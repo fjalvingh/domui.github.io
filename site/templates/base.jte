@@ -39,6 +39,21 @@
     </div>
 </div>
 <div class="ui-page-middle">
+    <div class="ui-page-menu">
+        <a class="ui-menu-home" href='${model.menuHref(model.getMenuRoot())}'>${model.getMenuRoot().getItem().getPageTitle()}</a>
+        <nav class="ui-menu">
+            @template.menuitem(model, model.getMenuRoot())
+        </nav>
+        <script>
+            //-- The menu column scrolls: make sure the page you are on is visible in it
+            (function() {
+                var current = document.querySelector(".ui-menu-current");
+                if(current) {
+                    current.scrollIntoView({block: "center"});
+                }
+            })();
+        </script>
+    </div>
     <div class="ui-page-content">
         <div class="ui-flex-content">
             $unsafe{model.getContent()}

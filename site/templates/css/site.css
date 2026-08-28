@@ -96,6 +96,7 @@ body {
 
     display: flex;
     flex-direction: column;
+    overflow: hidden;                       /* The page itself never scrolls, only the middle row's columns do */
     padding: 0;
     margin: 0;
 }
@@ -143,7 +144,12 @@ a:hover {
 }
 
 /** Main layout **/
+/** Main layout: three rows - the top and the bottom row take the room they
+ * need, the middle row gets whatever is left. That middle row holds two
+ * columns, the menu and the page content, each scrolling on its own.
+ **/
 .ui-page-top {
+    flex: 0 0 auto;
 }
 .ui-page-header {
     display: flex;
@@ -165,6 +171,7 @@ a:hover {
 }
 
 .ui-page-bottom {
+    flex: 0 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -178,22 +185,30 @@ a:hover {
     color: var(--clr-text-dim);
 }
 .ui-page-middle {
-    flex-grow: 3;
-    overflow: auto;
+    flex: 1 1 auto;
+    min-height: 0;                          /* Without this the row grows to fit its content instead of scrolling */
+    overflow: hidden;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
 }
+.ui-page-menu {
+    /* As wide as the menu needs, but never below 300 nor over 400 pixels */
+    flex: 0 0 auto;
+    width: max-content;
+    min-width: 300px;
+    max-width: 400px;
+    min-height: 0;
+    overflow: auto;
+}
 .ui-page-content {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    overflow: auto;
     display: flex;
     flex-direction: row;
     justify-content: center;
-    width: 100%;
-/*    overflow: auto; */
-}
-.ui-page-menu {
-    overflow: auto;
-    width: 120px;
 }
 
 .ui-flex-content {
@@ -310,12 +325,71 @@ a:hover {
     font-weight: 600;
 }
 
-/** Menu **/
-.ui-menu-level {
-    padding-left: 10px;
+/** Menu.
+ * Deliberately not styled like the page text: its own darker surface, dimmed
+ * text and denser type, so it reads as navigation. Colour is kept for state
+ * only, following the palette: amber marks the path you came down, ember marks
+ * where you are and what you are pointing at.
+ **/
+.ui-page-menu {
+    background: var(--clr-surface-a0);
+    border-right: 1px solid var(--clr-surface-a20);
 }
-.cl-true {
-    background: yellow;
+.ui-menu-home {
+    display: block;
+    padding: 8px 10px;
+    margin-bottom: 6px;
+    color: var(--clr-amber-a0);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.75em;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--clr-surface-a20);
+}
+.ui-menu {
+    font-size: 0.8125em;
+    line-height: 1.4;
+    padding: 0 6px 20px 6px;
+}
+.ui-menu-level {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.ui-menu-level-0 {
+    padding-left: 0;
+}
+.ui-menu-item {
+    margin: 1px 0;
+}
+.ui-menu-item .ui-menu-level {
+    padding-left: 12px;
+    border-left: 1px solid var(--clr-surface-a10);
+    margin-left: 6px;
+}
+.ui-menu-item > a {
+    display: block;
+    padding: 3px 8px;
+    border-radius: 3px;
+    color: var(--clr-text-dim);
+    text-decoration: none;
+}
+.ui-menu-level-0 > .ui-menu-item > a {
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+.ui-menu-item > a:hover {
+    background: var(--clr-surface-a10);
+    color: var(--clr-ember-a10);
+}
+.ui-menu-open > a {
+    color: var(--clr-amber-a20);
+}
+.ui-menu-current > a {
+    background: var(--clr-surface-tonal-a10);
+    color: var(--clr-ember-a10);
+    font-weight: 600;
 }
 
 /** code tag **/
@@ -437,6 +511,7 @@ code {
     html, body {
         height: auto;
         display: block;
+        overflow: visible;
         color: #000;
         background: #fff;
         background-image: none;
