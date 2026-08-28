@@ -1,0 +1,448 @@
+/* See https://colorffy.com/dark-theme-generator?colors=2ec3be-121222 */
+
+:root {
+    /** Dark theme primary colors */
+    --clr-primary-a0: #20eaa5;
+    --clr-primary-a10: #53edaf;
+    --clr-primary-a20: #71f0b9;
+    --clr-primary-a30: #8af3c3;
+    --clr-primary-a40: #a1f5cd;
+    --clr-primary-a50: #b5f8d7;
+
+    /** Dark theme surface colors */
+    --clr-surface-a0: #121222;
+    --clr-surface-a10: #282837;
+    --clr-surface-a20: #3f3f4d;
+    --clr-surface-a30: #575764;
+    --clr-surface-a40: #71717c;
+    --clr-surface-a50: #8c8b95;
+
+    /** Dark theme tonal surface colors */
+    --clr-surface-tonal-a0: #1f373a;
+    --clr-surface-tonal-a10: #354a4d;
+    --clr-surface-tonal-a20: #4c5f61;
+    --clr-surface-tonal-a30: #637476;
+    --clr-surface-tonal-a40: #7c8a8b;
+    --clr-surface-tonal-a50: #95a0a1;
+
+    /** Breadcrumb **/
+    --bc-bg: var(--clr-surface-tonal-a20);
+    --bc-fg: white;
+    --bc-bg-last: var(--clr-surface-tonal-a30);
+    --bc-border: var(--clr-surface-tonal-a0);
+    --bc-hover: var(--clr-primary-a0);
+}
+
+html {
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    height: 100%;
+    font: 400 1em / 1.714 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Ubuntu, system-ui, "Helvetica Neue", sans-serif;
+    color: var(--clr-primary-a50);
+    background-color: var(--clr-surface-a10);
+    background-image: url(../img/backdrop-1.png);
+    background-repeat: repeat-x;
+
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+}
+
+.ui-tbl {
+    border-collapse: collapse;
+    background-color: var(--clr-surface-tonal-a10);
+}
+.ui-tbl thead {
+	background-color: var(--clr-surface-tonal-a0);
+}
+
+.ui-tbl th {
+	padding: 3px 10px;
+	border-left: 1px solid #aaaaaa;
+	text-align: left;
+	white-space: nowrap;
+    font-weight: bold;
+}
+.ui-tbl th:last-child {
+	border-right: 1px solid #aaaaaa;
+}
+.ui-tbl td {
+	padding: 1px 10px;
+	border-left: 1px solid #aaaaaa;
+	vertical-align: top;
+}
+.ui-tbl tr:nth-child(even) {
+	background-color: var(--clr-surface-tonal-a20);
+}
+.ui-tbl td:last-child {
+	border-right: 1px solid #aaaaaa;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--clr-primary-a30);
+}
+a {
+    color: #b0bbfc;
+    text-decoration: none;
+}
+a:visited {
+    color: #b0bbfc;
+}
+
+/** Main layout **/
+.ui-page-top {
+}
+.ui-page-header {
+    display: flex;
+    justify-content: center;
+}
+
+.ui-page-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.ui-page-copyright {
+    font-size: xx-small;
+    color: #777;
+}
+.ui-page-meta-date {
+    font-size: xx-small;
+    color: var(--clr-primary-a30);
+}
+.ui-page-middle {
+    flex-grow: 3;
+    overflow: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+.ui-page-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+/*    overflow: auto; */
+}
+.ui-page-menu {
+    overflow: auto;
+    width: 120px;
+}
+
+.ui-flex-content {
+    width: 1024px;
+}
+
+.ui-page-nav {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 10px;
+}
+.ui-page-nav-end {
+
+}
+.ui-nav-item {
+    display: flex;
+    padding: 0.75em 0.75em 0.75em 1.25em;
+    outline: none;
+    position: relative;
+    text-decoration: none;
+    background-color: var(--clr-surface-tonal-a50);
+}
+.ui-page-bc-cont {
+/*    width: 700px; */
+}
+
+/** Breadcrumb **/
+.ui-page-breadcrumb {
+    flex-direction: row;
+    border: 1px solid var(--bc-border);
+    border-radius: 0.3rem;
+    display: inline-flex;
+    overflow: hidden;
+    /* margin: 20px 10px; */
+}
+
+.ui-bc-item {
+    background: var(--bc-bg);
+    color: var(--bc-fg);
+    outline: none;
+    padding: 0.75em 0.75em 0.75em 1.25em;
+    position: relative;
+    text-decoration: none;
+    transition: background 0.2s linear;
+}
+.ui-page-breadcrumb a, .ui-page-breadcrumb a:visited {
+    color: var(--bc-fg);
+}
+
+.ui-bc-item:hover:after,
+.ui-bc-item:hover {
+    background: var(--bc-hover);
+}
+
+.ui-bc-item:focus:after,
+.ui-bc-item:focus,
+.ui-bc-item.is-active:focus {
+    background: #323f4a;
+    color: #fff;
+}
+
+.ui-bc-item:after,
+.ui-bc-item:before {
+    background: var(--bc-bg);
+    bottom: 0;
+    clip-path: polygon(50% 50%, -50% -50%, 0 100%);
+    content: "";
+    left: 100%;
+    position: absolute;
+    top: 0;
+    transition: background 0.2s linear;
+    width: 1em;
+    z-index: 1;
+}
+
+.ui-bc-item:before {
+    background: #cbd2d9;
+    margin-left: 1px;
+}
+
+.ui-bc-last {
+    border-right: none;
+}
+
+.ui-bc-item.ui-bc-last {
+    background: var(--bc-bg-last);
+}
+
+/** Menu **/
+.ui-menu-level {
+    padding-left: 10px;
+}
+.cl-true {
+    background: yellow;
+}
+
+/** code tag **/
+code {
+    background: #121212;
+    /* border: 1px solid #ddd; */
+    border-left: 3px solid #f36d33;
+    color: #eee;
+    page-break-inside: avoid;
+    font-family: monospace;
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 1.6em;
+    max-width: 100%;
+    overflow: auto;
+    padding: 1em 1.5em;
+    display: block;
+    word-wrap: break-word;
+}
+
+.ui-not {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	padding: 0 20px;
+}
+.ui-not-icon {
+	width: 32px;
+	height: 32px;
+}
+.ui-not-cnt {
+	padding: 0 20px;
+}
+
+.ui-not-warning .ui-not-icon {
+	background-image: url(../img/notif-icon-warning.png);
+}
+.ui-not-error .ui-not-icon {
+	background-image: url(../img/notif-icon-error.png);
+}
+.ui-not-success .ui-not-icon {
+	background-image: url(../img/notif-icon-success.png);
+}
+.ui-not-info .ui-not-icon {
+	background-image: url(../img/notif-icon-info.png);
+}
+
+
+.ui-not-warning {
+	border-left: 5px solid #E7B600;
+}
+.ui-not-error {
+	border-left: 5px solid #C20000;
+}
+.ui-not-success {
+	border-left: 5px solid #A4B123;
+}
+.ui-not-info {
+	border-left: 5px solid rgb(102, 209, 255);
+}
+
+/** Blog **/
+.blg-date {
+    color: var(--clr-surface-a50);
+    font-size: 0.9em;
+    margin-right: 0.5em;
+}
+
+.ui-blog-nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1em;
+    width: 1024px;
+    max-width: 100%;
+    padding: 10px 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--clr-surface-tonal-a20);
+    font-size: medium;
+}
+
+.ui-blog-nav-prev,
+.ui-blog-nav-next {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    color: var(--clr-primary-a30);
+    text-decoration: none;
+}
+
+.ui-blog-nav-prev:hover,
+.ui-blog-nav-next:hover {
+    color: var(--clr-primary-a0);
+    text-decoration: underline;
+}
+
+.ui-blog-nav-next {
+    margin-left: auto;
+    text-align: right;
+}
+
+.ui-blog-nav-icon {
+    font-size: 1.2em;
+    line-height: 1;
+}
+
+/** Printing.
+ * The screen layout is a full-height flexbox with the content in a scrolling
+ * container of a fixed 1024px width. On paper that prints as a single clipped
+ * page, so undo all of it: no viewport-height boxes, no internal scrolling, no
+ * fixed widths, and dark-on-light instead of light-on-dark.
+ */
+@media print {
+    @page {
+        margin: 15mm;
+    }
+
+    html, body {
+        height: auto;
+        display: block;
+        color: #000;
+        background: #fff;
+        background-image: none;
+        font-size: 11pt;
+    }
+
+    .ui-page-middle, .ui-page-content, .ui-page-top, .ui-page-bottom {
+        display: block;
+        overflow: visible;
+        height: auto;
+    }
+
+    .ui-flex-content {
+        width: auto;
+        max-width: 100%;
+    }
+
+    /* Screen-only navigation: useless on paper */
+    .ui-page-nav-end, .ui-page-menu, .ui-blog-nav {
+        display: none;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        color: #000;
+        break-after: avoid;
+        page-break-after: avoid;
+    }
+
+    a, a:visited,
+    .ui-page-breadcrumb a, .ui-page-breadcrumb a:visited {
+        color: #000;
+        text-decoration: none;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    /* Code blocks: light background, wrap instead of scroll, allow page breaks */
+    code, pre {
+        background: #fff;
+        color: #000;
+        border-left: 3px solid #888;
+        overflow: visible;
+        font-size: 8pt;
+        line-height: 1.35;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        break-inside: auto;
+        page-break-inside: auto;
+    }
+
+    /* Dracula highlighting is unreadable on white */
+    .hljs, .hljs * {
+        color: #000 !important;
+        background: transparent !important;
+    }
+
+    /* Breadcrumb as plain text instead of dark arrow tabs */
+    .ui-page-breadcrumb {
+        display: block;
+        border: none;
+        overflow: visible;
+    }
+    .ui-bc-item {
+        display: inline;
+        background: none;
+        color: #000;
+        padding: 0;
+    }
+    .ui-bc-item:before {
+        display: none;
+    }
+    .ui-bc-item:after {
+        content: " \203A ";
+        position: static;
+        background: none;
+        clip-path: none;
+        width: auto;
+    }
+    .ui-bc-item.ui-bc-last {
+        background: none;
+    }
+    .ui-bc-item.ui-bc-last:after {
+        content: "";
+    }
+
+    .ui-page-copyright, .ui-page-meta-date {
+        color: #555;
+    }
+}
+

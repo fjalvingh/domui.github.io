@@ -1,0 +1,3 @@
+[submodule "sitegenerator"]
+	path = sitegenerator
+	url = git@github.com:fjalvingh/sitegenerator
