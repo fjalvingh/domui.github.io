@@ -1,21 +1,19 @@
 # Welcome to DomUI
 
-!i This documentation is being updated and is woefully incomplete 8-/ It's hard to do everything by yourself :wink:
+!i Work in progress (2026)
 
 DomUI is a component-based Java framework for building AJAX web applications
 without writing Javascript. If this is your first visit, read
 [What is DomUI](introduction/what-is-domui/index.md) and then
 [get started](getting-started/index.md).
 
-<a id="current-status"></a>
-
 ## Current status
 
-I'm currently working on DomUI 2.0. This will be a big change where a lot of problematic things will be rewritten. As a consequence the master branch's code is unstable and a work in progress. This also has its effect on [the demo application](https://etc.to/demo/) as that is also updated, changed, and uses the unstable 2.0 master.
-
-Progress on the work is [tracked on github](https://github.com/fjalvingh/domui/projects/1), and the [github issue list](https://github.com/fjalvingh/domui/issues) and planboard should be updated with things to do/done.
-
-<a id="the-documentation"></a>
+This is a newer version of the site, converted from Confluence to a static site generator. The
+data is still very old, plan is to update the documentation step by step. The most recent version
+is in branch skarp-master; this branch uses Java 21 and has upgraded to survive the javax -> jakarta 
+absolute idiocy (I hope the idiots requiring that move lose as much money as this has cost 
+the industry for absolutely nothing gained).
 
 ## The documentation
 
@@ -36,3 +34,11 @@ Progress on the work is [tracked on github](https://github.com/fjalvingh/domui/p
   tooling and the coding rules.
 - [Release notes](release-notes/index.md) - what changed in DomUI 2.0.
 - [FAQs and issues](faqs-and-issues/index.md) - the gotchas that keep biting.
+
+## Demo application
+
+There is a demo app from which we will show pages in this manual, embedded in
+an IFRAME:
+
+!demo(/)
+
