@@ -76,26 +76,3 @@ We can always hope, can't we?
 
 <a id="reference-and-todos"></a>
 
-## Reference and todo's
-
-- [Installing Oracle Database 12c R2 on Ubuntu 18.04](https://domui.atlassian.net/wiki/spaces/~admjal/pages/20086805/Install+Oracle+Database+12c+r2+on+Ubuntu+18.04.)
-- Sass and Scss
-  - [The SassMeister website to quickly test Sass fragments](https://www.sassmeister.com/) is a Godsend.
-- Maven
-  - [Using the Eclipse compiler inside Maven builds](using-the-eclipse-java-compiler-ecj-in-maven-builds/index.md)
-- CSS Styling frameworks
-  - [Bulma looks quite promising](https://bulma.io/) (Thanks Yoeri). It also has a [theme site](https://jenil.github.io/bulmaswatch/).
-    - [Reports about experimenting with Bulma](playing-with-bulma/index.md)
-  - [Materializecss](http://materializecss.com/color.html) which shows a way to style the upload button
-  - [Semantic UI](https://semantic-ui.com/)
-  - Juiced
-    - [Has some nice alternative to checkbox: switches](http://juicedcss.com/bower_components/juiced/docs/components.html#buttons)
-  - Spectre
-    - Has a very interesting "loading" modifier to classes - [see the css in the examples](https://picturepan2.github.io/spectre/elements.html#forms)
-  - Bootstrap does not seem to be a good plan: it changes versions quickly once one is there, but the last one is a complete rewrite and has taken > 2 years already. It also seems big and bloated.
-- Form designs worth looking at
-  - [https://codepen.io/nikhil8krishnan/pen/gaybLK](https://codepen.io/nikhil8krishnan/pen/gaybLK) and [https://codepen.io/lukeandrewreid/pen/OVPGXN](https://codepen.io/lukeandrewreid/pen/OVPGXN)
-- [Very good Antlr4 walkthrough](https://tomassetti.me/antlr-mega-tutorial/)
-- Graphs
-  - [http://fperucic.github.io/treant-js/](http://fperucic.github.io/treant-js/)
-
