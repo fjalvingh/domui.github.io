@@ -40,7 +40,6 @@
 </div>
 <div class="ui-page-middle">
     <div class="ui-page-menu">
-        <a class="ui-menu-home" href='${model.menuHref(model.getMenuRoot())}'>${model.getMenuRoot().getItem().getPageTitle()}</a>
         <nav class="ui-menu">
             @template.menuitem(model, model.getMenuRoot())
         </nav>

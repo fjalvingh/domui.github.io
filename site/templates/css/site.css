@@ -335,22 +335,10 @@ a:hover {
     background: var(--clr-surface-a0);
     border-right: 1px solid var(--clr-surface-a20);
 }
-.ui-menu-home {
-    display: block;
-    padding: 8px 10px;
-    margin-bottom: 6px;
-    color: var(--clr-amber-a0);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.75em;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    border-bottom: 1px solid var(--clr-surface-a20);
-}
 .ui-menu {
     font-size: 0.8125em;
     line-height: 1.4;
-    padding: 0 6px 20px 6px;
+    padding: 10px 6px 20px 6px;
 }
 .ui-menu-level {
     list-style: none;
