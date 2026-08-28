@@ -1,0 +1,11 @@
+# sigeto redirect map: <old path><TAB><new path>, relative to content/.
+# Maintained automatically from the renames git detects, and used to
+# generate redirect pages at the old locations. Hand edits are kept;
+# commit this file.
+#
+# An optional '#moves' line says which renames are picked up from git:
+#   #moves off              ignore them all, while a site is being restructured
+#   #moves since <commit>   only the renames made after <commit>
+#   #moves all              every rename in the history (the default)
+# The moves already listed below keep working whatever it says.
+#moves off

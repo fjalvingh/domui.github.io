@@ -6,7 +6,7 @@ menu:
 
 This is the documentation for **DomUI**, a component-based Java framework for
 building AJAX web applications without writing Javascript. If you are new here,
-start at [What is DomUI](../what-is-domui/index.md).
+start at [What is DomUI](../introduction/what-is-domui/index.md).
 
 DomUI is written and maintained by Frits Jalvingh and contributors, and is
 released under the [LGPL 2.1](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html).
@@ -17,7 +17,7 @@ released under the [LGPL 2.1](https://www.gnu.org/licenses/old-licenses/lgpl-2.1
   pull requests are welcome there.
 - [The demo application](https://etc.to/demo/), deployed automatically from the
   master build.
-- [The IntelliJ plugin](../using-the-domui-intellij-plugin/index.md) for editing
+- [The IntelliJ plugin](../getting-started/intellij-plugin/index.md) for editing
   DomUI pages.
 
 ## About the documentation

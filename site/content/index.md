@@ -2,77 +2,37 @@
 
 !i This documentation is being updated and is woefully incomplete 8-/ It's hard to do everything by yourself :wink:
 
+DomUI is a component-based Java framework for building AJAX web applications
+without writing Javascript. If this is your first visit, read
+[What is DomUI](introduction/what-is-domui/index.md) and then
+[get started](getting-started/index.md).
+
 <a id="current-status"></a>
 
-# Current status
+## Current status
 
 I'm currently working on DomUI 2.0. This will be a big change where a lot of problematic things will be rewritten. As a consequence the master branch's code is unstable and a work in progress. This also has its effect on [the demo application](https://etc.to/demo/) as that is also updated, changed, and uses the unstable 2.0 master.
 
 Progress on the work is [tracked on github](https://github.com/fjalvingh/domui/projects/1), and the [github issue list](https://github.com/fjalvingh/domui/issues) and planboard should be updated with things to do/done.
 
-<a id="getting-started"></a>
+<a id="the-documentation"></a>
 
-# Getting started
+## The documentation
 
-- [What is DomUI](what-is-domui/index.md)
-- [Quick DomUI facts for a developer](developer-view-of-domui/index.md)
-- [Checking out DomUI itself and running the demo application in Maven and IntelliJ](getting-started/index.md)
-- [Using the skeleton app as the basis for a new application](use-the-example-skeleton-to-create-a-new-application/index.md) (encouraged)
-- [Using a Maven artefact to create a bare bones application](getting-started/creating-a-new-domui-application-from-scratch-using-a-maven-archetype/index.md) (discouraged)
-- [Installing the IntelliJ Idea plugin for DomUI](using-the-domui-intellij-plugin/index.md)
-
-<a id="technical-reference-documentations-wip"></a>
-
-## Technical reference documentations (WIP)
-
-- [Generating and using typed properties](using-typed-properties-the-property-annotations-processor/index.md)
-- [Component Overview](domui-component-overview/index.md)
-- Application initialization
-  - [Header Contributors](header-contributors/index.md)
-- Data Binding
-  - [DomUI Data binding](data-binding/index.md)
-  - [Data binding technical description](data-binding-how-does-it-work/index.md)
-  - Data binding FAQ
-    - You cannot bind a control property with a dotted path
-- [Internationalization](internationalization-and-resource-bundles/index.md)
-  - [The locale for a request](internationalization-and-resource-bundles/locale-handling/index.md)
-- Using the database
-  - [The QCriteria query API](the-generic-query-framework-qcriteria/index.md)
-- Styling
-  - [Sass and SCSS support](sass-scss-support/index.md)
-  - [Using Icons in DomUI applications](icons/index.md)
-  - [Playing with flexbox and grid layout](playing-with-flexbox-layout/index.md)
-  - [CSS tips and tricks](css-problems-and-solutions/index.md)
-- Writing DomUI components
-  - [Component CSS rules and implementation details](domui-component-rules/index.md)
-  - [LookupInput/LookupInput2 layout and behavior details](domui-20-changes/lookupinput-lookupinput2-behavior-and-layout-rules/index.md)
-  - Text2 layout and behavior details
-- DomUI Internals
-  - [DomUI page state management: Pages and Conversations](domui-state-management/index.md)
-  - [SubPages](subpages/index.md) (2.0)
-  - [URL Contexts](url-contexts/index.md)
-- DomUI JUnit tests
-  - [Writing DomUI Junit tests](junit-testing-domui/index.md)
-  - [Using Mockito: pitfalls to be aware of](mockito-pitfalls/index.md)
-  - [The HtmlEditor tests](junit-testing-domui/the-htmleditor-junit-tests/index.md)
-  - [Data binding tests](tests-data-binding/index.md)
-
-<a id="domui-tools"></a>
-
-## DomUI tools
-
-- [The Hibernate/JPA POJO generator](the-hibernate-jpa-pojo-generator/index.md)
-- The dbpool database pool manager
-
-<a id="participating-in-development"></a>
-
-## Participating in development
-
-We can always hope, can't we?
-
-- [What's new / what's changing](domui-20-changes/index.md)
-- [Github / TravisCI / DeployHQ details](domui-github-environment/index.md)
-- [FAQs and issues](faqs-and-issues/index.md)
-
-<a id="reference-and-todos"></a>
-
+- [Introduction](introduction/index.md) - what DomUI is, and what a developer
+  can expect from it.
+- [Getting started](getting-started/index.md) - building DomUI and the demo, and
+  creating an application of your own.
+- [Building pages](building-pages/index.md) - the page model: UrlPage, state and
+  conversations, SubPages, URL contexts and internationalization.
+- [Components](components/index.md) - the component library, and the rules for
+  writing your own.
+- [Data binding and queries](data/index.md) - binding components to a model, and
+  getting that model out of the database.
+- [Look and feel](look-and-feel/index.md) - stylesheets, icons and animation.
+- [Testing](testing/index.md) - JUnit testing DomUI applications and DomUI
+  itself.
+- [Development environment](development-environment/index.md) - the build, the
+  tooling and the coding rules.
+- [Release notes](release-notes/index.md) - what changed in DomUI 2.0.
+- [FAQs and issues](faqs-and-issues/index.md) - the gotchas that keep biting.

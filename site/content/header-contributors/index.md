@@ -1,3 +1,0 @@
-# Header contributors
-
-tbd
