@@ -21,15 +21,6 @@ Progress on the work is [tracked on github](https://github.com/fjalvingh/domui/p
 - [Using a Maven artefact to create a bare bones application](getting-started/creating-a-new-domui-application-from-scratch-using-a-maven-archetype/index.md) (discouraged)
 - [Installing the IntelliJ Idea plugin for DomUI](using-the-domui-intellij-plugin/index.md)
 
-<a id="demo-and-build-information"></a>
-
-# Demo and build information
-
-- [The currently very ugly demo application](https://etc.to/demo/) (automatically deployed from master builds)
-- [The travis-ci build](https://travis-ci.org/fjalvingh/domui) page - with many thanks to the people hosting that great service!
-- [The maven build reports for the last build (be it branch or master)](https://etc.to/maven/index.html)
-- [The Selenium test reports for the last build (branch or master)](https://etc.to/maven/to.etc.domui.parent/to.etc.domui.demo/allure-maven-plugin/index.html)
-
 <a id="technical-reference-documentations-wip"></a>
 
 ## Technical reference documentations (WIP)
@@ -108,32 +99,3 @@ We can always hope, can't we?
 - Graphs
   - [http://fperucic.github.io/treant-js/](http://fperucic.github.io/treant-js/)
 
-<a id="other-hobbies"></a>
-
-# Other hobbies
-
-- [Electronics, old computers and old measurement instruments](https://domui.atlassian.net/wiki/spaces/ELEC)
-
-<a id="search-this-documentation"></a>
-
-## Search this documentation
-
-Search
-
-<a id="popular-topics"></a>
-
-## Popular Topics
-
-No labels match these criteria.
-
-<a id="featured-pages"></a>
-
-## Featured Pages
-
-Error rendering macro 'contentbylabel' : CQL was parsed but the search manager was unable to execute the search. Error message: com.atlassian.confluence.api.service.exceptions.scale.SSStatusCodeException: There was an illegal request passed to XP-Search Aggregator API : HTTP/1.1 403 Forbidden
-
-<a id="recently-updated-pages"></a>
-
-## Recently Updated Pages
-
-Error rendering macro 'recently-updated' : com.atlassian.confluence.search.v2.InvalidSearchException: com.atlassian.confluence.api.service.exceptions.scale.SSStatusCodeException: There was an illegal request passed to XP-Search Aggregator API : HTTP/1.1 403 Forbidden
