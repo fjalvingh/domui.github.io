@@ -1,36 +1,82 @@
-/* See https://colorffy.com/dark-theme-generator?colors=2ec3be-121222 */
+/* DomUI palette.
+ *
+ * Every colour here comes out of the DomUI logo. Its three interlocking blobs
+ * are amber, ember and violet, and each one is given exactly one job on the
+ * page, so a colour always means the same thing:
+ *
+ *   amber   headings - the structure of a document
+ *   ember   "you are here" - the current breadcrumb, hovers, the code rule
+ *   violet  links - somewhere else to go
+ *
+ * The ground stays a cool graphite so the three warm marks have something
+ * neutral to sit on (the way the logo needs a plain background), and so it
+ * sits comfortably next to the Dracula code blocks, which are #282a36.
+ */
 
 :root {
-    /** Dark theme primary colors */
-    --clr-primary-a0: #20eaa5;
-    --clr-primary-a10: #53edaf;
-    --clr-primary-a20: #71f0b9;
-    --clr-primary-a30: #8af3c3;
-    --clr-primary-a40: #a1f5cd;
-    --clr-primary-a50: #b5f8d7;
+    /** Brand: the three blobs of the logo, lifted where a dark ground needs it */
+    --clr-amber-a0: #f09000;
+    --clr-amber-a10: #f7a72e;
+    --clr-amber-a20: #fbbf63;
+    --clr-ember-a0: #e44818;
+    --clr-ember-a10: #f26a3c;
+    --clr-violet-a0: #602478;
+    --clr-violet-a10: #a26bc4;
+    --clr-violet-a20: #c9a0e0;
 
-    /** Dark theme surface colors */
-    --clr-surface-a0: #121222;
-    --clr-surface-a10: #282837;
-    --clr-surface-a20: #3f3f4d;
-    --clr-surface-a30: #575764;
-    --clr-surface-a40: #71717c;
-    --clr-surface-a50: #8c8b95;
+    /** Text: the wordmark's warm neutral, at reading contrast */
+    --clr-text: #e6ddd5;
+    --clr-text-dim: #a99e94;
 
-    /** Dark theme tonal surface colors */
-    --clr-surface-tonal-a0: #1f373a;
-    --clr-surface-tonal-a10: #354a4d;
-    --clr-surface-tonal-a20: #4c5f61;
-    --clr-surface-tonal-a30: #637476;
-    --clr-surface-tonal-a40: #7c8a8b;
-    --clr-surface-tonal-a50: #95a0a1;
+    /** Primary ramp (heading colour and its tints) */
+    --clr-primary-a0: #f09000;
+    --clr-primary-a10: #f39c1c;
+    --clr-primary-a20: #f7a72e;
+    --clr-primary-a30: #f9b449;
+    --clr-primary-a40: #fbbf63;
+    --clr-primary-a50: #e6ddd5;
+
+    /** Surfaces: cool graphite, tuned to sit beside the Dracula code theme */
+    --clr-surface-a0: #16161f;
+    --clr-surface-a10: #24242f;
+    --clr-surface-a20: #32323f;
+    --clr-surface-a30: #43434f;
+    --clr-surface-a40: #5c5c68;
+    --clr-surface-a50: #8a8a95;
+
+    /** Tonal surfaces: the same graphite warmed a few degrees toward the brand */
+    --clr-surface-tonal-a0: #1e1c26;
+    --clr-surface-tonal-a10: #2d2a35;
+    --clr-surface-tonal-a20: #3d3944;
+    --clr-surface-tonal-a30: #4e4954;
+    --clr-surface-tonal-a40: #6a6470;
+    --clr-surface-tonal-a50: #948d99;
 
     /** Breadcrumb **/
     --bc-bg: var(--clr-surface-tonal-a20);
-    --bc-fg: white;
+    --bc-fg: var(--clr-text);
     --bc-bg-last: var(--clr-surface-tonal-a30);
     --bc-border: var(--clr-surface-tonal-a0);
-    --bc-hover: var(--clr-primary-a0);
+    --bc-hover: var(--clr-amber-a0);
+}
+
+::selection {
+    background: var(--clr-amber-a0);
+    color: var(--clr-surface-a0);
+}
+
+a:focus-visible,
+.ui-nav-item:focus-visible {
+    outline: 2px solid var(--clr-amber-a0);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *:before, *:after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
 }
 
 html {
@@ -45,10 +91,8 @@ html {
 body {
     height: 100%;
     font: 400 1em / 1.714 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Ubuntu, system-ui, "Helvetica Neue", sans-serif;
-    color: var(--clr-primary-a50);
+    color: var(--clr-text);
     background-color: var(--clr-surface-a10);
-    background-image: url(../img/backdrop-1.png);
-    background-repeat: repeat-x;
 
     display: flex;
     flex-direction: column;
@@ -89,12 +133,13 @@ body {
 h1, h2, h3, h4, h5, h6 {
     color: var(--clr-primary-a30);
 }
-a {
-    color: #b0bbfc;
+a, a:visited {
+    color: var(--clr-violet-a20);
     text-decoration: none;
 }
-a:visited {
-    color: #b0bbfc;
+a:hover {
+    color: var(--clr-ember-a10);
+    text-decoration: underline;
 }
 
 /** Main layout **/
@@ -103,6 +148,20 @@ a:visited {
 .ui-page-header {
     display: flex;
     justify-content: center;
+    align-items: center;
+    padding: 24px 20px 22px;
+    background-color: var(--clr-surface-tonal-a10);
+    background-image: linear-gradient(to right,
+        var(--clr-amber-a0) 0 33.34%,
+        var(--clr-ember-a0) 33.34% 66.67%,
+        var(--clr-violet-a10) 66.67% 100%);
+    background-repeat: no-repeat;
+    background-position: bottom;
+    background-size: 100% 4px;
+}
+.ui-page-header img {
+    height: 72px;
+    width: auto;
 }
 
 .ui-page-bottom {
@@ -116,7 +175,7 @@ a:visited {
 }
 .ui-page-meta-date {
     font-size: xx-small;
-    color: var(--clr-primary-a30);
+    color: var(--clr-text-dim);
 }
 .ui-page-middle {
     flex-grow: 3;
@@ -138,7 +197,16 @@ a:visited {
 }
 
 .ui-flex-content {
+    box-sizing: border-box;
     width: 1024px;
+    max-width: 100%;
+    padding: 0 16px;
+}
+
+/* Imported screenshots run wider than the column; keep them inside it. */
+.ui-flex-content img {
+    max-width: 100%;
+    height: auto;
 }
 
 .ui-page-nav {
@@ -151,11 +219,21 @@ a:visited {
 }
 .ui-nav-item {
     display: flex;
-    padding: 0.75em 0.75em 0.75em 1.25em;
+    padding: 0.75em 1.25em;
     outline: none;
     position: relative;
     text-decoration: none;
-    background-color: var(--clr-surface-tonal-a50);
+    border-radius: 0.3rem;
+    border: 1px solid var(--clr-surface-tonal-a30);
+    background-color: var(--clr-surface-tonal-a10);
+}
+.ui-page-nav-end a.ui-nav-item, .ui-page-nav-end a.ui-nav-item:visited {
+    color: var(--clr-text);
+}
+.ui-nav-item:hover {
+    border-color: var(--clr-amber-a0);
+    color: var(--clr-amber-a10);
+    text-decoration: none;
 }
 .ui-page-bc-cont {
 /*    width: 700px; */
@@ -188,12 +266,19 @@ a:visited {
 .ui-bc-item:hover {
     background: var(--bc-hover);
 }
+.ui-page-breadcrumb a.ui-bc-item:hover {
+    color: var(--clr-surface-a0);
+}
 
 .ui-bc-item:focus:after,
 .ui-bc-item:focus,
 .ui-bc-item.is-active:focus {
-    background: #323f4a;
-    color: #fff;
+    background: var(--clr-surface-tonal-a30);
+    color: var(--clr-text);
+}
+.ui-bc-item:focus-visible {
+    outline: 2px solid var(--clr-amber-a0);
+    outline-offset: -2px;
 }
 
 .ui-bc-item:after,
@@ -211,7 +296,7 @@ a:visited {
 }
 
 .ui-bc-item:before {
-    background: #cbd2d9;
+    background: var(--clr-surface-tonal-a0);
     margin-left: 1px;
 }
 
@@ -221,6 +306,8 @@ a:visited {
 
 .ui-bc-item.ui-bc-last {
     background: var(--bc-bg-last);
+    color: var(--clr-amber-a20);
+    font-weight: 600;
 }
 
 /** Menu **/
@@ -233,10 +320,9 @@ a:visited {
 
 /** code tag **/
 code {
-    background: #121212;
-    /* border: 1px solid #ddd; */
-    border-left: 3px solid #f36d33;
-    color: #eee;
+    background: var(--clr-surface-a0);
+    border-left: 3px solid var(--clr-ember-a0);
+    color: var(--clr-text);
     page-break-inside: avoid;
     font-family: monospace;
     font-size: 15px;

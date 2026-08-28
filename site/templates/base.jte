@@ -6,7 +6,10 @@
 <!doctype html>
 <html lang="en">
 <head>
-<title>${model.getTitle()}</title>
+<title>${model.getTitle()} - DomUI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href='${model.siteURL("img/favicon.ico")}' sizes="any"/>
+<link rel="icon" type="image/png" href='${model.siteURL("img/favicon.png")}'/>
 <link rel="stylesheet" href='${model.siteURL("css/site.css")}'/>
 <link rel="stylesheet" href='${model.siteURL("css/dracula.css")}'/>
 
@@ -17,7 +20,7 @@
 <body>
 <div class="ui-page-top">
     <div class="ui-page-header">
-        <img src='${model.siteURL("img/logo-h126.png")}'>
+        <a href='${model.siteURL("index.html")}'><img src='${model.siteURL("img/logo-h126.png")}' alt="DomUI"></a>
     </div>
     <div class="ui-page-nav">
         <div class="ui-page-bc-cont">
@@ -57,7 +60,9 @@
         Last modified: ${model.getModifiedDateText()}
     </div>
     <div class="ui-page-copyright">
-        © 2024 by Frits Jalvingh. All information in here can be freely used (MIT License)
+        DomUI is © Frits Jalvingh and contributors, and is released under the
+        <a href="https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html">LGPL 2.1</a>.
+        This documentation can be freely used.
     </div>
 </div>
 
