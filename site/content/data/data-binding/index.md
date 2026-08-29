@@ -4,13 +4,20 @@ menu:
 ---
 # Data binding
 
-DomUI components use *data binding* to easily move data from the UI component to any underlying data model. Data binding makes it possible (and relatively easy) to separate the code for UI and business by using MVC or MVVC like patterns. Using data binding decouples the UI from the logic, and makes it possible to test the logic using normal JUnit tests instead of having to write Selenium like UI tests.
+DomUI components use *data binding* to easily move data from the UI component 
+to any underlying data model. Data binding makes it possible easy to separate 
+the code for UI and business by using MVC or MVVC like patterns. Using data 
+binding decouples the UI from the logic, and makes it possible to test the 
+logic using normal JUnit tests instead of having to write Selenium like UI tests.
 
 <a id="data-binding-example"></a>
 
 ## Data binding example
 
-Before we go into a long monologue about how Data Binding works - let's look at few examples. We will use the Demo application's database and create a screen to edit an Invoice. This is done using the following code:
+Before we go into a long monologue about how Data Binding works - let's look at few 
+examples. We will use the Demo application's database and create a screen to edit 
+an Invoice. This is done using the following code if we want to do it manually (you 
+would usually use FormBuilder to do this):
 
 ```
 public class EditInvoicePageB1 extends UrlPage {
@@ -56,9 +63,9 @@ public class EditInvoicePageB1 extends UrlPage {
 }
 ```
 
-If we open this screen using the url [http://localhost:8088/demo/to.etc.domuidemo.pages.binding.tut1.EditInvoicePage.ui?invoice=2](http://localhost:8088/demo/to.etc.domuidemo.pages.binding.tut1.EditInvoicePage.ui?$cid=0OUCkoO90006VhO5NqK000KH.c1&invoice=2) this will show a screen like this:
+This screen will look like this:
 
-![](image2018-10-15_23-12-9.png)
+!demo(to.etc.domuidemo.pages.binding.tut1.binding.EditInvoicePageB0.ui?invoice=2)
 
 The controls are there but the data is not. To do that we would normally code things like:
 
@@ -68,9 +75,15 @@ dateC.setValue(m_invoice.getInvoiceDate());
 // and so on, for all controls.
 ```
 
-What is worse- we have to repeat this - or the reverse order (from components back to the Invoice instance) every time we want the data there. This is tedious and error prone.
+What is worse- we have to repeat this - or the reverse order (from components 
+back to the Invoice instance) every time we want the data there:
 
-So instead we will use data binding. We add the following at the end of createContext():
+```
+m_invoice.setCustomer(customerLI.getValue());
+m_invoice.setInvoiceDate(dateC.getValue());
+```
+
+This is tedious and error prone. Let's use data binding instead. We add the following at the end of createContext():
 
 ```
 custLI.bind().to(m_invoice, "customer");
@@ -81,7 +94,10 @@ amountC.bind().to(m_invoice, "total");
 
 and we now have the following screen (live):
 
-Data binding works two ways. Let's add a button to the screen and change the data inside the Invoice instance with the following code added at the end of createContent:
+!demo(to.etc.domuidemo.pages.binding.tut1.binding.EditInvoicePageB1.ui?invoice=2)
+
+Data binding works two ways. Let's add a button to the screen and change the data inside 
+the Invoice instance with the following code added at the end of createContent:
 
 ```
 add(new DefaultButton("Clear amount", a -> {
@@ -91,7 +107,66 @@ add(new DefaultButton("Clear amount", a -> {
 
 The screen now looks like (live):
 
-Press the button, and you will see that the screen amount is set to zero even though we did not touch the component. So we manipulate *only* the model, and the view adapts itself. This means that business logic does not need to know much about the screens.
+!demo(to.etc.domuidemo.pages.binding.tut1.binding.EditInvoicePageB2.ui?invoice=2)
+
+Press the button, and you will see that the screen amount is set to zero even though we did not 
+touch the component. So we manipulate *only* the model, and the view adapts itself. This 
+means that business logic does not need to know much about the screens.
+
+## Fixing fragile strings
+
+The bind example above uses strings to name the pojo properties that the controls are bound
+to. This is very fragile:
+
+* It is easy to make a typing mistake, leading to an exception at runtime.
+* Refactoring pojo's will cause heaps of misery because you need to scan 
+  code all over the place for references to the changed properties.
+
+The solution to this is to use the [typed properties](typed-properties/index.md), which
+makes the code look like this:
+
+```
+custLI.bind().to(m_invoice, Invoice_.customer());
+dateC.bind().to(m_invoice, Invoice_.invoiceDate());
+addrC.bind().to(m_invoice, Invoice_.billingAddress());
+amountC.bind().to(m_invoice, Invoice_.total());
+```
+
+Impossible to make mistakes, because the compiler checks the existence of those fields, plus
+the fields are type checked: a mistake like binding a date control to a string property is
+caught at compile time. Refactoring the pojo will nicely create build errors in the code
+for every property affected, making refactoring safe.
+
+!demo(to.etc.domuidemo.pages.binding.tut1.binding.EditInvoicePageB3.ui?invoice=2)
+
+## Making it even simpler
+
+The FormBuilder class is a builder for input forms. It would create the entire screen above
+like this:
+
+```
+	public void createContent() throws Exception {
+		ContentPanel cp = new ContentPanel();
+		add(cp);
+
+		//-- Default invoice fields
+		if(null == m_invoice.getInvoiceDate())
+			m_invoice.setInvoiceDate(new Date());
+
+		FormBuilder fb = new FormBuilder(cp);			// Insert the form to build into cp
+
+		fb.property(m_invoice, Invoice_.customer()).control();
+		fb.property(m_invoice, Invoice_.invoiceDate()).control();
+		fb.property(m_invoice, Invoice_.billingAddress()).control();
+		fb.property(m_invoice, Invoice_.total()).control();
+
+		cp.add(new DefaultButton("Clear amount", a -> {
+			m_invoice.setTotal(BigDecimal.ZERO);
+		}));
+	}
+```
+
+This generates the same form, with data binding, in one line per input.
 
 <a id="how-does-it-work"></a>
 
