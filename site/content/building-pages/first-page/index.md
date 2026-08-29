@@ -69,13 +69,49 @@ There is no mapping to write and nothing to register: a class that extends
 changes its URL. The `.ui` extension is configured once, on the `AppFilter` in
 `web.xml`; `ui` is the default.
 
-Two things extend that basic rule:
+The application's root URL is the exception: it shows the page returned by
+`getRootPage()` in your `DomApplication` class - the demo returns its `HomePage`.
 
-- The application's root URL itself shows the page returned by `getRootPage()` in
-  your `DomApplication` class - the demo returns its `HomePage`.
-- Anything between the web application root and the class name is a
-  [URL context](../url-contexts/index.md), which the page can read if it wants to.
-  It does not change which class is addressed.
+### Giving a page its own URL
+
+In most cases using the class name works just fine. But if you want you can define
+your own URLs for a page, using the `@UIPage` annotation:
+
+```java
+@UIPage("/welcome/hello")
+public class HelloPage extends UrlPage {
+	...
+}
+```
+
+which puts the page at `https://demo.domui.org/welcome/hello` - no class name and no
+`.ui` extension. Nothing else changes: DomUI finds the annotation by scanning the
+classpath at startup, and it uses that URL itself whenever it generates a link to
+the page.
+
+A segment written as `{name}` is a variable, and it must name a property of the
+page annotated with `@UIUrlParameter`:
+
+```java
+@UIPage("/invoice/{invoiceId}")
+public class InvoicePage extends UrlPage {
+	private Long m_invoiceId;
+
+	@UIUrlParameter(name = "invoiceId")
+	public Long getInvoiceId() {
+		return m_invoiceId;
+	}
+
+	public void setInvoiceId(Long invoiceId) {
+		m_invoiceId = invoiceId;
+	}
+}
+```
+
+`/invoice/12345` now reaches that page with `invoiceId` set to 12345, and a link
+made to it with that parameter comes out as `/invoice/12345` rather than as a
+query string. Naming a variable that is not a `@UIUrlParameter` property of the
+page is an error, and so is two pages claiming the same pattern.
 
 ## createContent() builds the page
 
@@ -96,7 +132,8 @@ a keystroke or any other event does not rebuild the page - the tree stays alive
 between requests, and handlers change it in place. When you do want a page to
 build itself again from scratch, call `forceRebuild()` on it: DomUI throws the
 existing children away and calls `createContent()` again before the next
-response goes out.
+response goes out. We will see later that this is a common way for components
+to rebuild their presentation when data changes.
 
 ## A page is a tree of tags
 
@@ -133,7 +170,7 @@ a loop and a condition is a condition - building a list of rows is a `for` over
 
 ## Reacting to a click
 
-Any tag can be given a click handler. The handler is ordinary server side Java:
+Any node can be given a click handler. The handler is ordinary server side Java:
 
 ```java
 public class HelloClickPage extends UrlPage {
