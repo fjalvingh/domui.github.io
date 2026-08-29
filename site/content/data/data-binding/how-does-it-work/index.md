@@ -13,6 +13,33 @@ DomUI data binding uses a form of data binding we call "soft binding". When you 
 - When a request *enters* the servers we move data from *control* to *model*
 - When all user logic has finished, and the response is to be rendered back we move data from *model* to control. This means the control will show the value from the model when rendered back in the browser.
 
+```plantuml svg title="Where binding moves data during one request"
+@startuml
+skinparam shadowing false
+
+actor Browser
+participant "request handler" as RH
+participant "controls" as C
+participant "bindings" as B
+participant "model" as M
+participant "your page code" as UC
+
+Browser -> RH: action request
+RH -> C: handleComponentInput()\nraw input into the controls
+RH -> B: controlToModel()
+B -> C: which control values changed?
+B -> M: move the changed values in
+RH -> UC: onValueChanged / click handler
+UC -> M: read and change at will
+RH -> B: modelToControl()
+B -> M: what does the model say now?
+B -> C: move the changed values back
+RH -> Browser: rendered (delta) response
+@enduml
+```
+
+The model is never told anything in between: nothing listens to it, and nothing pushes into it except those two moments in the request. Everything your own code does to the model in the middle of that picture is picked up by the second move, on the way out.
+
 Because the binding itself is maintained by the control bindings are only active while the control itself is attached to a page. If a control gets removed from a page it's bindings will not update. But as soon as a control is added to a page (again) binding will be updated.
 
 The alternative to "soft binding" is "hard binding". In hard binding all property setters of classes are "Observable": they are coded in such a way that they call listeners as soon as a setXxx() call changes the value of the property. Instrumenting all setters to do this properly adds yet more boilerplate to Java's already very verbose "properties" which is a disadvantage. In addition having setters propagate changes means that it is very hard to control *when* bindings execute. And finally, since objects might live quite a while it becomes important to be able to clean up listeners on properties, or the system leaks memory or CPU cycles.
@@ -40,6 +67,39 @@ There is one small lie in the above. The code above usually binds to a control p
 As we cannot change the above behavior for getValue() (as existing code depends on it) we need an alternative, and that is the bindValue() property. The getBindValue() method does exactly the same as getValue() *except* propagating an error to the error UI. Calling getBindValue() will do conversion and validation as usual, but any error is just thrown as a ValidationException without it propagating to the display.
 
 The binding code will catch the validation exception and keep it inside the binding so that the fact that the control contains invalid data is not lost. The value inside the model is not changed.
+
+```plantuml svg title="What happens when a control's value does not convert"
+@startuml
+skinparam shadowing false
+
+start
+:controlToModel asks the binding\nwhat changed;
+if (is the control disabled or readonly?) then (yes)
+  :never bind back to the model;
+  stop
+else (no)
+endif
+:read the control's bindValue property;
+note right
+  getBindValue() converts and validates
+  exactly like getValue() does, but it
+  does not push the error to the screen.
+end note
+if (does it convert and validate?) then (yes)
+  if (does it differ from the model value?) then (yes)
+    :collect the value, to be\nmoved into the model;
+  else (no)
+    :nothing to move;
+  endif
+else (no: it throws)
+  :keep the error inside the binding;
+  :leave the model value alone;
+endif
+stop
+@enduml
+```
+
+So after the move the model is still consistent, the control still shows what the user typed, and the binding is the only thing that knows something is wrong. Nothing is on screen yet.
 
 To actually show binding errors (and to know they are there) you, as a developer, should execute the following code *before* using model data (for instance inside your save() method):
 
@@ -76,6 +136,35 @@ In fact, all bindings to control properties except value are unidirectional. Thi
 
 Bindings are made with the bind() call on the component that you want to bind to the model. The bind() call creates a builder and this builder requires you to call one of the "to" methods on it to complete the builder. As soon as the builder gets finished the builder creates a ComponentPropertyBindingBidi or ComponentPropertyBindingUni instance which represents the binding and stores it *inside* the DomUI node for the control.
 
+```plantuml svg title="Where a binding lives"
+@startuml
+skinparam shadowing false
+
+class NodeBase <<the control>> {
+  List<IBinding> m_bindingList
+  bind()
+  bindErrors()
+}
+
+interface IBinding {
+  getBindingDifference()
+  setModelValue()
+  moveModelToControl()
+  getBindError()
+}
+
+class ComponentPropertyBindingBidi
+class ComponentPropertyBindingUni
+class "the model instance" as Model
+
+NodeBase "1" *-- "0..n" IBinding : owns >
+IBinding <|.. ComponentPropertyBindingBidi
+IBinding <|.. ComponentPropertyBindingUni
+ComponentPropertyBindingBidi --> Model : instance + property
+ComponentPropertyBindingBidi ..> NodeBase : control + property
+@enduml
+```
+
 Because the actual bindings are stored inside the DomUI tree we have automatic lifecycle management: as soon as a DomUI node is removed from the display tree the bindings become inactive.
 
 <a id="binding-order"></a>
@@ -96,7 +185,7 @@ The "Country" combo contains a few countries, the "City" combo contains cities i
 
 Now let's see what happens if we order binding in "dom order"... Say the user changes "Netherlands" to "Great Britain":
 
-- The request enters the server, and binding executes *moveControlToModel.*
+- The request enters the server, and binding executes *controlToModel*.
 - "Country" changed to "Great Britain":
   - The model discovers that city "Amsterdam" is not in Great Britain, so it changes the "city" property to "London".
 - But now we bind "city" which is "Amsterdam" from the UI code.
@@ -108,7 +197,7 @@ Clearly this is not really what we want. We need to have some "order" imposed on
 
 ### How DomUI orders binding
 
-When a request comes in the binder (SimpleBinder) will run moveControlToModel, after all components have obtained their value(s) from the request. It does that as follows:
+When a request comes in the binding handler (`DefaultBindingHandler`) will run controlToModel, after all components have obtained their value(s) from the request. It does that as follows:
 
 - Walk the tree, and find all bindings.
 - Check each binding for a changed value, i.e. where the model value differs from the control value.
@@ -117,6 +206,32 @@ When a request comes in the binder (SimpleBinder) will run moveControlToModel, a
   - A "deeper" binding comes before a "higher" binding
   - Bindings at the same "level" execute in order of dom traversal.
 - Now bind all values as per the above ordering.
+
+```plantuml svg title="controlToModel: collect everything first, then move it"
+@startuml
+skinparam shadowing false
+
+start
+partition "1. collect" {
+  :walk the node tree, visiting\na node after its children;
+  :ask every binding on the node\nwhat its difference is;
+  if (does the control value equal the model value?) then (equal)
+    :ignore this binding;
+  else (changed)
+    :add a BindingValuePair to the list;
+  endif
+  :the list is now in binding order:\ndeeper before higher, dom order within a level;
+}
+partition "2. move" {
+  :set every collected value on its\nmodel property, in list order;
+}
+stop
+@enduml
+```
+
+Collecting before moving is what makes the ordering possible at all: by the time the first value is written into the model, every control has already been asked what it holds, so a setter that changes another property can no longer be overwritten by a control that was read afterwards.
+
+Moving the other way round, modelToControl walks the same tree but the other way about - a node *before* its children - so that a component may use binding internally as well.
 
 By ordering like this most binding issues should resolve themselves automatically.
 
