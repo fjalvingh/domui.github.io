@@ -443,6 +443,9 @@ code {
 .ui-not-icon {
 	width: 32px;
 	height: 32px;
+	flex-shrink: 0;						/* Or the text beside it squeezes the icon and clips it in half */
+	background-repeat: no-repeat;
+	background-position: center;
 }
 .ui-not-cnt {
 	padding: 0 20px;
