@@ -417,6 +417,22 @@ code {
 	background: #fff;
 }
 
+/* A generated PlantUML diagram: black line art, so it gets its own light card */
+.ui-uml {
+	margin: 1.5em 0;
+	max-width: 100%;
+	overflow-x: auto;
+	background: #fff;
+	border: 1px solid var(--clr-surface-a30);
+	border-radius: 4px;
+	padding: 8px;
+}
+.ui-uml img {
+	display: block;
+	max-width: 100%;
+	height: auto;
+}
+
 .ui-not {
 	display: flex;
 	flex-direction: row;
