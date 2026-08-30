@@ -89,7 +89,7 @@ The handler touches the model and nothing else - it does not know a price contro
 exists - and both price fields on the screen change. That is the point of the
 whole mechanism: your logic talks to the model, and the screen is a view of it.
 
-### One line per field
+### One line per field: using FormBuilder
 
 The mirror at the bottom of that page does not create its controls at all:
 

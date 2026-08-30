@@ -61,7 +61,6 @@ now compile errors:
 
 ```java
 q.eq(Album_.title(), 12);              // no suitable method found for eq(QField<Album,String>,int)
-q.ilike(Track_.name(), "%x%");         // no suitable method found for ilike(QField<Track,String>,String)
 q.ilike(Album_.artst().name(), "%x%"); // cannot find symbol: method artst()
 ```
 
@@ -153,13 +152,7 @@ collection.
 
 ## A property is a value
 
-```java
-QCriteria<Artist> aq = QCriteria.create(Artist.class);
-aq.ascending(Artist_.name()).limit(5);
-cp.add(listOf(getSharedContext().query(aq), Artist_.name()));
-...
-cp.add(listOf(getSharedContext().query(tq), Track_.album().artist().name()));
-```
+Take the following code:
 
 ```java
 /**
@@ -176,6 +169,16 @@ private <T> Div listOf(List<T> list, QField<T, String> labelProperty) throws Exc
 	}
 	return box;
 }
+```
+
+With that we can easily generalize code in a compile- and typesafe way:
+
+```java
+QCriteria<Artist> aq = QCriteria.create(Artist.class);
+aq.ascending(Artist_.name()).limit(5);
+cp.add(listOf(getSharedContext().query(aq), Artist_.name()));
+...
+cp.add(listOf(getSharedContext().query(tq), Track_.album().artist().name()));
 ```
 
 !demo(to.etc.domuidemo.pages.tutorial.typed.TypedGenericPage.ui, 100%, 620)
@@ -199,7 +202,7 @@ generates for every class annotated with either of:
 - **`@jakarta.persistence.Entity`** - so all your JPA entities are covered
   without doing anything.
 - **`@to.etc.annotations.GenerateProperties`** - for any other class. Typed
-  properties are not a database feature; a plain model class gets them just as
+  properties are not a database feature; a plain model class can get them just as
   well.
 
 Add the processor to the `maven-compiler-plugin` configuration of every module
