@@ -1,7 +1,3 @@
----
-menu:
-  sort: "05"
----
 # Building your first page
 
 A DomUI page is a Java class. There is no template, no jsp, no html file and no

@@ -12,26 +12,26 @@ the `sitegenerator` submodule, and published to GitHub Pages by
 ```
 git submodule update --init
 (cd sitegenerator && mvn -q clean package)
-java -jar sitegenerator/target/sitegen.jar -i site -include https://demo.domui.org/
+java -jar sitegenerator/target/sitegen.jar -i site
 ```
 
 The result is written to `site/_output`; open its `index.html` in a browser.
 
-`-include` is the base URL of the running demo application that the `!demo()`
-tags in the documentation embed - a page containing one of those tags fails the
-build without it. Point it at your own DomUI demo instance to check pages
-against a local build instead.
+`site/variables.properties` holds what the `${name}` variables in the
+documentation stand for, `demo` among them: the base URL of the running demo
+application that the `!demo()` tags embed. To check the pages against your own
+DomUI demo instance instead, override it for that build:
+
+```
+java -jar sitegenerator/target/sitegen.jar -i site -Ddemo=http://localhost:8088/demo/
+```
 
 ## Committing
 
 `sitegenerator/install-hooks.sh` installs git hooks that generate the site
 before a commit or push is accepted, so a broken link never reaches the
-published site. Give them the demo URL as well, or they fail on every `!demo()`
-tag:
-
-```
-export SIGETO_ARGS='-include https://demo.domui.org/'
-```
+published site. They need nothing else: the demo URL and every other variable
+come from `site/variables.properties`.
 
 Move tracking is off (`#moves off` in `site/redirects.tsv`) while the
 documentation is being restructured: pages are still being moved around and
