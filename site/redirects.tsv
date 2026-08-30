@@ -3,9 +3,11 @@
 # generate redirect pages at the old locations. Hand edits are kept;
 # commit this file.
 #
-# An optional '#moves' line says which renames are picked up from git:
-#   #moves off              ignore them all, while a site is being restructured
+# An optional '#moves' line says which of the renames git detects are
+# recorded here, and so get a redirect page keeping their old url alive:
+#   #moves off              none of them, while a site is being restructured
 #   #moves since <commit>   only the renames made after <commit>
 #   #moves all              every rename in the history (the default)
-# The moves already listed below keep working whatever it says.
+# The moves already listed below keep working whatever it says, and stale
+# links in the markdown sources are repaired from every rename regardless.
 #moves off
