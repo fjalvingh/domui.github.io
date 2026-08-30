@@ -38,8 +38,7 @@ which is when it is rendered.
 
 `SimpleSearchModel` takes the `QCriteria` from
 [using databases](../30-using-databases/index.md) and the node it should get its
-`QDataContext` from - `this`, the page, so it uses the page's shared context. For
-rows you already have there is `SimpleListModel<T>`, which takes a `List`.
+`QDataContext` from - `this`, the page, so it uses the page's shared context.
 
 `setPageSize(10)` is what makes the table a paged one; without it every row it
 got is shown at once. The pager is a separate component you place where you want
@@ -270,6 +269,12 @@ model from it, make a table, put both in a `Div` that was empty until now. The
 need to keep either of them in a field, and no need to rebuild the page, which
 would throw away what the user typed.
 
+In this example the setClicked() handler recreates everything: every click it
+will recreate a DataTable, RowRenderer and Model. While this works fine it can be
+done simpler: create the data table and renderer inside the main code, and make the
+setClicked handler only create a new SimpleSearchModel and assign that to the
+existing table. This will force it to redraw itself.
+
 `getCriteria()` returns `null` when one of the fields contains something that
 cannot be searched with; the messages are already on the screen by then, so the
 handler just returns. When nothing at all was filled in it returns a criteria
@@ -319,7 +324,7 @@ The rest of the panel is the buttons: **Search** is what `setClicked()` handles,
 screen. `setOnNew()` adds a "new" button for creating a record, `setOnClear()`
 hooks the reset, and `setCollapsed()` decides how the panel starts out.
 
-## Coming back to a list
+## SimpleSearchModel and page navigation
 
 A list where clicking a row opens a detail page has a problem the framework
 solves for you. While the user is in the detail page - editing, saving - the list
@@ -380,7 +385,7 @@ With this on, the model calls `refresh()` on the row objects it hands to the
 table, so their values come from the database rather than from what the session
 remembered. It costs a read per row shown, which is why it is not the default.
 
-## A table of your own data
+## Non database models for tables
 
 Not every table comes from a query. `SortableListModel<T>` puts one over a list
 you have: rows you built, computed, or read from somewhere that is not a
@@ -449,7 +454,3 @@ Adding to a sorted model puts the row where the sort order says it belongs; that
 is also why `add(index, row)` and `move()` refuse to work while a sort order is
 active - the order is not yours to choose then.
 
-## Where to go from here
-
-The session that keeps those entity objects alive, and what shelving does to it,
-is the subject of [state management](../../70-implementation-details/state-management/index.md).
