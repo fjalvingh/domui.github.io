@@ -112,7 +112,7 @@ rectangle "Text2<String>\nis a <div class='ui-txt2'>" as T {
 
 So a component is a small tree of the very same tags you wrote by hand on the
 previous page. This is what "layer 0" and "layer 1" mean: layer 0 is
-`to.etc.domui.dom.html`, one class per html element and no behaviour of its own;
+`to.etc.domui.dom.html`, one class per html element and no behavior of its own;
 layer 1 is the components, built out of layer 0. A screen fragment you write
 yourself - a class extending `Div` with a `createContent()` - is the same kind of
 thing, so there is no line between "framework component" and "your code".

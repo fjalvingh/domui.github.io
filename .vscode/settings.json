@@ -1,0 +1,19 @@
+{
+  // Page directories are moved around a lot while the site is being restructured.
+  // These settings make VS Code rewrite the relative "../../x/y/index.md" links
+  // when a page file or a whole page directory is moved in the Explorer.
+  //
+  // NOTE: this only hooks moves done *inside* VS Code (Explorer rename/drag-drop).
+  // A "git mv" or "mv" from a terminal bypasses it and leaves the links dangling.
+  "markdown.updateLinksOnFileMove.enabled": "always",
+  "markdown.updateLinksOnFileMove.enableForDirectories": true,
+
+  // Dangling internal links and missing images show up as squiggles in the editor,
+  // instead of only failing the sitegenerator build.
+  "markdown.validate.enabled": true,
+  "markdown.validate.fileLinks.enabled": "error",
+  "markdown.validate.fragmentLinks.enabled": "warning",
+
+  // Keep the explicit ".../index.md" form when VS Code writes a path itself.
+  "markdown.preferredMdPathExtensionStyle": "includeExtension"
+}
