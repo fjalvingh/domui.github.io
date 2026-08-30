@@ -25,6 +25,9 @@ managed, how it is addressed in an URL, and how it is translated.
 - [Page navigation](60-page-navigation/index.md) - what a page keeps between
   requests, how `UIGoto` moves to another one, and the shelf of pages that the
   breadcrumb is made of.
+- [Showing rows](70-showing-rows/index.md) - the model, the RowRenderer and the
+  DataTable, a search screen built on a SearchPanel, and why a list re-queries
+  when you come back to it.
 - [The body document (UrlPage)](../70-implementation-details/urlpage/index.md) - the root of every page.
 - [State management](../70-implementation-details/state-management/index.md) - pages, conversations and the
   lifetime of the data a page works with.
