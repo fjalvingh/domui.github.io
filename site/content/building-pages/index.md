@@ -31,6 +31,9 @@ managed, how it is addressed in an URL, and how it is translated.
 - [Metadata](80-metadata/index.md) - saying once, on the class, what every
   screen showing it needs to know: labels, limits, presentation - and
   translating all of it through DomUI's own resource bundles.
+- [Telling something to a user](90-telling-the-user/index.md) - the message box,
+  the message that stays on the page, the exception dialog, and the error fence
+  that decides where a message is shown.
 - [The body document (UrlPage)](../70-implementation-details/urlpage/index.md) - the root of every page.
 - [State management](../70-implementation-details/state-management/index.md) - pages, conversations and the
   lifetime of the data a page works with.
