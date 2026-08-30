@@ -193,7 +193,7 @@ fence**; the body of the page is always one, so a message always lands
 somewhere. When nothing on the page collects messages itself, DomUI puts an
 `ErrorPanel` at the top of the page - that red bar. The message is prefixed with
 the control's *error location*, which the form builder filled in from the label,
-which is why it names the field in words the user recognises.
+which is why it names the field in words the user recognizes.
 
 The `ValidationException` is not yours to catch. The framework catches it around
 your handler, stops the handler there, and renders the page as it now stands -
