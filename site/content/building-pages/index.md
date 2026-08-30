@@ -28,6 +28,9 @@ managed, how it is addressed in an URL, and how it is translated.
 - [Showing rows](70-showing-rows/index.md) - the model, the RowRenderer and the
   DataTable, a search screen built on a SearchPanel, and why a list re-queries
   when you come back to it.
+- [Metadata](80-metadata/index.md) - saying once, on the class, what every
+  screen showing it needs to know: labels, limits, presentation - and
+  translating all of it through DomUI's own resource bundles.
 - [The body document (UrlPage)](../70-implementation-details/urlpage/index.md) - the root of every page.
 - [State management](../70-implementation-details/state-management/index.md) - pages, conversations and the
   lifetime of the data a page works with.
@@ -35,6 +38,3 @@ managed, how it is addressed in an URL, and how it is translated.
 - [SPI pages and DomUI logins](../99-todo/spi-pages-and-logins/index.md) - single page
   interface applications and their login handling.
 - [URL contexts](../99-todo/url-contexts/index.md) - how a page class becomes an URL.
-- [Internationalization and resource bundles](../99-todo/internationalization/index.md) -
-  translating an application, and [locale handling](../99-todo/internationalization/locale-handling/index.md)
-  per request.
