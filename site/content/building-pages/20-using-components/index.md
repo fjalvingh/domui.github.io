@@ -6,7 +6,7 @@ menu:
 
 A component is a ready-made piece of screen: an input field, a date input, a
 combobox, a button. You add one to your page the way you added a `Div` on the
-[previous page](../../building-pages/10-first-page/index.md), you give it a value, and you ask it for
+[previous page](../10-first-page/index.md), you give it a value, and you ask it for
 the value the user typed.
 
 [TOC]

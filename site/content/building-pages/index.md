@@ -8,10 +8,10 @@ A DomUI application is a set of pages, each of them a Java class. This section
 describes the page model itself: what a page is, how its state and lifetime are
 managed, how it is addressed in an URL, and how it is translated.
 
-- [Building your first page](../building-pages/10-first-page/index.md) - what a page is, how its
+- [Building your first page](10-first-page/index.md) - what a page is, how its
   class name becomes an URL, and what `createContent()` does, in three small
   examples.
-- [Using components](using-components/index.md) - what a component is, the
+- [Using components](20-using-components/index.md) - what a component is, the
   state every input control has, how `getValue()` reports bad input and how a
   control reports a change.
 - [The body document (UrlPage)](urlpage/index.md) - the root of every page.
