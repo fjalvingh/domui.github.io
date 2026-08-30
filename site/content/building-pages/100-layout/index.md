@@ -371,4 +371,4 @@ What this fragment does *not* have is what separates a fragment from a
 **component**: a value it holds and reports (`getValue()`), the read-only,
 disabled and mandatory states, a place in the form builder, metadata deciding how
 it looks. Those are the subject of
-[building components](../../components/index.md).
+[writing a component](../110-writing-a-component/index.md).

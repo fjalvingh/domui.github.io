@@ -37,6 +37,9 @@ managed, how it is addressed in an URL, and how it is translated.
 - [Layout](100-layout/index.md) - the panel a page's content sits in, the bar its
   buttons sit on, tabs - and how to make a piece of screen of your own that
   several pages can use.
+- [Writing a component](110-writing-a-component/index.md) - a component is a
+  class implementing `IControl`; what `AbstractDivControl` already does, when a
+  control decides its value changed, and why `bindValue` is not `value`.
 - [The body document (UrlPage)](../70-implementation-details/urlpage/index.md) - the root of every page.
 - [State management](../70-implementation-details/state-management/index.md) - pages, conversations and the
   lifetime of the data a page works with.
