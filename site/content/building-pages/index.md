@@ -40,10 +40,3 @@ managed, how it is addressed in an URL, and how it is translated.
 - [Writing a component](110-writing-a-component/index.md) - a component is a
   class implementing `IControl`; what `AbstractDivControl` already does, when a
   control decides its value changed, and why `bindValue` is not `value`.
-- [The body document (UrlPage)](../70-implementation-details/urlpage/index.md) - the root of every page.
-- [State management](../70-implementation-details/state-management/index.md) - pages, conversations and the
-  lifetime of the data a page works with.
-- [SubPages](../99-todo/subpages/index.md) - the 2.0 single-page-interface building block.
-- [SPI pages and DomUI logins](../99-todo/spi-pages-and-logins/index.md) - single page
-  interface applications and their login handling.
-- [URL contexts](../99-todo/url-contexts/index.md) - how a page class becomes an URL.
