@@ -22,6 +22,9 @@ managed, how it is addressed in an URL, and how it is translated.
 - [Data binding](50-data-binding/index.md) - letting a control and a model
   property follow each other, which way each kind of binding moves, and what
   `bindErrors()` is for.
+- [Page navigation](60-page-navigation/index.md) - what a page keeps between
+  requests, how `UIGoto` moves to another one, and the shelf of pages that the
+  breadcrumb is made of.
 - [The body document (UrlPage)](urlpage/index.md) - the root of every page.
 - [State management](state-management/index.md) - pages, conversations and the
   lifetime of the data a page works with.
