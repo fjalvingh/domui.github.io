@@ -34,6 +34,9 @@ managed, how it is addressed in an URL, and how it is translated.
 - [Telling something to a user](90-telling-the-user/index.md) - the message box,
   the message that stays on the page, the exception dialog, and the error fence
   that decides where a message is shown.
+- [Layout](100-layout/index.md) - the panel a page's content sits in, the bar its
+  buttons sit on, tabs - and how to make a piece of screen of your own that
+  several pages can use.
 - [The body document (UrlPage)](../70-implementation-details/urlpage/index.md) - the root of every page.
 - [State management](../70-implementation-details/state-management/index.md) - pages, conversations and the
   lifetime of the data a page works with.
