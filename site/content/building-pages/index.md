@@ -14,6 +14,9 @@ managed, how it is addressed in an URL, and how it is translated.
 - [Using components](20-using-components/index.md) - what a component is, the
   state every input control has, how `getValue()` reports bad input and how a
   control reports a change.
+- [Using databases](30-using-databases/index.md) - `QCriteria` as the question
+  and `QDataContext` as the thing that runs it, restrictions and combinators,
+  and querying over a relation.
 - [The body document (UrlPage)](urlpage/index.md) - the root of every page.
 - [State management](state-management/index.md) - pages, conversations and the
   lifetime of the data a page works with.

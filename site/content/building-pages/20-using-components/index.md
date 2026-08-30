@@ -1,7 +1,3 @@
----
-menu:
-  sort: "06"
----
 # Using components
 
 A component is a ready-made piece of screen: an input field, a date input, a
