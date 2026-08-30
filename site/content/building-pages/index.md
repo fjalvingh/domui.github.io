@@ -17,6 +17,11 @@ managed, how it is addressed in an URL, and how it is translated.
 - [Using databases](30-using-databases/index.md) - `QCriteria` as the question
   and `QDataContext` as the thing that runs it, restrictions and combinators,
   and querying over a relation.
+- [Typed properties](40-typed-properties/index.md) - replacing the property
+  strings in a query with generated, compile-time checked ones.
+- [Data binding](50-data-binding/index.md) - letting a control and a model
+  property follow each other, which way each kind of binding moves, and what
+  `bindErrors()` is for.
 - [The body document (UrlPage)](urlpage/index.md) - the root of every page.
 - [State management](state-management/index.md) - pages, conversations and the
   lifetime of the data a page works with.
