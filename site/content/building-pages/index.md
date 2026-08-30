@@ -25,13 +25,13 @@ managed, how it is addressed in an URL, and how it is translated.
 - [Page navigation](60-page-navigation/index.md) - what a page keeps between
   requests, how `UIGoto` moves to another one, and the shelf of pages that the
   breadcrumb is made of.
-- [The body document (UrlPage)](urlpage/index.md) - the root of every page.
-- [State management](state-management/index.md) - pages, conversations and the
+- [The body document (UrlPage)](../70-implementation-details/urlpage/index.md) - the root of every page.
+- [State management](../70-implementation-details/state-management/index.md) - pages, conversations and the
   lifetime of the data a page works with.
-- [SubPages](subpages/index.md) - the 2.0 single-page-interface building block.
-- [SPI pages and DomUI logins](spi-pages-and-logins/index.md) - single page
+- [SubPages](../99-todo/subpages/index.md) - the 2.0 single-page-interface building block.
+- [SPI pages and DomUI logins](../99-todo/spi-pages-and-logins/index.md) - single page
   interface applications and their login handling.
-- [URL contexts](url-contexts/index.md) - how a page class becomes an URL.
-- [Internationalization and resource bundles](internationalization/index.md) -
-  translating an application, and [locale handling](internationalization/locale-handling/index.md)
+- [URL contexts](../99-todo/url-contexts/index.md) - how a page class becomes an URL.
+- [Internationalization and resource bundles](../99-todo/internationalization/index.md) -
+  translating an application, and [locale handling](../99-todo/internationalization/locale-handling/index.md)
   per request.

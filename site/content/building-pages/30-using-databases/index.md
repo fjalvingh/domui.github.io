@@ -145,7 +145,7 @@ That sharing matters: entities read on one context are only valid on that
 context, so a page that mixes contexts ends up with two versions of the same
 record.
 
-The context belongs to the page's [conversation](../state-management/index.md).
+The context belongs to the page's [conversation](../../70-implementation-details/state-management/index.md).
 It is opened the first time something asks for it during a request, and closed
 again when the request ends and the conversation is detached - so a page waiting
 for the user to press a button is not holding a database connection. The next

@@ -123,7 +123,7 @@ The IProgress interface, used in all asynchronous tasks, has been replaced by th
 
 ### Using enums as message bundle constants
 
-Using BundleRef's with String constants for the message names is very deprecated and will be removed. The replacement is to use enum classes that implement the new interface IBundleCode interface. The enum values act as key names for the messages, and because an enum is a class the BundleRef is associated directly with the enum too. It makes it way easier to work with message bundles. See the [localisation page for more details](../../building-pages/internationalization/index.md).
+Using BundleRef's with String constants for the message names is very deprecated and will be removed. The replacement is to use enum classes that implement the new interface IBundleCode interface. The enum values act as key names for the messages, and because an enum is a class the BundleRef is associated directly with the enum too. It makes it way easier to work with message bundles. See the [localisation page for more details](../../99-todo/internationalization/index.md).
 
 <a id="rendering-through-a-html-template"></a>
 

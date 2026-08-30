@@ -37,7 +37,7 @@ That is the whole page, and this is it running:
 
 Three things are worth naming in those few lines:
 
-- The class extends [UrlPage](../urlpage/index.md). Every page does. `UrlPage`
+- The class extends [UrlPage](../../70-implementation-details/urlpage/index.md). Every page does. `UrlPage`
   *is* the `<body>` element of the rendered document - when you `add()`
   something to the page, you are adding it inside the body.
 - `new Div(...)` creates a `<div>` tag; the string is its css class. Every html

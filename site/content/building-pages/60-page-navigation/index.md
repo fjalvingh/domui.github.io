@@ -280,4 +280,4 @@ knew about it is gone by the time the user sees the result.
 ## Where to go from here
 
 The conversation that carries a page and its data through all of this is the
-subject of [state management](../state-management/index.md).
+subject of [state management](../../70-implementation-details/state-management/index.md).

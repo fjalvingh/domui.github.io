@@ -19,7 +19,7 @@ components DomUI provides, and the rules for writing your own.
   Tree2 and BreadCrumb2.
 
 The page a component lives on is described separately, in
-[The body document (UrlPage)](../building-pages/urlpage/index.md).
+[The body document (UrlPage)](../70-implementation-details/urlpage/index.md).
 
 <a id="still-to-be-written"></a>
 
