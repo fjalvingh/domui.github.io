@@ -4,64 +4,17 @@ menu:
 ---
 # Using components
 
-[Your first page](../first-page/index.md) was built out of tags: a `Div`, a
-`Para`, a `Span`. Screens are not written that way. They are written with
-**components** - input fields, buttons, comboboxes, tables - and this page is
-about what a component actually is, what state each input control has, and how
-a control tells you what the user typed.
+A component is a ready-made piece of screen: an input field, a date input, a
+combobox, a button. You add one to your page the way you added a `Div` on the
+[previous page](../first-page/index.md), you give it a value, and you ask it for
+the value the user typed.
 
-The examples use `Text2<T>`, `DateInput2`, `ComboFixed2<T>` and `DefaultButton`,
-and they set and read every value by hand. That is not how a real screen moves
-data around - [data binding](../../data/data-binding/index.md) does that - but
-doing it by hand once is the clearest way to see what a control does.
-
-## A component is a node that builds itself
-
-A component is not a separate kind of thing. `Text2<T>` extends `Div`,
-`DefaultButton` extends `Button`, `ComboFixed2<T>` is a div as well. A component
-*is* a node, so it goes into the tree like any other node - `add()` it to the
-page, to a panel, to a table cell.
-
-What makes it a component is that it fills itself in. It implements
-`createContent()` - the same method your page implements, called by the same
-mechanism, once, just before the node is rendered for the first time. A `Text2`
-builds a div holding an `<input>`, followed by any buttons that were added to
-it. A `DefaultButton` builds a `<button>` with a span for its icon and a span
-for its text. Nothing else happens: the html a component becomes is a small tree
-of the same tags you wrote by hand on the previous page.
-
-This is what "layer 0" and "layer 1" mean. Layer 0 is `to.etc.domui.dom.html`:
-the tags, one class per html element, with no behaviour of their own. Layer 1 is
-the components, built out of layer 0. Your own screen fragments are the same
-kind of thing - a class extending `Div` with a `createContent()` - so there is no
-line between "framework component" and "your code".
-
-Because the content is built late, setting a property on a component is just
-setting a field; the html follows when the component builds. A property that
-changes what the component *looks* like makes it drop its content and build
-again (`forceRebuild()`): `ComboFixed2` does exactly that when you switch it to
-read-only, and comes back as plain text instead of a `<select>`. Either way you
-never render anything yourself - DomUI compares the built tree with what the
-browser has and sends the difference.
+[TOC]
 
 ## A form of components
 
 ```java
 public class ComponentFormPage extends UrlPage {
-	private final Text2<String> m_title = new Text2<>(String.class);
-
-	private final Text2<Integer> m_copies = new Text2<>(Integer.class);
-
-	private final Text2<BigDecimal> m_price = new Text2<>(BigDecimal.class);
-
-	private final DateInput2 m_released = new DateInput2();
-
-	private final ComboFixed2<String> m_medium = new ComboFixed2<>(List.of(
-		new ValueLabelPair<>("cd", "Compact disc"),
-		new ValueLabelPair<>("lp", "Vinyl LP"),
-		new ValueLabelPair<>("dl", "Download")
-	));
-
 	@Override
 	public void createContent() throws Exception {
 		setPageTitle("A form of components");
@@ -70,43 +23,217 @@ public class ComponentFormPage extends UrlPage {
 		add(cp);
 		cp.add(new HTag(1, "A form of components"));
 
+		Text2<String> title = new Text2<>(String.class);
+		Text2<Integer> copies = new Text2<>(Integer.class);
+		Text2<BigDecimal> price = new Text2<>(BigDecimal.class);
+		DateInput2 released = new DateInput2();
+		ComboFixed2<String> medium = new ComboFixed2<>(List.of(
+			new ValueLabelPair<>("cd", "Compact disc"),
+			new ValueLabelPair<>("lp", "Vinyl LP"),
+			new ValueLabelPair<>("dl", "Download")
+		));
+
 		FormBuilder fb = new FormBuilder(cp);
-		fb.label("Album title").mandatory().control(m_title);
-		fb.label("Copies in stock").control(m_copies);
-		fb.label("Price each").control(m_price);
-		fb.label("Released").control(m_released);
-		fb.label("Medium").control(m_medium);
-		...
+		fb.label("Album title").mandatory().control(title);
+		fb.label("Copies in stock").control(copies);
+		fb.label("Price each").control(price);
+		fb.label("Released").control(released);
+		fb.label("Medium").control(medium);
 	}
 }
 ```
 
 !demo(to.etc.domuidemo.pages.tutorial.components.ComponentFormPage.ui, 100%, 420)
 
-The type parameter is what the control hands you back: `Text2<Integer>` returns
-an `Integer`, `DateInput2` a `Date`, `ComboFixed2<String>` one of the `String`s
-you put in it. A `Text2` for a numeric type also refuses non-numeric keystrokes
-in the browser, but that is a convenience, not the check that matters.
+Each control is created, and then handed to a
+[FormBuilder](../../components/forms-and-input/form4-formbuilder/index.md),
+which puts a label in front of it and lays the pairs out. `mandatory()` marks the
+label and tells the control a value is required.
 
-The controls are laid out by
-[FormBuilder](../../components/forms-and-input/form4-formbuilder/index.md) from
-`to.etc.domui.component2.form4`. `fb.label("Album title").control(control)` puts
-a label in front of a control; `mandatory()` marks the label and makes the
-control mandatory. The label is used for one more thing: it becomes the
-control's **error location**, the name that error messages are prefixed with.
+The type parameter says what the control works in: `Text2<Integer>` accepts and
+returns an `Integer`, `DateInput2` a `Date`, `ComboFixed2<String>` one of the
+`String`s it was given. A control converts between that type and the text in the
+browser itself; you never see the text.
 
-## The state every control has
+!! The controls are __local variables__, never fields of the page. A control
+!! belongs to the tree that `createContent()` builds, and that tree is thrown
+!! away and built again whenever the page rebuilds. A control in a field survives
+!! that, so the page would show a new control while your code still holds the old
+!! one - which is a bug that is hard to see and easy to make.
 
-Whatever it looks like, an input control is an `IControl<T>` and has the same
-handful of properties:
+### A component is a node that builds itself
+
+`Text2<T>` extends `Div`. `DefaultButton` extends `Button`. `ComboFixed2<T>` is a
+div as well. A component *is* a node, which is why it goes into the tree exactly
+like a tag does.
+
+What it adds is that it fills itself in. A component implements
+`createContent()` - the same method your page implements, called by the same
+mechanism, once, just before the node is first rendered:
+
+```plantuml svg title="What a Text2 becomes when it builds"
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor #f8f8f8
+  BorderColor #909090
+}
+
+rectangle "Text2<String>\nis a <div class='ui-txt2'>" as T {
+  rectangle "<div class='ui-control'>" as C {
+    rectangle "<input class='ui-input'>" as I
+  }
+  rectangle "the buttons you added" as B
+}
+@enduml
+```
+
+So a component is a small tree of the very same tags you wrote by hand on the
+previous page. This is what "layer 0" and "layer 1" mean: layer 0 is
+`to.etc.domui.dom.html`, one class per html element and no behaviour of its own;
+layer 1 is the components, built out of layer 0. A screen fragment you write
+yourself - a class extending `Div` with a `createContent()` - is the same kind of
+thing, so there is no line between "framework component" and "your code".
+
+Because a component builds late, setting a property on one is just setting a
+field; the html follows when it builds. A property that changes what a component
+*looks* like makes it drop its content and build again (`forceRebuild()`).
+
+## Reading what the user typed
+
+The page above has two buttons under the form. This is the first one:
+
+```java
+cp.add(new DefaultButton("Show the values", a -> {
+	//-- Every getValue() can fail: the first one that does ends this handler.
+	String titleValue = title.getValue();
+	Integer copiesValue = copies.getValue();
+	BigDecimal priceValue = price.getValue();
+	Date releasedValue = released.getValue();
+	String mediumValue = medium.getValue();
+
+	result.removeAllChildren();
+	line(result, "Title: " + titleValue);
+	...
+}));
+```
+
+Press it with the album title empty, and no value is shown at all: a red bar
+appears at the top of the page saying **Album title:** Mandatory field, and the
+field itself turns red. Put `abc` in "Copies in stock" and it says **Copies in
+stock:** The field content "abc" is invalid.
+
+`getValue()` is where the input is checked. It takes the raw text the browser
+sent for that control and works through it in three steps:
+
+```plantuml svg title="getValue()"
+@startuml
+skinparam shadowing false
+start
+:the raw text from the browser;
+if (empty?) then (yes)
+	if (mandatory?) then (yes)
+		#ffd9d9:post "Mandatory field",
+		throw ValidationException;
+		stop
+	else (no)
+		:return null;
+		stop
+	endif
+else (no)
+endif
+:convert it to the control's type;
+if (conversion succeeded?) then (no)
+	#ffd9d9:post "The field content is invalid",
+	throw ValidationException;
+	stop
+else (yes)
+endif
+:run the validators of the control;
+:return the value;
+stop
+@enduml
+```
+
+Posting a message and throwing are two separate things, and the message is the
+one that matters. A control in error posts a `UIMessage` to the nearest **error
+fence**; the body of the page is always one, so a message always lands
+somewhere. When nothing on the page collects messages itself, DomUI puts an
+`ErrorPanel` at the top of the page - that red bar. The message is prefixed with
+the control's *error location*, which the form builder filled in from the label,
+which is why it names the field in words the user recognises.
+
+The `ValidationException` is not yours to catch. The framework catches it around
+your handler, stops the handler there, and renders the page as it now stands -
+with the message that was just posted. That is why the handler above reads five
+values in a row without a single check: the first control that cannot deliver
+ends it and explains itself, and nothing downstream ever sees half-valid input.
+
+When you want to look at a control without that happening - the second button on
+the demo page does - use `getValueSafe()`, which returns `null` instead of
+throwing, and `hasError()`, which tells you whether that `null` was an error
+rather than an empty field.
+
+## Switching a control off
+
+```java
+public class ComponentStatePage extends UrlPage {
+	private boolean m_readOnly;
+
+	private boolean m_disabled;
+
+	@Nullable
+	private String m_disabledBecause;
+
+	@Override
+	public void createContent() throws Exception {
+		...
+		String because = m_disabledBecause;
+		if(because != null) {
+			//-- A reason both disables the control and becomes its hover text.
+			title.setDisabledBecause(because);
+			released.setDisabledBecause(because);
+			medium.setDisabledBecause(because);
+		} else if(m_disabled) {
+			title.setDisabled(true);
+			released.setDisabled(true);
+			medium.setDisabled(true);
+		}
+		if(m_readOnly) {
+			title.setReadOnly(true);
+			released.setReadOnly(true);
+			medium.setReadOnly(true);
+		}
+		...
+		buttons.add(new DefaultButton("Read only", a -> state(true, false, null)));
+	}
+
+	/** Remember the wanted state and build the page again with it. */
+	private void state(boolean readOnly, boolean disabled, @Nullable String because) {
+		m_readOnly = readOnly;
+		m_disabled = disabled;
+		m_disabledBecause = because;
+		forceRebuild();
+	}
+}
+```
+
+!demo(to.etc.domuidemo.pages.tutorial.components.ComponentStatePage.ui, 100%, 340)
+
+Press the buttons and watch the three controls. Read-only and disabled are not
+the same thing and they do not look the same either: read-only keeps the value
+plainly readable, while a disabled control is greyed out. The combobox shows the
+difference best - read-only it is not a `<select>` at all any more, just the
+chosen label as text.
+
+Every input control is an `IControl<T>` and has the same handful of properties:
 
 - **value** - `setValue(T)` and `getValue()`, in the control's own type. Setting
   a value only presents it; it is not checked.
 - **readOnly** - the value stays visible and stays part of the page, but cannot
-  be changed. Every control decides for itself how to show that: `Text2` renders
-  its input read-only, `DateInput2` hides its calendar buttons as well, and
-  `ComboFixed2` rebuilds itself and shows the chosen label as plain text instead
-  of a `<select>`.
+  be changed. Each control decides how to show that: `Text2` renders its input
+  read-only, `DateInput2` hides its calendar buttons as well, and `ComboFixed2`
+  rebuilds itself into plain text.
 - **disabled** - the control is switched off: it cannot be focused or changed,
   and the theme greys it out.
 - **disabledBecause** - the same as disabled, plus the reason.
@@ -114,126 +241,83 @@ handful of properties:
   and makes that text its hover title; `setDisabledBecause(null)` enables it
   again. Prefer it over a bare `setDisabled(true)`: a control that is off for no
   stated reason is a puzzle for the user.
-- **mandatory** - `setMandatory(true)` states that a value must be present. It is
-  checked when the value is read, not while typing.
+- **mandatory** - `setMandatory(true)` states that a value must be present, which
+  is checked when the value is read.
+
+The state itself lives in three fields of the page, and the buttons only change
+those fields and call `forceRebuild()`. The controls are made from scratch by the
+next `createContent()`, in the state the fields describe. This is the reason
+controls are never kept in fields: `forceRebuild()` gives the page a whole new
+tree, and anything still pointing at the old controls is pointing at nodes that
+are no longer on the screen.
+
+## Reacting to a change
 
 ```java
-private void state(boolean readOnly, boolean disabled, @Nullable String because) {
-	m_title.setReadOnly(readOnly);
-	m_released.setReadOnly(readOnly);
-	m_medium.setReadOnly(readOnly);
+Text2<Integer> copies = new Text2<>(Integer.class);
+copies.setValue(1);
 
-	//-- A reason both disables the control and becomes its hover text; null enables it again.
-	m_title.setDisabledBecause(because);
-	m_released.setDisabledBecause(because);
-	m_medium.setDisabledBecause(because);
+Text2<BigDecimal> price = new Text2<>(BigDecimal.class);
+price.setValue(new BigDecimal("14.95"));
 
-	if(because == null) {
-		m_title.setDisabled(disabled);
-		m_released.setDisabled(disabled);
-		m_medium.setDisabled(disabled);
-	}
-}
+Div total = new Div("dm-tut");
+
+copies.setOnValueChanged(c -> showTotal(copies, price, total));
+price.setOnValueChanged(c -> showTotal(copies, price, total));
 ```
 
-!demo(to.etc.domuidemo.pages.tutorial.components.ComponentStatePage.ui, 100%, 320)
-
-Press the buttons and watch the three controls: read-only and disabled are not
-the same thing, and they do not look the same either.
-
-## getValue() is where the input is checked
-
-The browser sends back the raw text of every input with each request. Turning
-that text into a value is what `getValue()` does, and it does it in three steps:
-the mandatory check, then conversion to the control's type, then any validators
-on the control. That gives three possible outcomes:
-
-- a value;
-- `null`, when the control is empty and not mandatory;
-- a `ValidationException`.
-
-On that last one the control puts itself in error state, and posts a message to
-the nearest **error fence** - the page body is always one, so a message always
-lands somewhere. If nothing on the page handles messages, DomUI inserts an
-`ErrorPanel` as the first node of the page, which is the red bar the demo above
-shows. The message is prefixed with the error location, so it reads
-**Album title:** Mandatory field, and the field itself turns red.
-
-Only then does the exception leave `getValue()` - and you are not expected to
-catch it. The framework catches it around your handler, stops the handler there,
-and renders the page as it now stands: with the message that was just posted. So
-a handler can simply read what it needs:
-
 ```java
-String title = m_title.getValue();
-Integer copies = m_copies.getValue();
-BigDecimal price = m_price.getValue();
-```
+private void showTotal(Text2<Integer> copies, Text2<BigDecimal> price, Div total) {
+	Integer copiesValue = copies.getValueSafe();
+	BigDecimal priceValue = price.getValueSafe();
 
-The first field that cannot deliver ends the handler and reports itself. Nothing
-after it runs, which is exactly what you want - the handler never sees
-half-valid input.
-
-When you *do* want to look without that happening, use `getValueSafe()`, which
-returns `null` instead of throwing, and `hasError()`, which tells you whether
-that `null` was an error rather than an empty field.
-
-Two messages the demo page will show you: **Mandatory field** for an empty
-mandatory control, and **The field content "abc" is invalid** when the text
-cannot be converted to the control's type.
-
-## Reacting to a change: setOnValueChanged
-
-While the user types, nothing goes to the server; the typed values travel with
-the next action, such as a button click. Registering a change handler on a
-control changes that for that control:
-
-```java
-m_copies.setOnValueChanged(c -> showTotal());
-m_price.setOnValueChanged(c -> showTotal());
-```
-
-DomUI then renders an `onchange` handler on the input, so leaving the field
-after changing it causes a request of its own. In every request, whatever
-triggered it, DomUI does the same three things in order:
-
-1. it pushes the raw values from the browser into all controls;
-2. it calls the change handlers of the controls whose value actually changed;
-3. it runs the action, if the request was one.
-
-That order is why a Save button always sees the value that was typed
-immediately before it was pressed - the field's own change handler has already
-run by then.
-
-```java
-private void showTotal() {
-	Integer copies = m_copies.getValueSafe();
-	BigDecimal price = m_price.getValueSafe();
-
-	m_total.removeAllChildren();
-	if(copies == null || price == null) {
-		m_total.add("Fill in both fields to see the total");
+	total.removeAllChildren();
+	if(copiesValue == null || priceValue == null) {
+		total.add("Fill in both fields to see the total");
 	} else {
-		m_total.add("Total: " + price.multiply(new BigDecimal(copies)));
+		total.add("Total: " + priceValue.multiply(new BigDecimal(copiesValue)));
 	}
 }
 ```
 
 !demo(to.etc.domuidemo.pages.tutorial.components.ComponentChangePage.ui, 100%, 300)
 
-Change either field and leave it: the total follows, without a button. Note the
-`getValueSafe()` - a change handler runs while the user is still filling the
-form in, so it should look at what is there rather than complain about what is
-not.
+Change one of the two fields and leave it. The total follows immediately, and
+there is no button to press.
 
-## Next
+While the user types, nothing goes to the server; typed values normally travel
+with the next action, such as a button click. A control with a change handler is
+different: DomUI renders an `onchange` on its input, so leaving that field after
+changing it is a request of its own.
 
-Setting and reading every control by hand, as these three pages do, is fine for
-a handful of fields and tiring for a screen. The next step is
-[data binding](../../data/data-binding/index.md): you say which property of
-which object a control shows, and DomUI keeps the two in step in both
-directions.
+```plantuml svg title="Leaving a changed field"
+@startuml
+skinparam shadowing false
+
+actor Browser
+participant "DomUI request handler" as RH
+participant "the controls" as C
+participant "your change handler" as CH
+
+Browser -> RH: onchange, with the value of every field
+RH -> C: push the raw values in
+RH -> CH: onValueChanged, for the controls that changed
+CH -> C: getValueSafe()
+CH -> CH: fill in the total
+RH -> Browser: delta: the new total
+@enduml
+```
+
+Every request works in that order, whatever triggered it: raw values in first,
+then the change handlers of the controls whose value actually changed, then the
+action if the request was one. That is why a Save button always sees the value
+typed just before it was pressed - the field's own change handler has already
+run by the time the button's handler starts.
+
+Note the `getValueSafe()` in the handler. A change handler runs while the user is
+still filling the form in, so it should work with what is there rather than
+complain about what is not.
 
 All three pages above are in the demo application, under "Tutorial pages" on its
-home page; the source icon in the top bar shows the Java source of the screen
-you are looking at.
+home page; the source icon in the top bar shows the Java source of the screen you
+are looking at.
