@@ -36,11 +36,6 @@ Sort by clicking a header, and walk through the pages at the bottom. The query i
 not run when the model is made: it runs the first time the table needs rows,
 which is when it is rendered.
 
-Nothing in that code says how a price should look, yet the column reads `$ 0.99`,
-right aligned. The metadata of `Track.unitPrice` says it is money, and a column
-with nothing to say about presentation shows the value the way its property's
-metadata asks for.
-
 `SimpleSearchModel` takes the `QCriteria` from
 [using databases](../30-using-databases/index.md) and the node it should get its
 `QDataContext` from - `this`, the page, so it uses the page's shared context. For
@@ -52,22 +47,6 @@ it - above the table, below it, or both - and it also reports the number of
 records, with a marker next to it when the model hit its maximum. That maximum is
 1000 rows by default and is what keeps a careless query from pulling a whole
 table into memory; `model.setMaxRowCount()` changes it.
-
-### Columns you did not define
-
-The second table on that page has no columns at all:
-
-```java
-DataTable<Track> dt2 = new DataTable<>(model2, new RowRenderer<>(Track.class));
-```
-
-A renderer with no columns takes them from the metadata of the class - the
-`@MetaObject(defaultColumns = ...)` on `Track`, with the labels from its
-`Track.properties` bundle - which is why that table has a Title, a Duration, a
-Price, an Album and an Artist without being told. The duration reads
-`5m 43s 719ms` because `Track.milliseconds` carries
-`@MetaProperty(converterClass = MsDurationConverter.class)`. A class without such
-metadata throws instead: there is nothing to guess from.
 
 ## Defining the columns
 
@@ -82,14 +61,13 @@ rr.column(Track_.name()).label("Track").width(30).ascending().sortdefault()
 		clicked.add("Cell clicked: " + t.getName());
 	});
 
-//-- Nothing is said about the format: the property's metadata has the converter.
-rr.column(Track_.milliseconds()).label("Duration").align(TextAlign.RIGHT);
+//-- A converter decides how the value is shown.
+rr.column(Track_.milliseconds()).label("Duration").converter(new MsDurationConverter()).align(TextAlign.RIGHT);
 
 //-- A property of a property: the column follows the relation.
 rr.column(Track_.album().title()).label("Album").width(25);
 
-//-- A renderer gets the column's value and fills the cell itself. It replaces
-//-- the money format the metadata would have given this column.
+//-- A renderer gets the column's value and fills the cell itself.
 rr.column(Track_.unitPrice()).label("Price").align(TextAlign.RIGHT)
 	.renderer((node, price) -> {
 		Span s = new Span(price.toString());
@@ -113,13 +91,9 @@ rr.setRowClicked(t -> {
 Click a track name and then anywhere else in a row: the name column has a cell
 handler of its own, the rest of the row has the row handler. Sort on **Where it
 is from** and the rows come back ordered by artist, even though that column has
-no property at all. The last column is capped at 40 characters wide - what does
-not fit is cut off, with the whole text as a hover title.
-
-Two columns are worth comparing. Duration says nothing about its format and gets
-the one from the property's metadata. Price has a renderer, and a renderer takes
-over the whole cell - which is why the price here is a plain `0.99` with the
-expensive ones highlighted, where the table above showed `$ 0.99`.
+no property at all. The price of 1.99 is highlighted by its renderer, and the
+last column is capped at 40 characters wide - what does not fit is cut off, with
+the whole text as a hover title.
 
 ### Which column
 
@@ -135,7 +109,7 @@ expensive ones highlighted, where the table above showed `$ 0.99`.
 
 | Method | What it does |
 | --- | --- |
-| `label("Track")` | the header text; without it the label comes from metadata |
+| `label("Track")` | the header text |
 | `width(30)` | the width in characters |
 | `width("20%")` | the width as css |
 | `maxWidth(40)` | cap the width; longer content is cut and gets a hover title |
@@ -143,7 +117,7 @@ expensive ones highlighted, where the table above showed `$ 0.99`.
 | `css("...")` / `cssHeader("...")` | a css class on the cells / on the header |
 | `nowrap()` / `wrap()` | whether the cell content may wrap |
 | `hint("...")` | a tooltip on the column header |
-| `converter(...)` | how the value is turned into text, overriding the metadata |
+| `converter(...)` | how the value is turned into text |
 | `renderer(...)` | fill the cell yourself |
 | `ascending()` / `descending()` | make it sortable, and in which direction first |
 | `sortdefault()` | the column the table is sorted on when it first appears |
@@ -198,6 +172,58 @@ about it are worth knowing:
 !! control, and a control does its own conversion and rendering, so do the
 !! editing inside your renderer or leave the cell to the framework.
 
+### Sorting
+
+A column is sortable because you said which way it sorts first:
+
+```java
+rr.column(Track_.name()).label("Track").ascending().sortdefault();
+rr.column(Track_.milliseconds()).label("Duration").descending();
+rr.column(Track_.composer()).label("Composer").sortable(SortableType.UNSORTABLE);
+```
+
+`ascending()` and `descending()` make the header clickable and decide which
+direction the first click gives; clicking the column that is already sorted
+turns it around. `sortdefault()` picks the one column the table starts out
+sorted on. A `column()` column has no property to sort on, so it needs
+`sort(...)` to name one.
+
+The header click does not reorder what is on screen. It tells the **model** to
+sort - `sortOn(property, descending)` - and then asks it for rows again. Where
+that sorting happens is up to the model, and for `SimpleSearchModel` it happens
+in the database: the property becomes an `order by` on the query, next to the
+row limit.
+
+That is the important part, because the two are applied in this order:
+
+```plantuml svg title="Sorting a query model: the database sorts, then the limit cuts"
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor #f8f8f8
+  BorderColor #909090
+}
+
+rectangle "every row the\nquery matches" as A
+rectangle "order by,\nin the database" as B
+rectangle "the first rows of\nthat order (the limit)" as C
+rectangle "one page,\non screen" as D
+
+A -right-> B
+B -right-> C : the model's row limit
+C -right-> D : the pager
+@enduml
+```
+
+Sort, then limit, then show - not limit, then sort. Sorting 20,000 tracks by name
+in a model that fetches 1000 rows gives you the first 1000 names of *all* tracks,
+and clicking the header again gives you the last ones. If it were the other way
+round you would be sorting an arbitrary thousand rows, and the answer on screen
+would be wrong in a way nobody notices.
+
+The price is a query per sort: every header click throws the result away and asks
+the database again.
+
 ## A search screen
 
 A list of everything is rarely what a user wants. `SearchPanel<T>` is the other
@@ -223,7 +249,7 @@ sp.setClicked(a -> {
 	SimpleSearchModel<Track> model = new SimpleSearchModel<>(this, criteria);
 	RowRenderer<Track> rr = new RowRenderer<>(Track.class);
 	rr.column(Track_.name()).label("Track").ascending().sortdefault();
-	rr.column(Track_.milliseconds()).label("Duration");
+	rr.column(Track_.milliseconds()).label("Duration").converter(new MsDurationConverter());
 	rr.column(Track_.album().title()).label("Album");
 	rr.column(Track_.album().artist().name()).label("Artist");
 
@@ -252,16 +278,14 @@ without restrictions - a search for everything.
 ### Where the fields come from
 
 ```java
-new SearchPanel<>(Track.class)                             // the search fields from the metadata
 new SearchPanel<>(Track.class, "name", "album.title")      // these properties, in this order
 new SearchPanel<>(baseCriteria)                            // ...on top of a query you fix yourself
 ```
 
-With no property names the panel takes the search properties from the class
-metadata (`@MetaSearchItem` on the class, or `@MetaSearch` on the property). With
-names it takes exactly those, and a name may walk a relation like
-`album.artist.name`. The `QCriteria` form starts from a query of your own, so the
-user searches within a set you decide - a base filter they cannot get out of.
+The names are the properties to search on, in the order they are given, and a
+name may walk a relation like `album.artist.name`. The `QCriteria` form starts
+from a query of your own, so the user searches within a set you decide - a base
+filter they cannot get out of.
 
 For a field the panel would not have made itself, `add()` gives you a builder:
 
@@ -355,6 +379,75 @@ model.setRefreshAfterShelve(true);
 With this on, the model calls `refresh()` on the row objects it hands to the
 table, so their values come from the database rather than from what the session
 remembered. It costs a read per row shown, which is why it is not the default.
+
+## A table of your own data
+
+Not every table comes from a query. `SortableListModel<T>` puts one over a list
+you have: rows you built, computed, or read from somewhere that is not a
+database.
+
+```java
+/** The state of this page: the basket itself. */
+private final List<BasketLine> m_basket = new ArrayList<>(List.of(
+	new BasketLine("Kind of Blue", 1, new BigDecimal("12.50"))
+	, new BasketLine("Abbey Road", 2, new BigDecimal("14.95"))
+	, new BasketLine("The Wall", 1, new BigDecimal("19.95"))
+));
+
+@Override
+public void createContent() throws Exception {
+	...
+	SortableListModel<BasketLine> model = new SortableListModel<>(BasketLine.class, m_basket);
+
+	RowRenderer<BasketLine> rr = new RowRenderer<>(BasketLine.class);
+	rr.column(BasketLine_.title()).label("Album").width(30).ascending().sortdefault();
+	rr.column(BasketLine_.copies()).label("Copies");
+	rr.column(BasketLine_.price()).label("Price each").converter(new MoneyBigDecimalNoSign());
+
+	DataTable<BasketLine> dt = new DataTable<>(model, rr);
+	cp.add(dt);
+	...
+}
+```
+
+!demo(to.etc.domuidemo.pages.tutorial.tables.TableListPage.ui, 100%, 460)
+
+The table is built exactly as before - the model is the only thing that changed.
+There is no query, so a header click sorts the list itself, in memory, with a
+comparator for the property that was clicked, and the row limit of the previous
+sections plays no part.
+
+`SimpleListModel<T>` is the same thing without the sorting; `SortableListModel`
+adds it, and needs the class of the rows to build its comparators from.
+
+### Changing the rows
+
+```java
+bb.addButton("Add a line", a -> model.add(new BasketLine("New album " + (++m_added), 1, new BigDecimal("9.95"))));
+bb.addButton("One more copy of the first line", a -> {
+	BasketLine line = model.getItem(0);
+	line.setCopies(line.getCopies() + 1);
+	model.modified(0);                            // Tell the model, or the screen keeps the old number.
+});
+bb.addButton("Delete the first line", a -> {
+	if(model.getRows() > 0)
+		model.delete(0);
+});
+```
+
+Press the buttons: rows appear, disappear and change, and nothing on that page
+calls `forceRebuild()`. The model tells the table exactly what happened and the
+table changes those rows and nothing else - one row added, one row gone, one cell
+different.
+
+!! Every change goes through the model: `add()`, `delete()`, `modified()` and
+!! `move()`. Change the list behind its back, or change a field of a row object
+!! without saying `modified()`, and the model has nothing to tell the table -
+!! the screen keeps showing what it showed before.
+
+Adding to a sorted model puts the row where the sort order says it belongs; that
+is also why `add(index, row)` and `move()` refuse to work while a sort order is
+active - the order is not yours to choose then.
 
 ## Where to go from here
 
