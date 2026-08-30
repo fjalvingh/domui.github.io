@@ -50,16 +50,38 @@ Each control is created, and then handed to a
 which puts a label in front of it and lays the pairs out. `mandatory()` marks the
 label and tells the control a value is required.
 
-The type parameter says what the control works in: `Text2<Integer>` accepts and
-returns an `Integer`, `DateInput2` a `Date`, `ComboFixed2<String>` one of the
-`String`s it was given. A control converts between that type and the text in the
-browser itself; you never see the text.
+!i A FormBuilder is not a control itself, but helps creating/placing them.
 
-!! The controls are __local variables__, never fields of the page. A control
+Controls are __typeful__: they return an appropriate Java type for whatever they
+show/edit. A control converts between that type and the text in the
+browser itself; you never see the text.
+A DateInput2's getValue() returns a `Date`; `CheckBox` returns a `Boolean`.
+`Text2<T>` is a bit special: the `T` represents the type you want to get out of a 
+Text2's `getValue()`. When that type is something else than `String` then the text
+input by the user needs to be __converted__ to the actual type you want. This is
+typically done by adding a __converter__ to the `Text2` instance.
+For commonly used types Text2 has a built-in converter. These types are:
+
+* Integer
+* Long
+* Double
+* BigDecimal
+* BigInteger
+
+!! The controls should be stored in __local variables__, not in fields of the page. A control
 !! belongs to the tree that `createContent()` builds, and that tree is thrown
 !! away and built again whenever the page rebuilds. A control in a field survives
-!! that, so the page would show a new control while your code still holds the old
-!! one - which is a bug that is hard to see and easy to make.
+!! that, so the page would the previous version (and value) of that control - which 
+!! is a bug that is hard to see and easy to make.
+
+### A note on component names
+
+DomUI has existed since 2009, and as we went along we learned how to do things 
+better. A control that has a number behind its name means that it is an improved 
+version of an earlier control. In general, always use the highest numbered version
+of a control. The version number also indicates, usually, that the control might
+have a different interface than the earlier version; the number serves to keep
+existing code working without change.
 
 ### A component is a node that builds itself
 
@@ -97,7 +119,17 @@ thing, so there is no line between "framework component" and "your code".
 
 Because a component builds late, setting a property on one is just setting a
 field; the html follows when it builds. A property that changes what a component
-*looks* like makes it drop its content and build again (`forceRebuild()`).
+*looks* like makes it drop its content and build again (`forceRebuild()`):
+
+```
+@Override
+public void setValue(@Nullable T v) {
+	if(MetaManager.areObjectsEqual(v, internalGetValue()))
+		return;
+	m_value = v;
+	forceRebuild();
+}
+```
 
 ## Reading what the user typed
 
@@ -133,8 +165,8 @@ start
 :the raw text from the browser;
 if (empty?) then (yes)
 	if (mandatory?) then (yes)
-		#ffd9d9:post "Mandatory field",
-		throw ValidationException;
+		:post "Mandatory field",
+		throw ValidationException; <<#ffd9d9>>
 		stop
 	else (no)
 		:return null;
@@ -144,8 +176,8 @@ else (no)
 endif
 :convert it to the control's type;
 if (conversion succeeded?) then (no)
-	#ffd9d9:post "The field content is invalid",
-	throw ValidationException;
+	:post "The field content is invalid",
+	throw ValidationException; <<#ffd9d9>>
 	stop
 else (yes)
 endif
