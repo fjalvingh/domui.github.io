@@ -11,6 +11,9 @@ managed, how it is addressed in an URL, and how it is translated.
 - [Building your first page](first-page/index.md) - what a page is, how its
   class name becomes an URL, and what `createContent()` does, in three small
   examples.
+- [Using components](using-components/index.md) - what a component is, the
+  state every input control has, how `getValue()` reports bad input and how a
+  control reports a change.
 - [The body document (UrlPage)](urlpage/index.md) - the root of every page.
 - [State management](state-management/index.md) - pages, conversations and the
   lifetime of the data a page works with.
