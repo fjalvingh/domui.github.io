@@ -1,7 +1,3 @@
----
-menu:
-  sort: "30"
----
 # SubPages
 
 So far we have talked about DomUI **pages**. These are classes derived from UrlPage which are uniquely identified by an URL containing a class name and a set of parameters. Changing to another Page means changing the URL, and causing a Browser page change. A DomUI Page, once rendered, is fully AJAX, but changing pages is not AJAX but is closer to a traditional HTML page. This was a good match for the first application DomUI was written for.

@@ -1,7 +1,3 @@
----
-menu:
-  sort: "10"
----
 # The body document (UrlPage)
 
 All DomUI pages must extend UrlPage. This object forms the "body" element of the rendered page.

@@ -1,7 +1,3 @@
----
-menu:
-  sort: "60"
----
 # Internationalization and resource bundles
 
 DomUI can be easily localized. But it needs some "extra's" to circumvent problems in the JDK.

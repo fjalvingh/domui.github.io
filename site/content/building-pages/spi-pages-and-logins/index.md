@@ -1,7 +1,3 @@
----
-menu:
-  sort: "40"
----
 # SPI Pages and DomUI logins
 
 The DomUI login process is quite complex because it has to work for both normal pages and SPI pages. The latter are a big problem because the actual target we want to go to is not present in the URL that is sent from the browser: it comes from the url fragment (the part after the # in an url), and this URL fragment is not sent by the browser.

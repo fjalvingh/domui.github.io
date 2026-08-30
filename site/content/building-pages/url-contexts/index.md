@@ -1,7 +1,3 @@
----
-menu:
-  sort: "50"
----
 # URL Contexts
 
 A DomUI page in an URL is referred to by its fully qualified class name, followed by the page extension (usually .ui). This page name is usually just added to the web application's root URL. So for a web application with the base URL

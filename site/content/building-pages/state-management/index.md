@@ -1,7 +1,3 @@
----
-menu:
-  sort: "20"
----
 # DomUI State management
 
 DomUI is a stateful framework. This is quite a big advantage when you are writing code because there is no nonsense like serialization nor a need to write a zillion web services to service your page. For more advantages see here.
