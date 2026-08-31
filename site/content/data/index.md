@@ -10,9 +10,9 @@ database in a way that is not tied to one persistence framework.
 
 - [The Generic Query framework (QCriteria)](qcriteria/index.md) - writing
   database queries in a generic, typed way.
-- [Data binding](data-binding/index.md) - what it is and how to use it, plus:
-  - [how it works internally](data-binding/how-does-it-work/index.md)
-  - [why property references exist](data-binding/property-references/index.md)
-  - [generating typed properties](data-binding/typed-properties/index.md).
+- [Data binding](data-binding/index.md) - what it is and how to use it, plus
+  [generating typed properties](data-binding/typed-properties/index.md). How binding
+  works underneath is in
+  [Data binding details](../70-implementation-details/data-binding-details/index.md).
 - [The Hibernate/JPA POJO generator](pojo-generator/index.md) - generating data
   classes from an existing database schema.

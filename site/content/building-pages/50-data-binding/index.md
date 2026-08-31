@@ -369,4 +369,4 @@ lives.
 Binding has a bit more to it than fits here: the order in which bindings run when
 one setter changes another property, and what "changed" means for a value that is
 a list or a mutable object. Both are in
-[Data Binding - how does it work?](../../data/data-binding/how-does-it-work/index.md).
+[Data binding details](../../70-implementation-details/data-binding-details/index.md).

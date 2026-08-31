@@ -72,8 +72,9 @@ Browser -> Browser: apply to the browser DOM
   layer between the screen and the data.
 
 That last point is the large difference with Javascript-based UIs. A web service
-layer hides field types, and even the presence and names of fields; without one,
-a change to the model is a compile error rather than odd behavior at runtime.
+layer hides field types, and even the presence and names of fields. In DomUI,
+a change to the model is either fully refactorable by your IDE, or causes a compile 
+time error rather than odd behavior at runtime.
 
 ## Building an application
 
