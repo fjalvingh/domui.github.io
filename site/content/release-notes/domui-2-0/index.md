@@ -476,7 +476,7 @@ QRestrictor<EvServer, ?> or = c.or();
 
 ### Addition of typed properties to all QCriteria methods
 
-With the completion of [typed properties](../../data/data-binding/typed-properties/index.md) we can now have fully typed properties without any extra work. All QCriteria related objects now have two forms for all calls: the existing form that used a String to contain a property name, and a new form that uses a QField<I, V> instance which is a typed property. This allows queries like:
+With the completion of [typed properties](../../building-pages/40-typed-properties/index.md) we can now have fully typed properties without any extra work. All QCriteria related objects now have two forms for all calls: the existing form that used a String to contain a property name, and a new form that uses a QField<I, V> instance which is a typed property. This allows queries like:
 
 ```
 @Test

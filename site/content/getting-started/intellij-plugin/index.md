@@ -64,7 +64,7 @@ Clicking the stack trace elements will open the relevant file at the correct loc
 
 ### Replacing string referring to JavaBean properties with DomUI typed references
 
-Since DomUI 2.0 all code in DomUI that earlier accepted property paths as strings [now also accept typed properties](../../data/data-binding/typed-properties/index.md). Using typed properties instead of string constants has many advantages, the most important are:
+Since DomUI 2.0 all code in DomUI that earlier accepted property paths as strings [now also accept typed properties](../../building-pages/40-typed-properties/index.md). Using typed properties instead of string constants has many advantages, the most important are:
 
 - Compile-time safety: since the typed properties are maintained automatically, deleting or renaming properties will cause compile time errors. This is way better than having random runtime errors only on those places that you visit within the application.
 - Type safety: a DomUI typed property encapsulates not just the name but also the type of the property that you are accessing. By using them the compiler will check that you are using the property according to its type and will report an error otherwise. 

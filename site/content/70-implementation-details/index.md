@@ -11,3 +11,5 @@ know what it is about from the chapter that uses it.
   their database resources are kept and cleaned up.
 - [Data binding details](data-binding-details/index.md) - soft binding, where a binding
   lives, in what order bindings run, and when a value counts as changed.
+- [Typed properties: the annotation processor](typed-properties/index.md) - the classes
+  the processor generates, and how it decides which properties get one.

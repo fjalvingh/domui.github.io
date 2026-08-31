@@ -242,7 +242,7 @@ Everything above is a tag: a `Div`, a `Para`, a `Span`, an `HTag`. This is calle
 layer 0, and it is worth having seen, but it is __not__ how you write screens
 day to day. A real page uses [components](../20-using-components/index.md) - inputs,
 buttons, tables, lookup fields - which are themselves nodes built out of these
-same tags, and it uses [data binding](../../data/data-binding/index.md) to move
+same tags, and it uses [data binding](../50-data-binding/index.md) to move
 data between those components and your objects instead of setting values by hand.
 
 All three pages above are in the demo application, under "Tutorial pages" on its

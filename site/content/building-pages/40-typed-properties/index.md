@@ -270,3 +270,9 @@ generates one when the property's type is:
 
 To leave one out, put **`@IgnoreGeneration`** on the getter. Not on the field: a
 property is defined by its getter, and the processor never looks at fields.
+
+## Where to go from here
+
+What the processor writes for a class, and the full set of rules that decides whether a
+property gets a method - including the ones that quietly leave a property out - are in
+[Typed properties: the annotation processor](../../70-implementation-details/typed-properties/index.md).
