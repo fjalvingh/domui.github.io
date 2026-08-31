@@ -105,5 +105,5 @@ Which makes edit forms really simple: no models, no reloading, no serialization.
 - Layer 1 is the component layer.
 - This layer consists of components that are mostly constructed out of layer 0 nodes.
 - A component exposes behavior and can be an input component.
-- All DomUI input components are strongly typed, and always return their value in the appropriate Java type. For instance the Text<T> control is an html <input type="text"> component but can be used as Text<Integer>. In this case the getValue() call will return that Integer always (or null if the control is empty).
+- All DomUI input components are strongly typed, and always return their value in the appropriate Java type. For instance the Text2\<T\> control contains a html \<input type="text"\> component but can be used as Text2\<Integer\>. In this case the getValue() call will return that Integer always (or null if the control is empty).
 - This makes conversion and (field level) validation a function of a control itself. The control uses the validator framework and converter framework to do the actual work. Most common conversions are predefined.
