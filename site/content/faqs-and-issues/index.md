@@ -8,4 +8,4 @@ menu:
 
 ### Data Binding gotcha's
 
-- [You cannot bind to a component's dotted path](../data/data-binding/dotted-path-binding/index.md)
+- [You cannot bind to a component's dotted path](../building-pages/50-data-binding/index.md)

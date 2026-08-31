@@ -13,7 +13,6 @@ database in a way that is not tied to one persistence framework.
 - [Data binding](data-binding/index.md) - what it is and how to use it, plus:
   - [how it works internally](data-binding/how-does-it-work/index.md)
   - [why property references exist](data-binding/property-references/index.md)
-  - [generating typed properties](data-binding/typed-properties/index.md) and the
-    [dotted path gotcha](data-binding/dotted-path-binding/index.md).
+  - [generating typed properties](data-binding/typed-properties/index.md).
 - [The Hibernate/JPA POJO generator](pojo-generator/index.md) - generating data
   classes from an existing database schema.

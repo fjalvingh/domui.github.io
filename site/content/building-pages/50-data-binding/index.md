@@ -326,6 +326,44 @@ A style binding only ever moves model to control: it has no value to give back,
 and it can never be in error. Which is the same rule as every other binding that
 is not a value.
 
+## The control side is one property, never a path
+
+```java
+LookupInput<Customer> customerC = new LookupInput<>(QCriteria.create(Customer.class));
+cp.add(customerC);
+
+//-- Wrong: this throws while the page is being built.
+customerC.bind("value.id").to(m_model, "customerId");
+```
+
+The model side of a binding may be a dotted path - `to(m_order, "customer.name")`
+walks that path on every move, and it is a normal thing to do. The control side
+may not: `bind()` and `bind(PROPERTY)` refuse a name containing a dot with a
+`ProgrammerErrorException`, thrown at the moment the binding is made, so you find
+out in `createContent()` rather than through a screen that misbehaves.
+
+The reason is what such a binding would have to do on the way out:
+
+- read `m_model.getCustomerId()`,
+- and call `setId()` on whatever object `customerC.getValue()` returns.
+
+That second step does not give the control a new value - it reaches inside the
+value the control is already holding and changes a property of it. The control
+never sees an assignment, so nothing marks it as changed and nothing is rendered;
+and if its value happened to be `null` there is no object to assign into at all.
+The screen keeps showing what it showed before, while the model insists the move
+was made.
+
+Bind the control's own value instead, and let the model own the derivation:
+
+```java
+customerC.bind().to(m_model, SendInfoModel_.customer());
+```
+
+`getCustomerId()` on the model, if something still needs one, is then a getter
+over `getCustomer()` - a plain question about the model, asked where the model
+lives.
+
 ## Where to go from here
 
 Binding has a bit more to it than fits here: the order in which bindings run when
