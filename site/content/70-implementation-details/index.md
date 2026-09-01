@@ -13,3 +13,5 @@ know what it is about from the chapter that uses it.
   lives, in what order bindings run, and when a value counts as changed.
 - [Typed properties: the annotation processor](typed-properties/index.md) - the classes
   the processor generates, and how it decides which properties get one.
+- [The generic query layer (QCriteria)](qcriteria/index.md) - the query as an expression
+  tree, how it is translated and by what, selections, subqueries and in-memory matching.

@@ -276,7 +276,7 @@ public static void configure() {
 ```
 
 Every entity you add needs a line here. The last step registers that Hibernate
-setup as the default for [QCriteria](../../data/qcriteria/index.md), which is
+setup as the default for [QCriteria](../../70-implementation-details/qcriteria/index.md), which is
 what makes `getSharedContext()` on a page return a working `QDataContext` without
 any page having to know where it came from.
 

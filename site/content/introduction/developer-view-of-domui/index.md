@@ -205,7 +205,7 @@ them to your page.
 
 ## Accessing data
 
-- DomUI has an [abstract and generic query interface](../../data/qcriteria/index.md),
+- DomUI has an [abstract and generic query interface](../../70-implementation-details/qcriteria/index.md),
   loosely modeled on Hibernate's Criteria but without its design flaws. Components
   that help define queries therefore never need hand-built SQL.
 - It is Java-centric and uses the

@@ -301,6 +301,7 @@ best way to see what the query layer actually does. In a real screen you would
 hand the `QCriteria` to a table component and let it do the paging - and let a
 search screen build the restrictions from what the user filled in.
 
-The [Generic Query framework](../../data/qcriteria/index.md) page goes further
-into QCriteria itself: subselects, selections and projections, and the exact
-differences with Hibernate's own Criteria API.
+[The generic query layer (QCriteria)](../../70-implementation-details/qcriteria/index.md)
+goes further into the layer itself: what translates a query and how it is chosen,
+what the translator makes of a path and of an `exists`, selections and aggregates,
+subqueries, and running a query against a list instead of a database.
