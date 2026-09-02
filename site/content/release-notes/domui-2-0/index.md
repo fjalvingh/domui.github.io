@@ -253,7 +253,7 @@ The editor can use multiple themes and looks like this:
 
 ### SearchPanel component replacing LookupForm
 
-The LookupForm component was one of the oldest components in DomUI, and it had a very bad interface because it grew out of proportions. The new SearchPanel component replaces the LookupForm component (which is now deprecated and has moved to the legacy jar). The SearchPanel component has been rewritten so that every part of it can be easily extended and replaced without having to resort to arcane base classes. See [the description for more details](../../components/lookup-and-search/searchpanel/index.md).
+The LookupForm component was one of the oldest components in DomUI, and it had a very bad interface because it grew out of proportions. The new SearchPanel component replaces the LookupForm component (which is now deprecated and has moved to the legacy jar). The SearchPanel component has been rewritten so that every part of it can be easily extended and replaced without having to resort to arcane base classes. See [the description for more details](../../components/30-lookup-and-search/searchpanel/index.md).
 
 <a id="component-changes"></a>
 
@@ -303,7 +303,7 @@ The test IDs for the buttons on the LookupInput have changed, so that it is easy
 - one-lookup for the search button
 - one-clear for the clear button
 
-The generated html code for the controls has been changed so that [style fixes could be applied](../../components/lookup-and-search/lookupinput-rules/index.md). In addition, to reduce the maintenance of both LookupInput components, **both components now also share a common stylesheet** as they render the exact same layout. This breaks the existing legacy stylesheets! For fixes look at \_lookupInput.scss.
+The generated html code for the controls has been changed so that [style fixes could be applied](../../components/30-lookup-and-search/lookupinput2/index.md). In addition, to reduce the maintenance of both LookupInput components, **both components now also share a common stylesheet** as they render the exact same layout. This breaks the existing legacy stylesheets! For fixes look at \_lookupInput.scss.
 
 The value renderers used by this component have changed. In 1.0 the value renderers were not just responsible for rendering a value: they also placed the control's buttons and did a lot for the layout for the control. This was a bad plan, because it tightly couples those renderers to the control and anyone overridding those also need to know how the control renders. This made it impossible to change the rendering of the control. The new renderers are solely responsible for rendering the value in some reasonable way. All of the main layout of the control is done by the control itself. Consequently these renderers no longer need all the extra "hidden" parameters passed to INodeContentRenderer, and they now implement IRenderInto.
 

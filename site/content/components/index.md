@@ -16,13 +16,16 @@ methods, and a demo page showing it working.
   `TextArea`, `DateInput2` and the colour pickers.
 - [Choice input](20-choice-input/index.md) - `Checkbox`, `RadioGroup`,
   `ComboFixed2`, `ComboLookup2` and `EnumSetInput`.
+- [Lookup and search](30-lookup-and-search/index.md) - `LookupInput2`,
+  `SearchInput2`, `SearchAsYouType` and the `SearchPanel`.
+- [Buttons and actions](40-buttons/index.md) - `DefaultButton`, `LinkButton`,
+  `SmallImgButton`, `HoverButton`, the two toggle buttons, `IUIAction` and
+  `ButtonBar2`.
 - [Component rules](rules/index.md) - the CSS and implementation rules every
   DomUI component follows, plus
   [vertical form builder details](rules/vertical-form-builder-details/index.md).
-- [Forms and input](forms-and-input/index.md) - the form builder, buttons,
-  checkboxes, file upload and the embedded editors.
-- [Lookup and search](lookup-and-search/index.md) - LookupInput2, the
-  SearchPanel and search-as-you-type.
+- [Forms and input](forms-and-input/index.md) - the form builder, file upload
+  and the embedded editors.
 - [Tables, trees and navigation](tables-trees-navigation/index.md) - DataTable,
   Tree2 and BreadCrumb2.
 

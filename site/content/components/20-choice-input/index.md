@@ -25,7 +25,7 @@ The question is how many values there are, and where they come from:
 | up to about five | an enum, or a list in the code | `RadioGroup` |
 | five to a few dozen | an enum, or a list in the code | `ComboFixed2` |
 | five to a few dozen | a table | `ComboLookup2` |
-| more than fits in a drop-down | a table | [`LookupInput2`](../lookup-and-search/lookupinput2/index.md) |
+| more than fits in a drop-down | a table | [`LookupInput2`](../30-lookup-and-search/lookupinput2/index.md) |
 | more than one at a time | a list or a table | `EnumSetInput` |
 
 The line between a radio group and a combo box is what the metadata layer draws

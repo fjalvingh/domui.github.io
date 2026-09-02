@@ -61,7 +61,7 @@ The labels are kept sorted by their text, whichever order values were added in.
 
 ## What it is built out of
 
-The search box is a [`SearchAsYouType`](../../lookup-and-search/searchasyoutype/index.md)
+The search box is a [`SearchAsYouType`](../../30-lookup-and-search/searchasyoutype/index.md)
 over the values not yet chosen. Every few keystrokes it sends what was typed to
 the server, which filters the list it is holding and sends back the matches as a
 small drop-down; picking one adds it to the set, clears the box and hands the box

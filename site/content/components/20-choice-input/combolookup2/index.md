@@ -32,7 +32,7 @@ fb.label("Artist").control(artist);
 A query is only run when the control is built, so its size is your
 responsibility: everything in the list is rendered as an `<option>`, and the
 user scrolls through all of it. A few dozen rows is a combo box; more than that
-is a [`LookupInput2`](../../lookup-and-search/lookupinput2/index.md), which
+is a [`LookupInput2`](../../30-lookup-and-search/lookupinput2/index.md), which
 searches instead of listing.
 
 `ComboLookup2` also implements `IComboBox<T>`, whose `data()`, `query()` and
@@ -89,7 +89,7 @@ record changes nothing on screen.
 ## From a property
 
 A property that points at another entity - a many-to-one relation - gets a
-[`LookupInput2`](../../lookup-and-search/lookupinput2/index.md) by default: with
+[`LookupInput2`](../../30-lookup-and-search/lookupinput2/index.md) by default: with
 nothing said either way the lookup outscores the combo, because a table can be
 of any size. Say which one you want with the property's **component type hint**:
 
