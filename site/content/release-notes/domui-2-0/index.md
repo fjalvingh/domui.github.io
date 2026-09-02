@@ -263,10 +263,10 @@ The LookupForm component was one of the oldest components in DomUI, and it had a
 
 ### DataTable
 
-- Columns are now resizable with the mouse. Changes made by the user are sent to the server, so it is possible to persist those changes. See [the documentation](../../components/tables-trees-navigation/datatable/index.md) for details.
+- Columns are now resizable with the mouse. Changes made by the user are sent to the server, so it is possible to persist those changes. See [the documentation](../../components/60-tables-and-trees/datatable/index.md) for details.
 - The DataTable component has been merged with MultiRowDataTable, so that DataTable now supports rendering multiple rows per list value. The original DataTable has been moved to DataTableOld in legacy. The MultiRowRowRenderer has also been removed as 99.9% was the same as RowRenderer anyway.
 - The RowRenderer now sets columns that are defined from metadata to SORT\_ASCENDING if the metadata specifies unknown sort. To prevent set the metadata to UNSORTABLE. This change means that tables are by default sortable.
-- Column width length calculation has been fixed - [see the page for details](../../components/tables-trees-navigation/datatable/index.md). This mostly fixes the issue where column sizes changed every time we used the pager.
+- Column width length calculation has been fixed - [see the page for details](../../components/60-tables-and-trees/datatable/index.md). This mostly fixes the issue where column sizes changed every time we used the pager.
 - The DataTable now defaults to a width of 100% by its own "setWidth" method, not by the style sheet. This allows the table to be used in < 100% things too by just calling setWidth(null) or anything else.
 - You can change the size of columns by dragging their header edge, and there are listeners so that you can save the new column sizes in persistent storage for a user if you want. See the datatable page for details.
 
@@ -274,7 +274,7 @@ The LookupForm component was one of the oldest components in DomUI, and it had a
 
 ### New Tree2 component
 
-The [new Tree2 component](../../components/tables-trees-navigation/tree2/index.md) is a rewrite of the now deprecated Tree component. It uses mostly the same interface but is rewritten with cleaner code and renders without using tables.
+The [new Tree2 component](../../components/60-tables-and-trees/tree3/index.md) is a rewrite of the now deprecated Tree component. It uses mostly the same interface but is rewritten with cleaner code and renders without using tables.
 
 <a id="fileupload2"></a>
 

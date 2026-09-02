@@ -23,13 +23,14 @@ methods, and a demo page showing it working.
   `ButtonBar2`.
 - [Display-only components](50-display-only/index.md) - `DisplaySpan`,
   `DisplayControl`, the boolean displays, `DisplayHtml` and the ruler.
+- [Tables, lists and trees](60-tables-and-trees/index.md) - `DataTable`, the
+  row renderer, the table models, the other table shapes and `Tree3`.
 - [Component rules](rules/index.md) - the CSS and implementation rules every
   DomUI component follows, plus
   [vertical form builder details](rules/vertical-form-builder-details/index.md).
 - [Forms and input](forms-and-input/index.md) - the form builder, file upload
   and the embedded editors.
-- [Tables, trees and navigation](tables-trees-navigation/index.md) - DataTable,
-  Tree2 and BreadCrumb2.
+- [Navigation](tables-trees-navigation/index.md) - `BreadCrumb2`.
 
 The page a component lives on is described separately, in
 [The body document (UrlPage)](../70-implementation-details/urlpage/index.md).
