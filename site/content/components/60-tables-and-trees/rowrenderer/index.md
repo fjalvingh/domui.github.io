@@ -117,4 +117,4 @@ for the cells that are built by a renderer instead.
 Binding in a table has enough of its own rules - which cells bind, what an
 editable cell binds to, what a rebuilt row costs, and how an observable list
 drives the rows - that they are collected in one place:
-[data binding in a table](../datatable/index.md).
+[data binding in a table](../datatable/index.md#data-binding-in-a-table).

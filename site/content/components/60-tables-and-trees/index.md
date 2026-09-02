@@ -56,7 +56,7 @@ which is why changing an object changes the screen without the table being told
 anything. That has enough special cases of its own - renderer-built cells,
 editable cells, rows arriving from an observable list, and what a rebuilt row
 costs - to have its own section on the
-[DataTable page](datatable/index.md).
+[DataTable page](datatable/index.md#data-binding-in-a-table).
 
 ## Which one to use
 

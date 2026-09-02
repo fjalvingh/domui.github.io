@@ -87,4 +87,4 @@ showing the old rows.
 An `IObservableList<T>` can be handed to the table directly with `setList()`;
 the table then listens to the list and no model is written at all. That is the
 usual way to bind a table to a relation of a record - see
-[data binding in a table](../datatable/index.md).
+[data binding in a table](../datatable/index.md#data-binding-in-a-table).
