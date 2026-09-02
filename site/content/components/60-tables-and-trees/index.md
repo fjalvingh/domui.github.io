@@ -49,6 +49,15 @@ goes through the model.** `model.add()`, `model.delete()`, `model.modified()` -
 those are what tell the table which rows to redraw. A list changed behind the
 model's back leaves the screen showing what was there before.
 
+## Binding
+
+The cells of a table are not text: they are controls bound to the row objects,
+which is why changing an object changes the screen without the table being told
+anything. That has enough special cases of its own - renderer-built cells,
+editable cells, rows arriving from an observable list, and what a rebuilt row
+costs - to have its own section on the
+[DataTable page](datatable/index.md).
+
 ## Which one to use
 
 | You want | Use |

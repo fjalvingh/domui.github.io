@@ -83,6 +83,148 @@ Select-all respects the acceptor too - in the demo it selects two albums out of
 `selectionChanged(row, on)` and `selectionAllChanged()`; the table itself
 listens as well, which is how the checkboxes follow a selection made in code.
 
+## Data binding in a table
+
+Binding in a table is not the same subject as binding on a form, because a table
+has many rows, only some of them on screen, and it builds their cells itself.
+This section is what that changes.
+
+!demo(to.etc.domuidemo.pages.components.tables.TableBindingPage.ui, 100%, 780)
+
+### Every value cell is already bound
+
+A column that shows a property does not render text: it renders a
+`DisplaySpan` **bound to that property of that row object**. So this is all it
+takes for the screen to follow the data:
+
+```java
+rr.column("copies").label("Copies");        // A bound cell, like every other one
+…
+line.setCopies(line.getCopies() + 1);       // The cell updates. Nothing else is called.
+```
+
+No `forceRebuild()`, no telling the table, no re-query. The binding was made when
+the row was rendered and lives inside the cell, and the page's binding pass moves
+the value on every request.
+
+### A cell built by a renderer is not
+
+A renderer builds content from whatever it likes, so there is no single value the
+binding could watch, and nothing updates it. Say `rerenderOnBind()` and the cell
+is redrawn once per request instead:
+
+```java
+rr.column().label("Line total")
+    .renderer((node, line) -> node.add(line.getCopies() + " x 14.95"))
+    .rerenderOnBind();                       // ...or the cell keeps its first text
+```
+
+The demo above has the same column twice, with and without it: after pressing a
+button the bound one follows and the other still shows what it rendered when the
+page was built.
+
+`valueHint(QField)` works the same way for the cell's tooltip - it binds the
+cell's `title` to a property of the row.
+
+### Editable cells
+
+`editable()` puts a **control** in the cell and binds it to the row's property,
+which is what makes a table of input boxes work with no code at all:
+
+```java
+rr.column("copies").label("Copies").editable();
+```
+
+Which control it is comes from the metadata of the property, exactly as in a
+form. `factory(row -> …)` makes the control yourself, and is asked once per row
+so the control can depend on what is in it.
+
+!! Whichever way the control is made, the binding is always
+!! `control.bind().to(row, theColumnProperty)`. A control made by a factory is
+!! bound to that same property, so its value type must be the property's type -
+!! a factory returning a control over something else fails when the binding
+!! moves a value.
+
+An editable column cannot also have a renderer or a converter: a cell either
+shows a value or holds a control, and asking for both throws.
+
+### Style bound to the row
+
+A column can bind a css class to a property of the row, which is how a table
+colours the rows that need attention:
+
+```java
+rr.column("copies").label("Copies")
+    .styleBinding(new StyleBinder()
+        .define(Boolean.TRUE, "row-warning")
+        .define(Boolean.FALSE, ""))
+    .to("bulk");                              // A property of the row object
+```
+
+### The footer binds to anything
+
+`getFooterBody()` hands back an ordinary `TBody` under the rows, so a total is
+just a control bound to whatever holds it - usually the page or a controller
+rather than a row:
+
+```java
+Text2<Integer> total = new Text2<>(Integer.class);
+total.setReadOnly(true);
+total.bind().to(this, "totalCopies");         // A property of the page
+
+TR tr = table.getFooterBody().addRow();
+tr.addCell().add("Copies in total");
+tr.addCell().add(total);
+```
+
+### Binding the rows themselves: an observable list
+
+A table can be given an `IObservableList<T>` instead of a model:
+
+```java
+DataTable<Album> table = new DataTable<>(rr);
+table.setList(artist.getAlbumList());         // A Hibernate relation list is observable
+```
+
+The table then listens to the list, and **changing the list changes the table**:
+adding an album to the artist's list adds a row. What the table does with an
+event depends on how many changes arrive at once:
+
+| The list reports | The table |
+| --- | --- |
+| one add, delete or modify | updates that one row |
+| an assign (the whole list replaced) | rebuilds itself |
+| more than one change in one event | rebuilds itself |
+
+That is the natural way to write a master/detail screen: the detail table is
+bound to the relation of the master record, and nothing has to be told when the
+relation changes.
+
+### The special cases
+
+!! **A modified row is thrown away and rebuilt.** `model.modified(index)`
+!! removes the row's cells and renders them again, so the controls in that row
+!! are new ones: an unsaved keystroke, a validation error and the focus are all
+!! gone. Update the object and let the *cell* bindings follow it where you can,
+!! and reserve `modified()` for changes the cells cannot show by themselves.
+
+!! **Only the rows on screen have bindings.** A table renders one page; the rows
+!! of the other pages do not exist as components, so nothing binds them.
+!! Changing an object that is not on screen is not lost - it is simply picked up
+!! when that page is rendered.
+
+!! **A cell compares values the way every binding does**, with
+!! `MetaManager.areObjectsEqual`. Two entities with the same primary key are the
+!! same value, and an object changed *in place* is still the same object - so
+!! putting a mutated copy back does not move anything. That trap is the same one
+!! [writing a component](../../../building-pages/110-writing-a-component/index.md)
+!! describes, and it bites hardest in a table because the cells are made for you.
+
+The binding pass walks every control on the page once per request, so an
+editable table is that many comparisons per request: a hundred rows of five
+editable columns is five hundred. That is cheap, but it is not free, and it is a
+reason to page a large table rather than show it whole.
+
 ## Column widths
 
 Every column can be given a width in one of two ways, and the table treats them
