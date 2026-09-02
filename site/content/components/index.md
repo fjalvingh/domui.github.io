@@ -21,6 +21,8 @@ methods, and a demo page showing it working.
 - [Buttons and actions](40-buttons/index.md) - `DefaultButton`, `LinkButton`,
   `SmallImgButton`, `HoverButton`, the two toggle buttons, `IUIAction` and
   `ButtonBar2`.
+- [Display-only components](50-display-only/index.md) - `DisplaySpan`,
+  `DisplayControl`, the boolean displays, `DisplayHtml` and the ruler.
 - [Component rules](rules/index.md) - the CSS and implementation rules every
   DomUI component follows, plus
   [vertical form builder details](rules/vertical-form-builder-details/index.md).
