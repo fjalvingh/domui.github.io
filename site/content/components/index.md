@@ -8,6 +8,14 @@ DomUI applications are built from components: Java objects that render
 themselves as HTML and handle their own events. This section documents the
 components DomUI provides, and the rules for writing your own.
 
+The components are grouped by what they are for. Each group page describes the
+group and its members; each member has a page of its own with its properties and
+methods, and a demo page showing it working.
+
+- [Text and value input](10-text-and-value-input/index.md) - `Text2`,
+  `TextArea`, `DateInput2` and the colour pickers.
+- [Choice input](20-choice-input/index.md) - `Checkbox`, `RadioGroup`,
+  `ComboFixed2`, `ComboLookup2` and `EnumSetInput`.
 - [Component rules](rules/index.md) - the CSS and implementation rules every
   DomUI component follows, plus
   [vertical form builder details](rules/vertical-form-builder-details/index.md).
