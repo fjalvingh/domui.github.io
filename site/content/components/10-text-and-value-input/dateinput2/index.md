@@ -66,14 +66,15 @@ In a Dutch locale `13/3/2012`, `13-3-13`, `13/3` (this year) and `13032012` all
 arrive as the same date - `/`, `.` and `-` are interchangeable, a two-digit year
 is 19yy above 29 and 20yy otherwise, and a missing year is the current one. The
 browser rewrites what was typed into the full format as soon as the field is
-left.
+left, and it does that in the order of the locale's own pattern: the same short
+forms in an English locale are `2012-3-13`, `2012-3` and `20120313`, all
+rewritten to `2012-03-13`. The control tells the browser which pattern to use by
+rendering the server's own date pattern on its input, so what the field ends up
+holding is always what the server is about to parse.
 
-!! That rewriting is **not locale-aware**: it assumes the day-month-year shape
-!! whatever the request's locale is. In an English locale, typing `13-3-13` into
-!! a `DateInput2` leaves `2013-03-13` in the box while the value the server took
-!! from it is the year **13**, and typing `13/3/2012` opens a browser alert
-!! saying *Invalid date* rather than reporting the error the way every other
-!! control does.
+!! Input the browser cannot make a date of at all opens a browser alert saying
+!! *Invalid date*, rather than reporting the error the way every other control
+!! does.
 
 Where the locale of a request comes from, and how to change it, is described
 under [metadata and internationalization](../../../building-pages/80-metadata/index.md).

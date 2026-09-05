@@ -61,12 +61,13 @@ IUIAction<Album> reprint = new UIAction<>("Reprint", "Have the sleeve printed ag
 | --- | --- |
 | a button | `new DefaultButton(instance, action)` |
 | a button bar | `bar.addAction(instance, action)` |
+| a link | `new LinkButton(instance, action)` |
 | a button with a menu | `new ActionButton(instance, action)` |
 | a popup menu | `PopupMenu2.text(...)...` built from the action's parts |
 
-!! `LinkButton(IUIAction<Void>)` and `ButtonBar2.addButton(IUIAction<Void>)`
-!! take an action over `Void` only - an action with an instance goes through
-!! `DefaultButton(instance, action)` or `bar.addAction(instance, action)`.
+Each of them also has a form without the instance - `new DefaultButton(action)`,
+`bar.addButton(action)`, `new LinkButton(action)` - for an action that does not
+work on one: the action is then asked about `null`.
 
 ## ActionButton: more actions behind one button
 

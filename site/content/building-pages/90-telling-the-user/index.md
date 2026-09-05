@@ -322,6 +322,10 @@ A fence is not a component: it is an `IErrorFence` sitting *on* a
 - **`new ErrorMessageDiv(panel)` does both at once**: it makes `panel` a fence and
   registers itself as its listener, which is the whole of what the demo page does
   per panel.
+- **A message box catches its own messages.** `MsgBox2` puts an
+  `ErrorMessageDiv` above its content, so an error raised by a control inside the
+  box - by its `onValidate`, for instance - is shown in the box and does not
+  also appear on the page behind it.
 - **A fence with no listeners asks the application.** When a message arrives and
   nothing is listening, `DomApplication.addDefaultErrorComponent()` is called to
   put a display component in the container - by default an `ErrorPanel` at the

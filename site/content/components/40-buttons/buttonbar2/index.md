@@ -36,6 +36,7 @@ You do not add buttons so much as ask for one:
 | `addBackButtonConditional()` | the same, but nothing at all when there is nowhere to go back to |
 | `addCloseButton()` | close the window |
 | `addAction(instance, action)` | a button made from an [`IUIAction`](../actionbutton/index.md) |
+| `addButton(action)` | the same for an action that works on no instance |
 | `addButton(node, order)` | any node at all, for what the list above does not cover |
 
 Every one of them also has a form taking an `order` number, and the bar sorts on

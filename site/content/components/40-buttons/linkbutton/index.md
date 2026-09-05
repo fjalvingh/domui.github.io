@@ -26,7 +26,8 @@ cp.add(new LinkButton("Delete", Icon.faTrash, a -> delete()));
 | `new LinkButton(text, icon)` | text and an icon |
 | `new LinkButton(text, icon, click)` | all three |
 | `new LinkButton(IBundleCode, ...)` | the same with a translated text |
-| `new LinkButton(IUIAction<Void>)` | a link made from an [action](../actionbutton/index.md) |
+| `new LinkButton(instance, action)` | a link made from an [action](../actionbutton/index.md) on that instance |
+| `new LinkButton(IUIAction)` | the same for an action that needs no instance |
 
 `icon()` and `click()` are the fluent forms and return the button.
 
