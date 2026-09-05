@@ -18,5 +18,5 @@ as text: it is escaped, not interpreted, so code containing `<` and `&` shows as
 written.
 
 It does not highlight anything. For highlighted, editable code the component is
-the [AceEditor](../../forms-and-input/aceeditor/index.md); for showing html *as
+the [AceEditor](../../110-editors/aceeditor/index.md); for showing html *as
 html* it is [`DisplayHtml`](../displayhtml/index.md).

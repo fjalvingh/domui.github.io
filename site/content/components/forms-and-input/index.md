@@ -4,9 +4,10 @@ menu:
 ---
 # Forms and input components
 
-Building input screens: the form builder that lays out labels and controls,
-file upload and the embedded editors.
+- [The FormBuilder (form4)](form4-formbuilder/index.md) - laying out forms:
+  labels, controls and the layout between them.
 
-- [The FormBuilder (form4)](form4-formbuilder/index.md) - laying out forms.
-- [FileUpload components](fileupload/index.md)
-- [The AceEditor component](aceeditor/index.md) - an embedded code editor.
+The controls a form is filled with are in the groups above: text and value
+input, choice input, lookup and search, and the rest. File upload lives with
+[images, icons and file upload](../100-images-and-icons/index.md), and the
+embedded editors with [rich content editors](../110-editors/index.md).

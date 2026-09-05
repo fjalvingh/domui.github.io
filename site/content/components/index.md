@@ -35,11 +35,12 @@ methods, and a demo page showing it working.
 - [Images, icons and file upload](100-images-and-icons/index.md) - `IIconRef`
   and the three kinds of icon, `Img`, the two image controls and the two upload
   controls.
+- [Rich content editors](110-editors/index.md) - `HtmlEditor`, `CKEditor` and
+  the `AceEditor`.
 - [Component rules](rules/index.md) - the CSS and implementation rules every
   DomUI component follows, plus
   [vertical form builder details](rules/vertical-form-builder-details/index.md).
-- [Forms and input](forms-and-input/index.md) - the form builder, file upload
-  and the embedded editors.
+- [Forms and input](forms-and-input/index.md) - the form builder.
 
 The page a component lives on is described separately, in
 [The body document (UrlPage)](../70-implementation-details/urlpage/index.md).

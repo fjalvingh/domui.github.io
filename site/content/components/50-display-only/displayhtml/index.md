@@ -5,7 +5,7 @@ menu:
 # DisplayHtml
 
 `DisplayHtml` shows a piece of html as html: a review, a description, whatever a
-[`CKEditor`](../../forms-and-input/index.md) produced. What it is given goes
+[`CKEditor`](../../110-editors/ckeditor/index.md) produced. What it is given goes
 through a sanitizer first.
 
 ```java
