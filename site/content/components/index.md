@@ -40,6 +40,10 @@ methods, and a demo page showing it working.
 - [Charts](120-charts/index.md) - `PlotlyGraph`, its traces and its layout.
 - [Asynchronous and long-running work](130-async/index.md) - `AsyncContainer`,
   `AsyncDiv` and `PollingDiv`.
+- [Agenda and calendar](140-agenda/index.md) - `WeekAgendaComponent`,
+  `MonthPanel` and the schedule model behind them.
+- [Drag and drop](150-drag-and-drop/index.md) - not a component: the two
+  handlers that make any node draggable or a drop zone.
 - [Component rules](rules/index.md) - the CSS and implementation rules every
   DomUI component follows, plus
   [vertical form builder details](rules/vertical-form-builder-details/index.md).
