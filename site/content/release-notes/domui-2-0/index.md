@@ -401,7 +401,7 @@ The following things have changed regarding themes, styles and look-and-feel.
 
 ### Using FontAwesome with DomUI
 
-You can [use FontAwesome](../../look-and-feel/icons/fontawesome-support/index.md) icons in most places where you would usually add an image resource.
+You can [use FontAwesome](../../components/100-images-and-icons/icons/index.md) icons in most places where you would usually add an image resource.
 
 <a id="sass-scss-support"></a>
 

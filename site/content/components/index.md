@@ -30,12 +30,16 @@ methods, and a demo page showing it working.
 - [Windows, dialogs and messages](80-windows-and-dialogs/index.md) - `Window`,
   `Dialog`, `InputDialog`, `MsgBox2`, `ExceptionDialog` and the components that
   show a message on the page.
+- [Navigation and menus](90-navigation/index.md) - `BreadCrumb2`,
+  `AppPageTitleBar`, `ALink` and the two menus.
+- [Images, icons and file upload](100-images-and-icons/index.md) - `IIconRef`
+  and the three kinds of icon, `Img`, the two image controls and the two upload
+  controls.
 - [Component rules](rules/index.md) - the CSS and implementation rules every
   DomUI component follows, plus
   [vertical form builder details](rules/vertical-form-builder-details/index.md).
 - [Forms and input](forms-and-input/index.md) - the form builder, file upload
   and the embedded editors.
-- [Navigation](tables-trees-navigation/index.md) - `BreadCrumb2`.
 
 The page a component lives on is described separately, in
 [The body document (UrlPage)](../70-implementation-details/urlpage/index.md).
