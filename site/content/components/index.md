@@ -37,6 +37,9 @@ methods, and a demo page showing it working.
   controls.
 - [Rich content editors](110-editors/index.md) - `HtmlEditor`, `CKEditor` and
   the `AceEditor`.
+- [Charts](120-charts/index.md) - `PlotlyGraph`, its traces and its layout.
+- [Asynchronous and long-running work](130-async/index.md) - `AsyncContainer`,
+  `AsyncDiv` and `PollingDiv`.
 - [Component rules](rules/index.md) - the CSS and implementation rules every
   DomUI component follows, plus
   [vertical form builder details](rules/vertical-form-builder-details/index.md).
