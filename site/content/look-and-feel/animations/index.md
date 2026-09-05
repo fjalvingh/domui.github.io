@@ -24,5 +24,3 @@ For animations that make nodes disappear there are usually two forms: a normal f
 ### How it works internally
 
 The effects work by setting the required JQuery state in the node, and then adding the appropriate Javascript to the node to be executed at the render. Since many effects require an "odd" state of the DOM (like display: none to slide down) we want the DomUI node to be "fixed" after render so that it has the same state as the browser DOM. This is done by adding an after-render listener: this listener will "reset" the display state of the node back to what it should be in DomUI.
-
-Since: DomUI 2.0

@@ -1,10 +1,10 @@
 # SubPages
 
-So far we have talked about DomUI **pages**. These are classes derived from UrlPage which are uniquely identified by an URL containing a class name and a set of parameters. Changing to another Page means changing the URL, and causing a Browser page change. A DomUI Page, once rendered, is fully AJAX, but changing pages is not AJAX but is closer to a traditional HTML page. This was a good match for the first application DomUI was written for.
+So far we have talked about DomUI **pages**. These are classes derived from UrlPage which are uniquely identified by an URL containing a class name and a set of parameters. Changing to another Page means changing the URL, and causing a Browser page change. A DomUI Page, once rendered, is fully AJAX, but changing pages is not AJAX but is closer to a traditional HTML page.
 
-Modern applications try to be fully AJAX: they load the main page once, and from then on all changes are made to that page with AJAX calls. They never reload the entire page. While it is possible to make this with DomUI 1.x it is hard because having everything in a single Page means that state management difficult because everything uses the same Conversation (and thus the same QDataContext).
+An application that wants to be fully AJAX loads the main page once and changes only parts of it from then on, never reloading the whole page. Building that from UrlPages alone is hard: everything lives in one Page, so everything shares one Conversation and with it one QDataContext, which makes state management awkward.
 
-DomUI 2.0 has a new concept called *SubPages* which aims to fix this. This are part of the SPI (Single Page Interface) implementation for DomUI.
+*SubPages* exist for that. They are part of the SPI (Single Page Interface) implementation of DomUI.
 
 !w This is preliminary info; the implementation can still change quite a bit.
 

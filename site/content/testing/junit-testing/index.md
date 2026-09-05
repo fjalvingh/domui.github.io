@@ -22,38 +22,21 @@ The Maven build runs these tests as *Integration Tests*. These can be found aut
 - Now Maven locates all Integration Tests and runs them. These tests use localhost:8088 as the base URL and so connect to the Jetty server started by Maven.
 - Once done Maven stops the Jetty server and reports the test results.
 
-You can test against any Selenium-supported browser by setting properties inside ~/.test.properties, or passing them as Java properties to the JVM. But by default the tests will run using the Chrome Headless browser. This means that chrome and chromedriver need to be installed on whatever station DomUI is built on, as follows:
+The browser to use is set with `webdriver.hub`, in `~/.test.properties` or as a `-D` property on the JVM; without it the tests run headless Chrome. That means Chrome and a matching chromedriver have to be present on the machine DomUI is built on:
 
-- Install Chrome as usual
-- Download the [latest chromedriver from here](https://sites.google.com/a/chromium.org/chromedriver/).
-- Unzip the file. This will give you a single file, "chromedriver".
-- Copy this file to some directory on your PATH, like /usr/bin for Linux, or ~/bin if you have no rights.
+- Install Chrome as usual.
+- Install the chromedriver for that Chrome version - the [Chrome for Testing downloads](https://googlechromelabs.github.io/chrome-for-testing/) have both.
+- Put the `chromedriver` binary in `/usr/local/bin`, `/usr/bin`, `~/bin` or `~`, which are the places the tests look, or name it with the `webdriver.chrome.driver` property.
 
 <a id="using-headless-chrome"></a>
 
 ## Using Headless Chrome
 
-Since Chrome 59 we can also use Chrome in headless mode, and as PhantomJS development has been abandoned this is now the default.
+The tests run in headless Chrome. `webdriver.hub` picks another browser: `chrome-desktop` for a Chrome you can watch, `firefox` for Firefox.
 
 There are some issues with using chrome. The most important issue is that ChromeDriver/Chrome does not properly take screenshots. Unlike the other drivers chrome takes only partial screenshots of the page, and that breaks some tests and makes bugs harder to find.
 
 To circumvent this issue the DomUI wrapper around WebDriver has a special implementation of the code that creates a screenshot for Chrome. [The code is described on Stackoverflow](https://stackoverflow.com/questions/45199076/take-full-page-screen-shot-in-chrome-with-selenium/46025126).
-
-<a id="alternative-using-phantomjs"></a>
-
-## Alternative: using Phantomjs
-
-You can also use [PhantomJS](http://phantomjs.org/) as the headless test platform. Just install the "phantomjs" executable in some directory in your PATH, and define webdriver.hub=phantomjs in .test.properties or on the command line (-Dwebdriver.hub=phantomjs).
-
-Sadly enough PhantomJS is no longer supported because the main developer quit 8-/
-
-!w Please install phantomjs from the website, and do **not** use your distribution's version of it (so do not use apt-get). The distributions often distribute handicapped versions causing odd test failures.
-
-<a id="using-htmlunit"></a>
-
-## Using HTMLUNIT
-
-I moved to Phantomjs because its alternative, htmlunit, does not allow screenshots to be taken from the pages, and this makes a lot of tests hard to use. But it can still be used, with the effect that some tests will not really work.
 
 <a id="test-helper-base-classes"></a>
 
@@ -73,24 +56,12 @@ But there are tests that we cannot do with this. A good example is [the test for
 
 For this we can use Selenium's ability to take screenshots. Using screenshots of a rendered page we can load the screenshot, then use Selenium's knowledge of the *position* and *size* of a web page element to extract from the screenshot the *actual rendering of the component* as a bitmap. This bitmap can then be further analyzed.
 
-<a id="tests-and-the-travis-ci-build"></a>
-
-## Tests and the Travis-CI build
-
 <a id="failed-test-screenshots"></a>
 
-### Failed test screenshots
+## Failed test screenshots
 
-The UI tests that run during the build will make screenshots for those tests that fail. These screenshots are stored inside the \[module\]/target/failsafe-reports directory as classname\_testname.png, for instance:
+The UI tests make a screenshot of every test that fails. They are written to \[module\]/target/failsafe-reports as classname\_testname.png, for instance:
 
 ```
 display ./to.etc.domui.demo/target/failsafe-reports/ITTestLookupInput_testInitialLayout.png
 ```
-
-If the build fails all of the failsafe-reports directories are collected and tarred, and these are copied to the deployment server so that they can be obtained (they are copied to deployer@xxx/reports.tgz).
-
-<a id="the-version-of-phantomjs-inside-the-build"></a>
-
-### The version of phantomjs inside the build
-
-Travis-CI has phantomjs default in its image, but that is an older version (2.0.0). To ensure that we have the same results locally and in the build the build script will download version 2.1.1 of phantomjs and cause it to be used by setting the PATH to it.

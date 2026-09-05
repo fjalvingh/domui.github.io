@@ -412,6 +412,24 @@ user in the session. Everything after that - `@UIRights`, `UIContext.getCurrentU
 page rather than the framework's, changing how it looks is just editing
 `LoginPage`.
 
+The framework counts failures per user id: after ten failed attempts within five
+minutes `login()` returns false for that id even when the credentials are right,
+until the five minutes have passed. `DefaultLoginHandler` holds both numbers, and
+an application that wants other ones - or another way of counting - implements
+`ILoginHandler` itself. The `m_failcount` in the code above is the page's own
+counter, and does not replace this.
+
+A user with the right to do so can work as somebody else:
+`UILogin.impersonateByLoginId(id)` authenticates that user without a password and
+makes them the current user, so everything reading the current user - rights
+included - sees the impersonated one. It throws unless the real user's
+`IUser.canImpersonate()` says yes. `UILogin.getRealUser()` gives the user behind
+the impersonation, and `UILogin.impersonate(null)` ends it.
+
+!! Impersonating hands the impersonator every right the impersonated user has.
+!! `canImpersonate()` returns false by default; keep it that way for anyone who
+!! does not need it.
+
 !! The three users the migration script creates are for getting started only.
 !! Delete them from `V1__create_database.sql`, or add a later migration that
 !! removes them, before this goes anywhere real.

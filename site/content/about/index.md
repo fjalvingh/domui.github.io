@@ -15,17 +15,17 @@ released under the [LGPL 2.1](https://www.gnu.org/licenses/old-licenses/lgpl-2.1
 
 - [The source code on GitHub](https://github.com/fjalvingh/domui) - issues and
   pull requests are welcome there.
-- [The demo application](https://etc.to/demo/), deployed automatically from the
-  master build.
+- [The demo application](https://demo.domui.org/), deployed from the framework
+  repository with `scripts/deploy-demo`.
 - [The IntelliJ plugin](../getting-started/intellij-plugin/index.md) for editing
   DomUI pages.
 
 ## About the documentation
 
 These pages were written over many years in a Confluence wiki and have been
-converted to Markdown; they are now maintained alongside the code. That history
-shows: some pages are current, some describe work in progress on DomUI 2.0, and
-some are older than the code they describe.
+converted to Markdown; they are maintained alongside the code now. They are being
+reworked chapter by chapter to describe the framework as it is today, so a page
+that has not been reached yet can still be older than the code it describes.
 
 !w This documentation is incomplete, and always will be while it is written by
 !w the people also writing the framework. If a page is wrong or missing, a pull

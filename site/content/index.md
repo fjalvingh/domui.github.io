@@ -32,7 +32,6 @@ the industry for absolutely nothing gained).
   itself.
 - [Development environment](development-environment/index.md) - the build, the
   tooling and the coding rules.
-- [Release notes](release-notes/index.md) - what changed in DomUI 2.0.
 - [FAQs and issues](faqs-and-issues/index.md) - the gotchas that keep biting.
 
 ## Demo application

@@ -4,32 +4,23 @@ menu:
 ---
 # DomUI component rules
 
-When we started DomUI we did our best to have some rules for components. But of course we learned a lot, and in the best way possible: by making mistakes. The sad news, of course, is that those mistakes live on in the framework. This is why we have multiple versions of components, like LookupInput and LookupInput2. The higher the number the better the control is supposed to be (and incidentally the more stubbornly wrong we were).
+These are the rules a DomUI component follows - the ones the framework's own components are held to, and the ones a component of your own should obey.
 
-If a component has no numbered version this does not necessarily mean it's perfect, though :wink:
+Some component names carry a number: LookupInput2, ComboFixed2, Tree3. Where they do, **the highest number is the component to use**; the ones below it are still in the framework because applications use them, and are not documented here. A name without a number is simply the only version there is.
 
-Related to the quality of the components is the quality of the style sheets and style sheet rules associated with the components. DomUI has a highly flexible theming engine which allows for many ways of organizing style sheets. DomUI's styling also preceded the current flock of CSS preprocessors like Sass and Less, so it implements some logic by itself in the older stylesheets. Because DomUI was primarily used by a corporation with special UI needs there are multiple style sheets, most of them of questionable overall quality.
-
-Starting with DomUI 2.0 all new components will get their styles from the SCSS stylesheet provider. These stylesheets use standard SCSS, and obey stricter rules around how components and pages should be styled. The existing "legacy" stylesheets should continue to work just fine, and we're taking care to not change the components in such a way that they are impossible to use with the older stylesheets. But new components and layout fixes will mostly be done in the new SCSS theme, "winter".
+Styles come from the **SCSS theme**, and the theme is `winter`: standard SCSS, one fragment per component, compiled by the framework at runtime. The `.frag.css` themes next to it in `resources/themes` are what the framework used before SCSS; nothing is maintained in them, and a component that only styles itself in `winter` is the normal case.
 
 <a id="stylesheet-rules"></a>
 
 ## Stylesheet rules
 
-<a id="reset-scripts-no-longer-used"></a>
+<a id="no-reset-stylesheet"></a>
 
-### Reset scripts - no longer used
+### No reset stylesheet
 
-The earlier DomUI stylesheets used a "CSS reset script" to clear the default styling off all HTML tags. The idea was that after this the behavior of the tags would be more easily controlled, and that this behavior would be the same for all browsers.
+The stylesheets do not clear the default styling off all html tags first. A reset sheet is hard to do well, its effects percolate through everything styled on top of it, and it breaks the one thing an application does a lot: *showing* html that came from somewhere else, which then renders as flat text until every style the reset removed has been put back by hand.
 
-But using a reset sheet has quite a few side effects... Most of these are not too bad for websites and not too big applications, but for bigger stuff they get in the way:
-
-- The reset script is not that easy to do well. So its effects percolate through to your own styles, often in unexpected results.
-- Lots of functions actually want to *show* HTML. And those functions expect that html to be rendered in a reasonable way. Removing all formatting means that this does not hold, at all: by default it looks like flat text. The solution means adding back all those styles carefully removed by the reset script, sigh. Which means you STILL have to consider the "native" styles of tags.
-
-Consequently the newer DomUI stylesheets do away with reset scripts completely.
-
-The effects of this are not too bad: using the per-component classes (see below) you can more easily address styling of html tags used in the components and reset them only where needed. In addition DomUI mostly uses the styleless div and span tags, and just adds styling by giving those a class where needed.
+Instead a component styles itself through its own classes (see below) and resets a tag only where it has to. Most of what DomUI renders is a `div` or a `span` - which have nothing to reset - with a class on it.
 
 <a id="the-box-model-used-is-border-box"></a>
 
@@ -69,27 +60,17 @@ See the following links for more information:
 
 ### Browser support and tweaks
 
-![](iehell.jpg)
+Stylesheets are written for current browsers. There is nothing in them working around a browser that is no longer around.
 
-In those times of yore we had browsers and Internet Explorer. The latter was, well, evil. Supporting IE versions below 8 was what Hell probably looks like. Luckily a lot has changed: while IE is still a royal pain in the backside (you won't believe the trouble it has with the simplest stuff still) its rendering, at least, has become way better.
-
-Now if only they would not LIE about the css styles in the developer tools....
-
-For IE we try to do our best to make it work with the jokes implanted in the actual browser versions. We do not usually spend time getting something to work in the IE7 emulation mode in IE 11 or nonsense like that. The best way to get things to Just Work is actually to write them on Chrome or Firefox, and once they are working to try to see what IE makes of it. The other way is more problematic, usually.
-
-Supporting old browsers (well, IE) is just too much work. So we focus on current browsers (meaning those that were current a year ago) to create style sheets, and we remove stuff in style sheets that were needed for Netscape 1.1.
-
-If tweaks are needed please try to use feature discovery, and try not to depend on browser identification.
-
-Older versions of the DomUI style sheets allowed embedded "preprocessing" Javascript, and knew about the browser version they were rendered for. This allowed per-browser version tweaks by conditionally including css. The SCSS version of the sheets do not support this and do not know the browser type.
+If a tweak is needed, use feature detection rather than browser identification. The SCSS sheets cannot do the latter anyway: they are compiled once, not per request, and know nothing about the browser they will be sent to.
 
 <a id="one-fragment-per-component"></a>
 
 ### One fragment per component
 
-Each component must have its own stylesheet fragment which contains most of the scss needed to render the component. For a component like LookupInput2 there is a fragment called \_lookupinput2.scss. These fragments are included in the master stylesheet called theme.style.scss. This same rule applies to the legacy stylesheets; these fragments are called like lookupinput2.frag.css.
+Each component must have its own stylesheet fragment which contains most of the scss needed to render the component. For a component like LookupInput2 there is a fragment called \_lookupinput2.scss, in the theme directory `resources/themes/scss/winter`.
 
-When a new fragment is added you need (for now) to copy the style.theme.scss file and add the includes for the new fragments. In a later version the fragments will be located and included automatically.
+A new fragment has to be added to that theme's `style.scss` with an `@import` of its own; nothing finds fragments by itself.
 
 <a id="styling-a-component"></a>
 
@@ -145,7 +126,7 @@ So the rule is: **use only class names in selectors, do not use tags**.
 
 # Layout rules
 
-One of the biggest design flaws in the earlier DomUI style sheets have to do with layout. So in the new style sheets we attempt to do better, by defining stricter rules. The disadvantage of the new rules are that sometimes more css is needed to style a page, or that extra "layout" components are needed to get something to look good. But the advantage should be less odd layout cases and easier CSS.
+Layout has stricter rules than the rest. They cost something: a page sometimes needs more css, or an extra "layout" component, to look right. What they buy is fewer odd layout cases and simpler css everywhere else.
 
 <a id="two-basic-types-of-components"></a>
 
@@ -184,7 +165,7 @@ while a bad, bad one (hello DateInput) would be:
 <button class='ui-myc-btn'><span class='fa-icon' /></button>
 ```
 
-The latter was used in some older DomUI components- and styling them is also called the seventh circle of Hell.
+The latter cannot be addressed relative to a container at all, which makes aligning it with anything a fight.
 
 <a id="inline-component-layout"></a>
 
@@ -210,7 +191,7 @@ This rule also means that adding "naked" components together, without help, will
 
 Input components are normally used inside forms. A form in DomUI is not a component but is built by a *FormBuilder*, a special class which helps with creating a nice layout for a form. The result of a FormBuilder is a set of Nodes with special styles that together with the components *should* force them to look nice.
 
-The current "best version" of a FormBuilder is the FormBuilder from package form4. This formbuilder allows building both vertical (default) and horizontal forms, and uses [data binding](../../building-pages/50-data-binding/index.md) extensively.
+Forms are built with the `FormBuilder` from package `component2.form4`. It builds both vertical (the default) and horizontal forms, and uses [data binding](../../building-pages/50-data-binding/index.md) throughout.
 
 <a id="vertical-forms-for-form4"></a>
 
