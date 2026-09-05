@@ -628,7 +628,7 @@ Every `NodeBase` - so every page, every fragment, every component - can look up 
 text without naming a bundle at all:
 
 ```java
-MsgBox.info(this, $("recordNotFound", getName()));
+MsgBox2.on(this).info($("recordNotFound", getName()));
 ```
 
 `$()` finds the bundles that belong to the class it is called on, reads the key

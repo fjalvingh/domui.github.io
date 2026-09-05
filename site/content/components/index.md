@@ -25,6 +25,11 @@ methods, and a demo page showing it working.
   `DisplayControl`, the boolean displays, `DisplayHtml` and the ruler.
 - [Tables, lists and trees](60-tables-and-trees/index.md) - `DataTable`, the
   row renderer, the table models, the other table shapes and `Tree3`.
+- [Layout and page structure](70-layout/index.md) - the panels, the headers,
+  the tab panels, the splitter and `ChildFragment`.
+- [Windows, dialogs and messages](80-windows-and-dialogs/index.md) - `Window`,
+  `Dialog`, `InputDialog`, `MsgBox2`, `ExceptionDialog` and the components that
+  show a message on the page.
 - [Component rules](rules/index.md) - the CSS and implementation rules every
   DomUI component follows, plus
   [vertical form builder details](rules/vertical-form-builder-details/index.md).

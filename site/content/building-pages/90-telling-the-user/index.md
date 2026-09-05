@@ -85,9 +85,9 @@ are:
 | `input(label, control, handler)` | the input handler | the value of the control |
 
 Add no buttons at all and the box gets `CONTINUE`, plus `CANCEL` when it carries
-inputs. Buttons are laid out by priority rather than by the order you add them:
-the primary one (`OK`, `YES`, `CONTINUE`) ends up on the right, `CANCEL` and `NO`
-to its left. Closing the box with the cross counts as `CANCEL`.
+inputs. As long as you give no button a priority of its own, the box orders them
+for you: the primary one (`OK`, `YES`, `CONTINUE`) ends up on the right, `CANCEL`
+and `NO` to its left. Closing the box with the cross counts as `CANCEL`.
 
 An input box asks for a value instead of a decision:
 
@@ -118,19 +118,6 @@ The control is an ordinary control - it converts, validates and reports the same
 way it would on a page. `onValidate` runs *before* the answer handler and before
 the box closes, and returning `false` from it leaves the box standing with the
 message on it, which is how a box refuses an answer it cannot use.
-
-### MsgBox, the older form
-
-```java
-MsgBox.info(this, "The album has been saved.");
-MsgBox.yesNo(this, "Delete the album?", answer -> { ... });
-```
-
-`MsgBox` is the same window with a fixed set of static methods instead of a
-builder: one method per combination of type, buttons and handler. It is still
-used in a great deal of existing code, so it is worth recognising - but every one
-of its methods is a combination `MsgBox2` can build, and combinations it cannot
-build. Write new code with `MsgBox2`.
 
 ## A message that stays on the page
 
