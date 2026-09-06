@@ -1,7 +1,3 @@
----
-menu:
-  sort: "20"
----
 # Mockito pitfalls
 
 While testing with Mockito works, there are quite a lot of pitfalls. Mockito is technically very complex and fails silently in a huge amount of cases. In other cases you get messages containing very technical gibberish from which the real problem cannot really be found.. And don't even think of doing multithreaded tests... For this reason I dislike that framework a lot, and I prefer writing my code in such a way that it becomes testable by normal Java means.

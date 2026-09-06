@@ -227,7 +227,7 @@ them to your page.
 - Pages are tested end to end with Selenium, from JUnit. Tests extend
   `AbstractWebDriverTest` (a clean state per test) or
   `AbstractSinglePageWebDriverTest`, and get their driver from
-  `WebDriverConnector`; see [JUnit testing](../../testing/junit-testing/index.md).
+  `WebDriverConnector`; see [testing](../../testing/index.md).
 - Tests do not poke at HTML. They drive **page objects**: proxies like `CpText2`,
   `CpDataTable` and `CpButton` that expose a control the way the Java control
   exposes it, so a test says "type this in the name field" rather than "find this
