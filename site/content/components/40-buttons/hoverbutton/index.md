@@ -8,7 +8,7 @@ menu:
 come from **one** image: three pictures of the same size, side by side.
 
 ```java
-HoverButton close = new HoverButton("THEME/72x24_close.png", a -> closeWindow());
+HoverButton close = new HoverButton("THEME/72x24_close.png", () -> closeWindow());
 ```
 
 !demo(to.etc.domuidemo.pages.components.buttons.ButtonKindsPage.ui, 100%, 620)

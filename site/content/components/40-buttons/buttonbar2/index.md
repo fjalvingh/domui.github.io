@@ -10,11 +10,11 @@ and a set of methods for the *kinds* of button a screen usually needs.
 ```java
 ButtonBar2 bb = new ButtonBar2();
 cp.add(bb);
-bb.addButton("Save", Theme.BTN_SAVE, a -> save());
-bb.addConfirmedButton("Delete", Theme.BTN_DELETE, "Delete this album?", a -> delete());
+bb.addButton("Save", Theme.BTN_SAVE, () -> save());
+bb.addConfirmedButton("Delete", Theme.BTN_DELETE, "Delete this album?", () -> delete());
 bb.addBackButton();
 bb.right();                                    // Everything after this goes right
-bb.addLinkButton("Help", Icon.faQuestionCircle, a -> help());
+bb.addLinkButton("Help", Icon.faQuestionCircle, () -> help());
 ```
 
 !demo(to.etc.domuidemo.pages.components.buttons.ButtonBar2Page.ui, 100%, 700)

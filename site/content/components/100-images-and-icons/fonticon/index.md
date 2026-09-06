@@ -33,7 +33,7 @@ You rarely construct one. A font pack's enum constant *is* an
 reference:
 
 ```java
-new DefaultButton("Delete", FaIcon.faTrash, a -> delete());   // Makes the FontIcon itself
+new DefaultButton("Delete", FaIcon.faTrash, () -> delete());   // Makes the FontIcon itself
 ```
 
 ## Size and colour

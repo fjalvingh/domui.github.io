@@ -9,7 +9,7 @@ two enums the framework ships - `Icon` and `Theme` - are the standard sets of
 them.
 
 ```java
-new DefaultButton("Save", Icon.faSave, a -> save());
+new DefaultButton("Save", Icon.faSave, () -> save());
 ```
 
 !demo(to.etc.domuidemo.pages.components.images.IconsPage.ui, 100%, 900)

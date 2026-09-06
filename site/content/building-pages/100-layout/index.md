@@ -40,10 +40,10 @@ page itself rather than to the panel, since it is not part of the content.
 ButtonBar2 bb = new ButtonBar2();
 cp.add(bb);
 bb.addBackButton();
-bb.addButton("Save", Theme.BTN_SAVE, a -> save());
-bb.addConfirmedButton("Delete", Theme.BTN_DELETE, "Delete this order?", a -> delete());
+bb.addButton("Save", Theme.BTN_SAVE, () -> save());
+bb.addConfirmedButton("Delete", Theme.BTN_DELETE, "Delete this order?", () -> delete());
 bb.right();                                    // Everything after this goes right
-bb.addLinkButton("Help", Theme.ICON_BIG_INFO, a -> help());
+bb.addLinkButton("Help", Theme.ICON_BIG_INFO, () -> help());
 ```
 
 The bar is a `Div` that arranges what it is given: a left group and a right
@@ -282,7 +282,7 @@ public class CollapsibleSection extends Div {
 	public void createContent() throws Exception {
 		Div header = new Div("dm-cs-h");
 		add(header);
-		header.add(new LinkButton(m_title, m_expanded ? Icon.faAngleDown : Icon.faAngleRight, a -> toggle()));
+		header.add(new LinkButton(m_title, m_expanded ? Icon.faAngleDown : Icon.faAngleRight, () -> toggle()));
 
 		if(m_expanded) {
 			add(m_content);

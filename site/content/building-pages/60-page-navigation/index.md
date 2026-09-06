@@ -24,7 +24,7 @@ public class NavStatePage extends UrlPage {
 	public void createContent() throws Exception {
 		Text2<String> note = new Text2<>(String.class);
 		note.setValue(m_note);
-		note.setOnValueChanged(c -> {
+		note.setOnValueChanged(() -> {
 			m_note = note.getValueSafe();
 			forceRebuild();
 		});
@@ -33,7 +33,7 @@ public class NavStatePage extends UrlPage {
 		cp.add(state);
 		state.add("Clicks: " + m_clicks + ", note: " + (m_note == null ? "(empty)" : m_note));
 
-		bb.addButton("Count a click", a -> {
+		bb.addButton("Count a click", () -> {
 			m_clicks++;
 			forceRebuild();
 		});
@@ -88,7 +88,7 @@ code: it writes down where to go and returns, so the rest of the handler still
 runs.
 
 ```java
-bb.addButton("Save and close", a -> {
+bb.addButton("Save and close", () -> {
 	UIGoto.back();                       // Only says where to go next...
 	m_invoice.setState(PAID);            // ...so this still happens.
 	dc.commit();

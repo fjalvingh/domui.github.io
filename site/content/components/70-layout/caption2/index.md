@@ -10,7 +10,7 @@ buttons sit at the right-hand end.
 ```java
 Caption2 caption = new Caption2(CaptionType.Default, "Invoice lines");
 cp.add(caption);
-caption.addButton(Icon.faPlus, "Add a line", a -> addLine());
+caption.addButton(Icon.faPlus, "Add a line", () -> addLine());
 ```
 
 !demo(to.etc.domuidemo.pages.components.layout.HeadersPage.ui, 100%, 700)
@@ -29,7 +29,7 @@ caption.addButton(Icon.faPlus, "Add a line", a -> addLine());
 | --- | --- |
 | `setCaption(String)` / `getCaption()` | the text; setting it rebuilds the bar |
 | `setIcon(String)` | an image at the left of the bar |
-| `addButton(IIconRef, String hint, IClicked<NodeBase>)` | a small button at the right |
+| `addButton(IIconRef, String hint, IExecute)` | a small button at the right |
 | `addButton(IIconRef, String hint, String onClickJs)` | the same, handled in the browser |
 
 `CaptionType` decides the look: `Default` is a bar standing on its own

@@ -9,8 +9,8 @@ menu:
 asks for attention more quietly.
 
 ```java
-cp.add(new LinkButton("Forgot your password?", a -> resetPassword()));
-cp.add(new LinkButton("Delete", Icon.faTrash, a -> delete()));
+cp.add(new LinkButton("Forgot your password?", () -> resetPassword()));
+cp.add(new LinkButton("Delete", Icon.faTrash, () -> delete()));
 ```
 
 !demo(to.etc.domuidemo.pages.components.buttons.ButtonKindsPage.ui, 100%, 620)

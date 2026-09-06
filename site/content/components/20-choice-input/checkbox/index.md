@@ -10,7 +10,7 @@ and it is never `null`.
 ```java
 Checkbox newsletter = new Checkbox();
 newsletter.setChecked(true);
-newsletter.setClicked(a -> shown.add("Newsletter is now " + newsletter.getValue()));
+newsletter.setClicked(() -> shown.add("Newsletter is now " + newsletter.getValue()));
 
 FormBuilder fb = new FormBuilder(cp);
 fb.label("Send me the newsletter").control(newsletter);
@@ -46,8 +46,8 @@ than as a dead control, `DisplayCheckbox` is the display-only component for it.
 ## Use the click handler, not the change handler
 
 ```java
-box.setClicked(a -> recompute());          // this one
-box.setOnValueChanged(a -> recompute());   // not this one - it is deprecated
+box.setClicked(() -> recompute());          // this one
+box.setOnValueChanged(() -> recompute());   // not this one - it is deprecated
 ```
 
 `setOnValueChanged()` and `getOnValueChanged()` are deprecated on `Checkbox`.

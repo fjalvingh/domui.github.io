@@ -81,7 +81,7 @@ are:
 | --- | --- | --- |
 | `yesNo()`, `continueCancel()`, `button(MsgBoxButton)` | `onAnswer` | the `MsgBoxButton` that was pressed |
 | `button(String label, Object value)` | `onAnswer2` | the value you attached to that button |
-| `button(String label, IClicked)` | its own click handler | nothing - it does not answer the box |
+| `button(String label, IExecute)` | its own click handler | nothing - it does not answer the box |
 | `input(label, control, handler)` | the input handler | the value of the control |
 
 Add no buttons at all and the box gets `CONTINUE`, plus `CANCEL` when it carries
@@ -347,7 +347,7 @@ would light up half a form the user has not reached yet.
 in belongs here as well:
 
 ```java
-cp.add(new DefaultButton("Save", a -> {
+cp.add(new DefaultButton("Save", () -> {
 	if(bindErrors()) {                        // Anything wrong anywhere below this node?
 		return;                               // Yes: it is on screen now, stop here.
 	}

@@ -125,8 +125,8 @@ Both `setSize()` and `setMaxLength()` return the control, so they chain:
 
 ```java
 Text2<String> search = new Text2<>(String.class);
-search.addButtonSmall(Icon.faSearch, a -> doSearch(search.getValue()));
-search.addButtonSmall(Icon.faEraser, a -> search.setValue(null));
+search.addButtonSmall(Icon.faSearch, () -> doSearch(search.getValue()));
+search.addButtonSmall(Icon.faEraser, () -> search.setValue(null));
 ```
 
 A button added this way is rendered *inside* the control, right of the box, so

@@ -82,7 +82,7 @@ private final ObservableList<IItem> m_path = new ObservableList<>();    // The s
 ...
 cp.add(new BreadCrumb2(m_path));                                        // The component, local
 ...
-button.setClicked(a -> m_path.add(new Item(null, "Level " + m_path.size(), null, null)));
+button.setClicked(() -> m_path.add(new Item(null, "Level " + m_path.size(), null, null)));
 ```
 
 That is the whole difference between the two lists: a plain `List` is a path the

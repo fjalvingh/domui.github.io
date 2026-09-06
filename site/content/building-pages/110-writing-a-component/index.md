@@ -36,7 +36,7 @@ public class StarRating extends AbstractDivControl<Integer> {
 			Span span = new Span(star <= rating ? "dm-rating-on" : "dm-rating-off", star <= rating ? "★" : "☆");
 			add(span);
 			if(!isDisabled() && !isReadOnly()) {
-				span.setClicked(a -> starClicked(star));
+				span.setClicked(() -> starClicked(star));
 			}
 		}
 	}
@@ -114,10 +114,8 @@ private void starClicked(int star) throws Exception {
 
 	setValue(newValue);                                    // Rebuilds, but only on a real change
 	OldBindingHandler.controlToModel(this);                // This request's binding pass already ran
-	IValueChanged<StarRating> onValueChanged = (IValueChanged<StarRating>) getOnValueChanged();
-	if(null != onValueChanged) {
-		onValueChanged.onValueChanged(this);
-	}
+
+	callOnValueChanged();                                  // Tell whoever is listening
 }
 ```
 

@@ -34,7 +34,7 @@ public class BindByHandPage extends UrlPage {
 		price.setValue(m_order.getPrice());
 
 		...
-		cp.add(new DefaultButton("Save", a -> {
+		cp.add(new DefaultButton("Save", () -> {
 			//-- ...and every one of them has to be carried back again.
 			m_order.setCustomerName(customer.getValue());
 			m_order.setGenre(genre.getValue());
@@ -82,7 +82,7 @@ the compiler to check: `bind().to(m_order, AlbumOrder_.copies())` on a
 Now press **Clear the price**:
 
 ```java
-cp.add(new DefaultButton("Clear the price", a -> m_order.setPrice(BigDecimal.ZERO)));
+cp.add(new DefaultButton("Clear the price", () -> m_order.setPrice(BigDecimal.ZERO)));
 ```
 
 The handler touches the model and nothing else - it does not know a price control
@@ -198,7 +198,7 @@ customerC.bind().to(m_model, SendInfoModel_.customer());
 artistC.immediate();
 customerC.immediate();
 
-DefaultButton send = new DefaultButton("Send info", a -> ...);
+DefaultButton send = new DefaultButton("Send info", () -> ...);
 cp.add(send);
 
 //-- The model decides whether the button may be pressed; the button follows.
@@ -226,7 +226,7 @@ interfaces that define them:
 ## When the input does not convert
 
 ```java
-cp.add(new DefaultButton("Save", a -> {
+cp.add(new DefaultButton("Save", () -> {
 	if(bindErrors()) {                        // Anything wrong anywhere below this node?
 		return;                               // Yes: it is on screen now, stop here.
 	}

@@ -30,7 +30,7 @@ control has no empty state.
 | --- | --- |
 | `setValue(String)` | set the colour; also updates the open picker |
 | `getValue()` | the six hex digits currently picked |
-| `setOnValueChanged(IValueChanged<?>)` | stored, but see below |
+| `setOnValueChanged(IExecute)` | stored, but see below |
 
 ## How the value gets back
 

@@ -11,7 +11,7 @@ button of a [`Text2`](../../10-text-and-value-input/text2/index.md), a row
 button in a table.
 
 ```java
-SmallImgButton search = new SmallImgButton(Icon.faSearch, a -> doSearch());
+SmallImgButton search = new SmallImgButton(Icon.faSearch, () -> doSearch());
 search.setTitle("Search for a customer");
 ```
 

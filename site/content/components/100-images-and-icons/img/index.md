@@ -51,7 +51,7 @@ server.
 
 ```java
 Img button = new Img("img/reload.png");
-button.setClicked(a -> reload());
+button.setClicked(() -> reload());
 ```
 
 Giving an `Img` a click handler adds the `ui-clickable` class, so the cursor

@@ -11,7 +11,7 @@ just be typed.
 ```java
 ColorPickerInput cover = new ColorPickerInput();
 cover.setValue("c05a2a");
-cover.setOnValueChanged(a -> repaintPreview(cover.getValue()));
+cover.setOnValueChanged(() -> repaintPreview(cover.getValue()));
 
 FormBuilder fb = new FormBuilder(cp);
 fb.label("Sleeve colour").control(cover);
@@ -31,7 +31,7 @@ control that can be empty:
 | `setValue(String)` | the colour, and the swatch beside the box |
 | `getValue()` | the six hex digits, or `null` when the box is empty and the control is not mandatory |
 | `setMandatory(boolean)` | **defaults to true**; a mandatory control that is empty hands back `000000` rather than `null` |
-| `setOnValueChanged(IValueChanged<?>)` | called when a colour is picked |
+| `setOnValueChanged(IExecute)` | called when a colour is picked |
 | `setDisabled(boolean)` / `setReadOnly(boolean)` | the box keeps its value and swatch, but the picker no longer opens |
 | `setHint(String)` | the tooltip |
 

@@ -42,8 +42,8 @@ about.
 ## Reacting to a change
 
 ```java
-box.setClicked(a -> recompute());          // this one
-box.setOnValueChanged(a -> recompute());   // deprecated, like on the plain Checkbox
+box.setClicked(() -> recompute());          // this one
+box.setOnValueChanged(() -> recompute());   // deprecated, like on the plain Checkbox
 ```
 
 Use `setClicked()`, as with the plain

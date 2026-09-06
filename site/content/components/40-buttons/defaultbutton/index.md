@@ -8,7 +8,7 @@ menu:
 that runs when it is pressed.
 
 ```java
-cp.add(new DefaultButton("Save", Theme.BTN_SAVE, a -> save()));
+cp.add(new DefaultButton("Save", Theme.BTN_SAVE, () -> save()));
 ```
 
 !demo(to.etc.domuidemo.pages.components.buttons.DefaultButtonPage.ui, 100%, 780)
@@ -34,7 +34,7 @@ configured in pieces:
 DefaultButton b = new DefaultButton()
     .text("Save")
     .icon(Icon.faCheck)
-    .clicked(a -> save());
+    .clicked(() -> save());
 ```
 
 `text()`, `icon()`, `clicked()`, `css()` and `mini()` all return the button.
@@ -65,7 +65,7 @@ The button is styled entirely through css classes, which `css()` adds:
 | `is-loading` | a spinner instead of the label |
 
 ```java
-new DefaultButton("Delete", a -> delete()).css("is-danger", "is-outlined");
+new DefaultButton("Delete", () -> delete()).css("is-danger", "is-outlined");
 ```
 
 !! `mini()` is not one of these: it **replaces** the button's css classes with

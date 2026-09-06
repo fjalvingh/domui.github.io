@@ -10,7 +10,7 @@ and one method that turns what the user filled in into a `QCriteria<T>`.
 ```java
 SearchPanel<Invoice> sp = new SearchPanel<>(Invoice.class);
 cp.add(sp);
-sp.setClicked(a -> search(sp.getCriteria()));
+sp.setClicked(() -> search(sp.getCriteria()));
 ```
 
 !demo(to.etc.domuidemo.pages.components.lookup.SearchPanelPage.ui, 100%, 720)

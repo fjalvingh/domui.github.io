@@ -52,7 +52,7 @@ F --> Browser: full HTML
 == the user presses a button ==
 
 Browser -> F: clicked, $cid=...
-F -> P: IClicked handler
+F -> P: click handler
 P -> P: change the tree\n(add rows, set an error, ...)
 F -> F: OptimalDeltaRenderer\ncompares old and new tree
 F --> Browser: delta: a few commands

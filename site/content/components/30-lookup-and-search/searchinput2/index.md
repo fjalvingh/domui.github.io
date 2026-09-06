@@ -10,7 +10,7 @@ reports what is typed to the server while the user is still typing.
 ```java
 SearchInput2 box = new SearchInput2();
 box.setHint("Type part of a name");
-box.setOnLookupTyping(a -> showMatches(box.getValue()));
+box.setOnLookupTyping(() -> showMatches(box.getValue()));
 box.setReturnPressed(a -> takeTheFirstMatch());
 cp.add(box);
 ```
@@ -30,7 +30,7 @@ no binding. What it has is the text typed so far.
 | Method | What it does |
 | --- | --- |
 | `getValue()` | the raw text currently in the box |
-| `setOnLookupTyping(IValueChanged<SearchInput2>)` | called while typing, a short pause after each burst |
+| `setOnLookupTyping(IExecute)` | called while typing, a short pause after each burst |
 | `setReturnPressed(...)` | called when the user presses return in the box |
 | `setHint(String)` | the tooltip |
 | `setPopupWidth(int)` | the width for whatever is dropped down under it |

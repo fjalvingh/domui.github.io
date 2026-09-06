@@ -10,7 +10,7 @@ by the time the handler runs, the file is on the server.
 ```java
 FileUpload2 upload = new FileUpload2("png", "jpg", "gif");
 upload.setMaxSize(4 * 1024 * 1024);
-upload.setOnValueChanged(a -> store(upload.getValue()));
+upload.setOnValueChanged(() -> store(upload.getValue()));
 fb.label("An image").control(upload);
 ```
 
@@ -35,7 +35,7 @@ slash in it (`image/*`) is passed through as one.
 | `setMaxSize(int bytes)` | the largest file that may be chosen (default 100MB) |
 | `setValue(UploadItem)` / `getValue()` | the file; setting null empties the control |
 | `clear()` | empty it, closing the file, and fire `onValueChanged` |
-| `setOnClearClicked(IClicked<FileUpload2>)` | take over what the clear button does |
+| `setOnClearClicked(IExecute)` | take over what the clear button does |
 | `setMandatory(boolean)` | `getValue()` throws a validation exception when nothing was chosen |
 
 It is an `IControl<UploadItem>`, so `setReadOnly()`, `setDisabled()` and data

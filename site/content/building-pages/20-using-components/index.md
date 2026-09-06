@@ -132,7 +132,7 @@ public void setValue(@Nullable T v) {
 The page above has two buttons under the form. This is the first one:
 
 ```java
-cp.add(new DefaultButton("Show the values", a -> {
+cp.add(new DefaultButton("Show the values", () -> {
 	//-- Every getValue() can fail: the first one that does ends this handler.
 	String titleValue = title.getValue();
 	Integer copiesValue = copies.getValue();
@@ -233,7 +233,7 @@ public class ComponentStatePage extends UrlPage {
 			medium.setReadOnly(true);
 		}
 		...
-		buttons.add(new DefaultButton("Read only", a -> state(true, false, null)));
+		buttons.add(new DefaultButton("Read only", () -> state(true, false, null)));
 	}
 
 	/** Remember the wanted state and build the page again with it. */
@@ -290,8 +290,8 @@ price.setValue(new BigDecimal("14.95"));
 
 Div total = new Div("dm-tut");
 
-copies.setOnValueChanged(c -> showTotal(copies, price, total));
-price.setOnValueChanged(c -> showTotal(copies, price, total));
+copies.setOnValueChanged(() -> showTotal(copies, price, total));
+price.setOnValueChanged(() -> showTotal(copies, price, total));
 ```
 
 ```java

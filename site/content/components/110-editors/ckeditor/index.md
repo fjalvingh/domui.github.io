@@ -54,10 +54,10 @@ removes the image picker and the colours as well as the buttons.
 | --- | --- |
 | `setValue(String)` / `getValue()` | the html |
 | `setReadOnly(boolean)` / `setDisabled(boolean)` / `setMandatory(boolean)` | as on any control |
-| `setOnValueChanged(IValueChanged<?>)` | told when the user changed the text |
+| `setOnValueChanged(IExecute)` | told when the user changed the text |
 | `setToolbarStartExpanded(boolean)` | start with the toolbar folded away, and let the user open it |
-| `setOnDomuiImageClicked(IClicked<NodeBase>)` | what the toolbar's image button opens |
-| `setOnDomuiOddCharsClicked(IClicked<NodeBase>)` | the same for the special-characters button |
+| `setOnDomuiImageClicked(IExecute)` | what the toolbar's image button opens |
+| `setOnDomuiOddCharsClicked(IExecute)` | the same for the special-characters button |
 | `appendfixSizeJS()` | re-measure the editor after the layout around it changed |
 
 Without an image handler the image button says so and closes; without a

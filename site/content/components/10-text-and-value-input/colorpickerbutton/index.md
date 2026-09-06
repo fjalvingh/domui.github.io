@@ -10,7 +10,7 @@ opens the picker over the page and closes it again when a colour is chosen.
 ```java
 ColorPickerButton cover = new ColorPickerButton();
 cover.setValue("c05a2a");
-cover.setOnValueChanged(a -> repaintPreview(cover.getValue()));
+cover.setOnValueChanged(() -> repaintPreview(cover.getValue()));
 
 FormBuilder fb = new FormBuilder(cp);
 fb.label("Sleeve colour").control(cover);
@@ -29,7 +29,7 @@ stripped, `null` becomes `000000`, and there is no empty state.
 | Method | What it does |
 | --- | --- |
 | `setValue(String)` / `getValue()` | the colour |
-| `setOnValueChanged(IValueChanged<?>)` | called when a colour is picked |
+| `setOnValueChanged(IExecute)` | called when a colour is picked |
 | `setMandatory(boolean)` | stored, but nothing checks it: the control always has a colour |
 | `setDisabled(boolean)` / `setReadOnly(boolean)` | the square still shows its colour, but pressing it opens nothing |
 | `setHint(String)` | the tooltip |

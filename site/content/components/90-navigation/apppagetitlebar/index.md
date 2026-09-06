@@ -11,7 +11,7 @@ and the buttons that belong to the screen as a whole.
 AppPageTitleBar bar = new AppPageTitleBar("Album maintenance", false);
 add(bar);                                     // On the page, above everything else
 bar.setShowBackButton(true);
-bar.addButton(Icon.faSearch, "Find an album", a -> find());
+bar.addButton(Icon.faSearch, "Find an album", () -> find());
 ```
 
 !demo(to.etc.domuidemo.pages.components.navigation.PageTitleBarPage.ui, 100%, 700)
@@ -69,8 +69,8 @@ the walkthrough under
 ## Buttons of your own
 
 ```java
-bar.addButton(Icon.faSearch, "Find an album", a -> find());
-bar.addButton(Icon.faPrint, "Print the catalogue", a -> print());
+bar.addButton(Icon.faSearch, "Find an album", () -> find());
+bar.addButton(Icon.faPrint, "Print the catalogue", () -> print());
 ```
 
 Each call adds one small image button at the right end of the bar, with the hint

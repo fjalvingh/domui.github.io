@@ -40,8 +40,8 @@ made whenever one is needed:
 ```java
 IIconRef save = Icon.faSave;                       // A reference: reusable
 
-new DefaultButton("Save", save, a -> save());      // ...used here
-bar.addButton("Save this too", save, a -> save()); // ...and here
+new DefaultButton("Save", save, () -> save());      // ...used here
+bar.addButton("Save this too", save, () -> save()); // ...and here
 cp.add(save.createNode());                         // ...and here as a node of its own
 ```
 

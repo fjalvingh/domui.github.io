@@ -11,7 +11,7 @@ buttons at its right.
 cp.add(new GenericHeader(Type.HEADER_2, "Tracks"));
 
 GenericHeader header = new GenericHeader(Type.HEADER_2, "Tracks");
-header.addButton(Icon.faPencil, "Rename", a -> rename());
+header.addButton(Icon.faPencil, "Rename", () -> rename());
 cp.add(header);
 ```
 
@@ -28,7 +28,7 @@ cp.add(header);
 | `new GenericHeader(String)` | a `SIMPLE` header |
 | `new GenericHeader(Type, String)` | one of the six |
 | `setText(String)` | change the text |
-| `addButton(IIconRef, String hint, IClicked<NodeBase>)` | a small button at the right |
+| `addButton(IIconRef, String hint, IExecute)` | a small button at the right |
 | `addButton(IIconRef, String hint, String onClickJs)` | the same, handled in the browser |
 
 It renders as `ui-generichd ui-generichd-<type>`, with the buttons in a

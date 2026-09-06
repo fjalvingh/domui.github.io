@@ -53,8 +53,8 @@ box appears when the request is finished.
 | `buttonDefault(MsgBoxButton, MsgBoxButtonPrio)` | ...and give it the focus when the box opens, so enter presses it |
 | `yesNo()`, `continueCancel()` | the two usual pairs |
 | `button(String label, Object value)` | a button of your own carrying the value it answers with |
-| `button(String label, IClicked<DefaultButton>)` | a button that runs its own handler instead of answering |
-| `button(String label, MsgBoxButtonPrio, IClicked<DefaultButton>)` | ...with a priority |
+| `button(String label, IExecute)` | a button that runs its own handler instead of answering |
+| `button(String label, MsgBoxButtonPrio, IExecute)` | ...with a priority |
 
 **Add no buttons at all and the box gets `CONTINUE`** - plus a `CANCEL` when it
 carries an input. Closing the box with the cross counts as `CANCEL`.
@@ -74,7 +74,7 @@ add them in the order you want them.
 | --- | --- |
 | `onAnswer(IAnswer)` | a standard button was pressed: the `MsgBoxButton` |
 | `onAnswer2(IAnswer2)` | the same, but for `button(label, value)`: the value |
-| `onClicked(IClicked<MsgBox2>)` | any button was pressed: the box |
+| `onClicked(IExecute)` | any button was pressed: the box |
 | `input(label, control, IInput<T>)` | the box has an input and it was accepted: the value of the control |
 | `onValidate(IValidate)` | *before* the answer handler, with the button; `false` keeps the box open |
 

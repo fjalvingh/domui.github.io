@@ -239,7 +239,7 @@ sp.add().property(Track_.unitPrice()).label("Price").control();
 Div results = new Div();
 cp.add(results);
 
-sp.setClicked(a -> {
+sp.setClicked(() -> {
 	QCriteria<Track> criteria = sp.getCriteria();
 	if(null == criteria)                            // Bad input: the errors are on the screen already.
 		return;
@@ -428,13 +428,13 @@ adds it, and needs the class of the rows to build its comparators from.
 ### Changing the rows
 
 ```java
-bb.addButton("Add a line", a -> model.add(new BasketLine("New album " + (++m_added), 1, new BigDecimal("9.95"))));
-bb.addButton("One more copy of the first line", a -> {
+bb.addButton("Add a line", () -> model.add(new BasketLine("New album " + (++m_added), 1, new BigDecimal("9.95"))));
+bb.addButton("One more copy of the first line", () -> {
 	BasketLine line = model.getItem(0);
 	line.setCopies(line.getCopies() + 1);
 	model.modified(0);                            // Tell the model, or the screen keeps the old number.
 });
-bb.addButton("Delete the first line", a -> {
+bb.addButton("Delete the first line", () -> {
 	if(model.getRows() > 0)
 		model.delete(0);
 });

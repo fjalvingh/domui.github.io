@@ -32,7 +32,7 @@ try {
 component; it is the try/catch above, written once:
 
 ```java
-cp.add(new DefaultButton("Save", a -> executeWithDialog("Saving the order failed", () -> save())));
+cp.add(new DefaultButton("Save", () -> executeWithDialog("Saving the order failed", () -> save())));
 ```
 
 A `ValidationException` is ignored on purpose: the control that threw it has

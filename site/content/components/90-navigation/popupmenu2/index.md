@@ -7,7 +7,7 @@ menu:
 A small menu that opens at a component, does one thing and disappears again.
 
 ```java
-button.setClicked(a -> {
+button.setClicked(() -> {
     PopupMenu2 pm = new PopupMenu2(a);                  // Opens at the button
     pm.text("Play it").icon(Icon.faMusic).click(() -> play(album)).append();
     pm.text("Add to the cart").icon(Icon.faShoppingCart).click(() -> order(album)).append();
@@ -68,7 +68,7 @@ never kept in a field:
 
 ```java
 //-- Right: a new menu each time, thrown away when it closes
-button.setClicked(a -> {
+button.setClicked(() -> {
     PopupMenu2 pm = new PopupMenu2(a);
     ...
     pm.show(a);
