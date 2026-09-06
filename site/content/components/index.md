@@ -14,6 +14,8 @@ methods, and a demo page showing it working.
 
 - [Text and value input](10-text-and-value-input/index.md) - `Text2`,
   `TextArea`, `DateInput2` and the colour pickers.
+- [Forms](15-forms/index.md) - not a component: the `FormBuilder` that lays
+  controls out as labelled rows and binds them to properties.
 - [Choice input](20-choice-input/index.md) - `Checkbox`, `RadioGroup`,
   `ComboFixed2`, `ComboLookup2` and `EnumSetInput`.
 - [Lookup and search](30-lookup-and-search/index.md) - `LookupInput2`,
@@ -45,9 +47,7 @@ methods, and a demo page showing it working.
 - [Drag and drop](150-drag-and-drop/index.md) - not a component: the two
   handlers that make any node draggable or a drop zone.
 - [Component rules](rules/index.md) - the CSS and implementation rules every
-  DomUI component follows, plus
-  [vertical form builder details](rules/vertical-form-builder-details/index.md).
-- [Forms and input](forms-and-input/index.md) - the form builder.
+  DomUI component follows.
 
 The page a component lives on is described separately, in
 [The body document (UrlPage)](../70-implementation-details/urlpage/index.md).

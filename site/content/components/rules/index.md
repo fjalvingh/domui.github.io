@@ -189,12 +189,6 @@ This rule also means that adding "naked" components together, without help, will
 
 ### Forms
 
-Input components are normally used inside forms. A form in DomUI is not a component but is built by a *FormBuilder*, a special class which helps with creating a nice layout for a form. The result of a FormBuilder is a set of Nodes with special styles that together with the components *should* force them to look nice.
+Input components are normally used inside forms, and a form is not a component: it is what the `FormBuilder` builds out of the controls it is handed. A component therefore has to look right inside a form's label/control pair, which mostly means it must not bring margins of its own - the form supplies the space between its rows.
 
-Forms are built with the `FormBuilder` from package `component2.form4`. It builds both vertical (the default) and horizontal forms, and uses [data binding](../../building-pages/50-data-binding/index.md) throughout.
-
-<a id="vertical-forms-for-form4"></a>
-
-### Vertical forms for form4
-
-A vertical form is built using a table, with each row containing one cell for the label and one for the control. [The details can be found here](vertical-form-builder-details/index.md).
+What the builder does, and what it leaves on the page, is described in [forms](../15-forms/index.md).

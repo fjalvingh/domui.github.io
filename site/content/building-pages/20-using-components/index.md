@@ -42,7 +42,7 @@ public class ComponentFormPage extends UrlPage {
 !demo(to.etc.domuidemo.pages.tutorial.components.ComponentFormPage.ui, 100%, 420)
 
 Each control is created, and then handed to a
-[FormBuilder](../../components/forms-and-input/form4-formbuilder/index.md),
+[FormBuilder](../../components/15-forms/index.md),
 which puts a label in front of it and lays the pairs out. `mandatory()` marks the
 label and tells the control a value is required.
 
