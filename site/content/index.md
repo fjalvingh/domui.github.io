@@ -32,7 +32,6 @@ the industry for absolutely nothing gained).
   itself.
 - [Development environment](development-environment/index.md) - the build, the
   tooling and the coding rules.
-- [FAQs and issues](faqs-and-issues/index.md) - the gotchas that keep biting.
 
 ## Demo application
 

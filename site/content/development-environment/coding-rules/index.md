@@ -4,7 +4,9 @@ menu:
 ---
 # Coding rules
 
-TBD, will be filled in while I think of/encounter stuff
+The conventions the DomUI sources are held to. The component rules - css, node
+structure, what a component may assume - are separate, with
+[the components](../../components/rules/index.md).
 
 <a id="javadoc-rules"></a>
 

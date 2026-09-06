@@ -15,3 +15,7 @@ know what it is about from the chapter that uses it.
   the processor generates, and how it decides which properties get one.
 - [The generic query layer (QCriteria)](qcriteria/index.md) - the query as an expression
   tree, how it is translated and by what, selections, subqueries and in-memory matching.
+- [SubPages](subpages/index.md) - a page inside a page, with a conversation and a
+  database connection of its own.
+- [URL contexts](url-contexts/index.md) - the part of the URL before the page name, and
+  how a page can read it.

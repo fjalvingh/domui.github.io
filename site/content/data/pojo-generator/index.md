@@ -2,89 +2,119 @@
 menu:
   sort: "30"
 ---
-# The Hibernate/JPA POJO Generator
+# The Hibernate/JPA POJO generator
 
-When you already have a database and you want to use JPA or Hibernate to access that database you need something that will generate those POJO classes for you with the appropriate annotations. There are some existing solutions but I was not happy with them, so this is Yet Another Pojo Generator.
+When the database already exists and you want JPA or Hibernate entities for it,
+something has to write those classes with their annotations. DomUI ships a
+generator for that in `utilities/hibernate-generator`.
 
-The generator gets generates as part of the build of DomUI and can be found as utilities/hibernate-generator/target/hibernate-generator.jar, and can be executed as:
+What sets it apart from the usual reverse engineering tools is that it **updates
+existing classes** instead of overwriting them: run it again after a schema
+change and it adds the new columns, removes the dropped ones and leaves the code
+you wrote alone.
 
-!i java -jar hibernate-generator.jar
+[TOC]
 
-The generator so far should work for PostgreSQL and Oracle, with PostgreSQL the one that has been tested. Adding new database types should not be too hard.
+## Running it
 
-The generator does the following:
+The generator's main class is `to.etc.domui.hibgen.HibernateGenerator`. The
+module's jar has no `Main-Class` and does not carry its dependencies, so it is
+run from the build rather than with `java -jar`:
 
-- It generates a new POJO class for every table in the schema(s) specified
-- If a POJO class already exists for the table *it edits the POJO file and updates it with the database definition*:
-  - New columns are added to the existing POJO
-  - Removed columns are, well, removed
-  - Metadata is updated where applicable
-- Existing code in POJO classes is mostly left alone, so it should be reasonably safe to re-run the generator on already existing code.
-- It has basic support for compound primary keys; it should properly generate XxxxId classes for class Xxxx if that table as a compound primary key
-- It adds all relations that are properly defined by foreign keys
-  - It adds @ManyToOne parent references in the child class
-  - It adds @OneToMany child list references as List<T> in the parent, with T the type of the child class
-  - This however will not work for compound PK's.
-- It automatically recognizes *and uses* any @MappedSuperClass class as a base class for those tables that share colums with that base class.
-- It generates/updates \[classname\].properties files with the new properties in the class, so that these files can be used as resource bundles for the property names of that class.
-- It generates a class HibernateConfigurator which contains methods that add all classes to Hibernate's config.
-
-<a id="usage"></a>
-
-## Usage
-
-An example command line invocation would be:
-
-```
-java -jar hibernate-generator.jar -dbtype postgres -db dbusername:dbpasswordl@localhost/database_name -pkgroot org.mydomain.myprogram.database -source /home/jal/myproject/src/main/java -s pdi_meta -s source_mapping -s auth -s definition -s sectormodel
+```bash
+$ mvn -q -pl utilities/hibernate-generator exec:java \
+    -Dexec.mainClass=to.etc.domui.hibgen.HibernateGenerator \
+    -Dexec.args="-dbtype postgres -db user:password@localhost/mydatabase \
+                 -pkgroot org.mydomain.myprogram.database \
+                 -source /home/me/myproject/src/main/java \
+                 -s public -s auth"
 ```
 
-This connects to a PostgreSQL database with the specified username and passwords, loads all tables from the schema's pdi\_meta, source\_mapping, auth and sectormodel, then generates/updates all classes into the specified directory and package.
+Running it with no arguments prints the full option list.
 
-!w The directory and package are *separate*, so the final directory for the classes is formed by adding the source AND the package name.
+This connects to a PostgreSQL database, reads the schemas `public` and `auth`,
+and generates or updates the classes under
+`/home/me/myproject/src/main/java/org/mydomain/myprogram/database`.
 
-The options supported are:
+!w `-source` and `-pkgroot` are **separate**: the output directory is the source
+!w root with the package path appended to it.
 
-| Option | Short |
+Only PostgreSQL and Oracle are supported, and PostgreSQL is the one that is
+actually exercised. Adding a database type is not much work.
+
+## What it generates
+
+- a class per table in the schemas it was given;
+- `@ManyToOne` parent references for every foreign key, and the matching
+  `@OneToMany List<T>` in the parent;
+- `XxxxId` classes for tables with a compound primary key (the relations above
+  are not generated for those);
+- a `[classname].properties` bundle per class, holding the property names, ready
+  to be used as the class's [metadata labels](../../building-pages/80-metadata/index.md);
+- a `HibernateConfigurator` class that registers every generated class with
+  Hibernate.
+
+It also uses any `@MappedSuperClass` it finds: when the columns of a table match
+such a base class, the generated entity extends it instead of repeating the
+properties.
+
+## Updating instead of overwriting
+
+Whenever the generator writes a file that already exists it first copies the old
+one to `<name>.java.old`. On the next run it reads *that* file rather than the
+one it wrote, so the input is always the code as it was before the generator
+first touched it, however often it is re-run.
+
+That is what makes the loop below work: run, look, adjust, run again. When the
+result is right, delete the `.old` files. New files get a zero-length `.old` so
+the generator can tell them from originals - keep that in mind if you ever
+rename them back.
+
+## Names, and overriding them
+
+The generator derives class and property names from table and column names, and
+how good they are depends entirely on how good those are. Two ways to change
+them:
+
+- **Rename in the IDE.** The next run reads the renamed source and keeps the new
+  name, because it takes existing code as the truth.
+- **Override in `genHib.xml`.** The generator writes and updates this file in the
+  package directory it generates into, listing every table and column with an
+  empty value meaning "decide it yourself". Fill one in to override it.
+
+So the usual cycle is: generate, read the result, put what you dislike in
+`genHib.xml`, generate again. Commit the xml file - it is the record of those
+decisions.
+
+## The options
+
+Required: `-db`, `-source`, `-pkgroot`, and at least one `-s`.
+
+| Option | What it does |
 | --- | --- |
-| \-db | Database connection string as username:password@hostname\[:port\]/databasename (required) |
-| \-dbtype | The database type: postgres or oracle (required) |
-| \-source | Specifies the root of the source directory for both existing and generated sources |
-| \-pkg | The package name for the generated classes |
-| \-destroy-constructors | When set, this destroys all constructors in existing Java classes. It can be used to get rid of the silliness generated by the hibernate pojo tool |
-| \-ffr | When set all field names are forcefully renamed to the name as decided by column name and prefix. |
-| \-frm | When set all getter and setter methods in existing classes are renamed to whatever the property name is calculated to be |
-| \-nb, -no-bundles | Disable generation of .properties bundles |
-| \-no-baseclass | Do not try to find base classes for new pojo's |
-| \-no-deserial | Postgres 'serial' columns are actually just columns with a 'default' which retrieves a value from a generated sequence. By default the code will find this sequence and generate a SEQUENCE type of ID generator. Setting this option will cause the code to use the generated.IDENTITY method. |
-| \-no-onechar-boolean | By default, all columns found that are (var)char with a size of 1 and that contain <= 2 distinct values are generated as boolean with an appropriate @Type annotation. This option disables that. |
-| \-noi, -no -identifyable | By default all generated classes will implement IIdentifyable<T>. This disables generating that. |
-| \-s, -schema | Adds a schema to reverse engineer |
-|     |     |
-
-<a id="generated-code"></a>
-
-## Generated code
-
-When the generator writes its output it will always make a backup copy of all files it overwrites, as ".old" files. In addition, when a .old file exists, the generator will always read *that* file as the source file when called again. This allows you to re-run the generator many times until the result is as desired; it will never re-read the code it has generated but instead the data that was present at the start.
-
-Once you are happy with the result you should remove the .old files.
-
-A .old file 0 bytes long is generated for all new files, so that the generator knows that those are not original either. Keep that in mind if you want to rename the .old files back.
-
-<a id="specifying-exceptions-and-overriding-names"></a>
-
-## Specifying exceptions and overriding names
-
-By default the generator will try a bit to concoct reasonable names for classes and properties, but the quality is very dependent on whatever is used in the database. If you do not like the generated names you have two choices:
-
-- Use your favorite IDE to rename the field, getter and setter. This will work fine, because the next time the generator is run it will know that new name from the .java source and use that by default.
-- Add an override to the GenHib.xml file
-
-The GenHib.xml file gets generated/updated by the generator every time it is run. After the first run it will contain all possible options that can be set for all tables and columns with an "empty" value which means "use the default, Luke". You can simply edit this file to override the names and other things for classes. So a typical run would be:
-
-- Run the generator to create all classes
-- Inspect the classes, and change everything you hate by updating GenHib.xml
-- Repeat from step one until satisfied
-
-Do not forget to add the .xml file to your VCS.
+| `-db` | connection string, `username:password@hostname[:port]/databasename` |
+| `-dbtype` | `postgres` (the default) or `oracle` |
+| `-source` | root directory of the java sources, without the package path |
+| `-pkgroot` | root java package for the generated classes |
+| `-s`, `-schema` | a schema to read; repeat for more than one |
+| `-i`, `-ignore` | a table to skip; repeatable |
+| `-only` | regenerate only these tables; repeatable |
+| `-schema-package` | add the schema name as the last package level |
+| `-asc`, `-add-schema-classname` | add the schema name to the generated class name |
+| `-append-schema-name`, `-as` | always write the schema name in `@Table`, not only when several schemas were read |
+| `-no-remove-schema` | keep the schema name at the start of a table name instead of stripping it |
+| `-field-prefix` | prefix for generated fields, `m_` by default; `none` for no prefix |
+| `-ffr`, `-force-field-rename` | rename fields even in classes that already exist |
+| `-fmr`, `-force-method-rename` | rename getters and setters in existing classes |
+| `-pkname` | the name to force on the primary key property, `id` by default; `none` keeps the column's own name |
+| `-keep-pktype` | keep a small numeric primary key as `Integer` instead of widening it to `Long` |
+| `-no-deserial` | generate PostgreSQL `serial` columns as `GenerationType.IDENTITY` instead of finding the sequence and using `SEQUENCE` |
+| `-no-onechar-boolean` | do not map a `char(1)`/`varchar(1)` column with at most two distinct values to `boolean` |
+| `-enum-max-field-size`, `-emfs` | largest field size still scanned for enum values (20) |
+| `-noi`, `-no-identifyable` | do not implement `IIdentifyable<T>` on the generated classes |
+| `-no-baseclass` | do not look for `@MappedSuperClass` base classes |
+| `-match-columns-only` | match those base classes on column names only, ignoring types |
+| `-nb`, `-no-bundles` | skip the `.properties` bundles |
+| `-bundles` | add a language for the bundles, e.g. `-bundles nl_NL`; repeatable |
+| `-destroy-constructors` | remove all constructors from existing classes |
+| `-verbose` | explain every decision it makes |

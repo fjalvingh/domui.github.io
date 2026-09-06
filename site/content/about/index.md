@@ -14,9 +14,10 @@ released under the [LGPL 2.1](https://www.gnu.org/licenses/old-licenses/lgpl-2.1
 ## Where things live
 
 - [The source code on GitHub](https://github.com/fjalvingh/domui) - issues and
-  pull requests are welcome there.
+  pull requests are welcome there. Every push is built by GitHub Actions: the
+  full Maven build, the Selenium tests, CodeQL and a SonarCloud analysis.
 - [The demo application](https://demo.domui.org/), deployed from the framework
-  repository with `scripts/deploy-demo`.
+  repository with the `deploy-demo` script in its root.
 - [The IntelliJ plugin](../getting-started/intellij-plugin/index.md) for editing
   DomUI pages.
 

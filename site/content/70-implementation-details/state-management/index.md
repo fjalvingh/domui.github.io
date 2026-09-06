@@ -130,4 +130,4 @@ In practice this does not pose a very big problem because most of the time it is
 
 ## What else: SubPages..
 
-This all talked about UrlPages. There are also [SubPages, and they work differently](../../99-todo/subpages/index.md).
+This all talked about UrlPages. There are also [SubPages, and they work differently](../subpages/index.md).

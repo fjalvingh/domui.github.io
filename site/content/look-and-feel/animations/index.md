@@ -4,23 +4,60 @@ menu:
 ---
 # Animations
 
-DomUI supports the most common JQuery animation effects for nodes. Descriptions for the animations can be found in [JQuery's documentation](http://api.jquery.com/category/effects/).
+`to.etc.domui.dom.Animations` runs a jQuery effect on a node. The node is a
+DomUI node like any other; the effect happens in the browser, after the response
+that carries the change has been rendered.
 
-To animate a node use code like the following:
-
-```
+```java
 Div newNode = new Div();
 /* add content to the node here */
+cp.add(newNode);
 
 Animations.slideDown(newNode);
 ```
 
-In this example the node will be added, and on the screen it will appear to "slide down" from where it is added.
+The node is added the ordinary way, and on the screen it appears to slide down
+into place.
 
-For animations that make nodes disappear there are usually two forms: a normal form (like Animations.slideUp) and a "destroy" form (like Animations.slideUpAndDestroy). The normal form will leave the node present in the DomUI DOM, but usually with display: none. This mode does allow showing the exact same node just by setting display back to block. But in DomUI nodes that are hidden by something like slideUp are meant to be removed from the DOM. For these cases we have the Destroy variant. This variant will first render the node back to the browser including the effect, and after the render it will remove the node from the DomUI DOM. The net effect is the same as if remove() was called.
+## What there is
 
-<a id="how-it-works-internally"></a>
+| Method | What the browser does |
+| --- | --- |
+| `slideDown(node)` | slides the node open; the node ends up at its normal display |
+| `slideUp(node)` | slides it closed; the node stays in the tree with `display: none` |
+| `slideUp(node, jsCallback)` | the same, with a piece of javascript run when the slide finishes |
+| `slideUpAndRemove(node)` | slides it closed and then removes it from the tree |
+| `shake(node)`, `bounce(node)` | the jQuery UI effects of those names |
+| `pulsate(node, times)` | pulsates; `0` means the effect's own default |
+| `scrollIntoView(node)` | scrolls the node into view if it is not already |
+| `animate(node, what)` | jQuery's `animate()`, with `what` as its options object |
 
-### How it works internally
+The effect names are jQuery's, and its
+[documentation](https://api.jquery.com/category/effects/) describes what each
+one looks like.
 
-The effects work by setting the required JQuery state in the node, and then adding the appropriate Javascript to the node to be executed at the render. Since many effects require an "odd" state of the DOM (like display: none to slide down) we want the DomUI node to be "fixed" after render so that it has the same state as the browser DOM. This is done by adding an after-render listener: this listener will "reset" the display state of the node back to what it should be in DomUI.
+## Hiding versus removing
+
+`slideUp()` leaves the node in the DomUI tree with `display: none`, which is
+what you want when the same node is to be shown again later - `slideDown()` on
+it brings it back with its content intact.
+
+More often a node that slides up is meant to be gone, and then leaving it
+behind is a leak of screen state: it still holds its controls, its bindings and
+its values. `slideUpAndRemove()` is the one to use there. It renders the node
+one more time so the effect can run, and removes it from the tree afterwards -
+the net effect of `remove()`, with the animation in front of it.
+
+## How it works
+
+An effect is not rendered as part of the node: it is a **javascript statement
+appended to the response**, plus an after-render listener that repairs the
+DomUI node afterwards.
+
+The repair is the point. Most effects need the browser DOM to start in a state
+that the server-side tree does not have - `slideDown()` needs the node to be
+`display: none` before it can slide it open - so the node is rendered in that
+odd state, and the listener sets the DomUI node back to the state it should
+have once the effect has run. Without it the server's idea of the tree and the
+browser's would drift apart, and the next delta would be computed against the
+wrong one.

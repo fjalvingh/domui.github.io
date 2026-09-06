@@ -23,14 +23,14 @@ The design criteria for DomUI value developer productivity over hardware costs.
 
 ## Where can I get DomUI?
 
-- The code was released on January 28, 2011 using the LGPL 2.1 license. This allows commercial use without having to open-source your application too. In return we ask only that you return fixes and additions to the DomUI code itself.
-- I am still busy adding documentation and tutorials. In the meantime: ask questions if you have them by becoming a member of one of the mailing lists:
-  - [domui-announce@googlegroups.com](mailto:domui-announce@googlegroups.com) for announcements
-  - [domui-users@googlegroups.com](mailto:domui-users@googlegroups.com) for users of DomUI
-  - [domui-devel@googlegroups.com](mailto:domui-devel@googlegroups.com) when you're developing for DomUI itself
-- The project is maintained [on Github](https://github.com/fjalvingh/domui). Here you find the code, branches, binary releases and the bug tracker. 
-- [There is a plugin](../../getting-started/intellij-plugin/index.md) for Jetbrains' IntelliJ Idea IDE that helps with developing DomUI applications.
+The code is [on Github](https://github.com/fjalvingh/domui) - the source, the branches, the releases and the bug tracker - under the **LGPL 2.1**, which allows commercial use without open-sourcing your own application. In return we ask only that fixes and additions to DomUI itself come back.
 
-This site contains the documentation for the code, tutorials to help you with learning and a FAQ for those questions that are frequently asked.
+[Getting started](../../getting-started/index.md) is the fastest way in: the [skeleton application](../../getting-started/example-skeleton/index.md) is a working program with a database, a login and a build already in it. There is also [a plugin](../../getting-started/intellij-plugin/index.md) for Jetbrains' IntelliJ IDEA that helps with writing DomUI code.
+
+Questions are welcome on the mailing lists:
+
+- [domui-announce@googlegroups.com](mailto:domui-announce@googlegroups.com) for announcements
+- [domui-users@googlegroups.com](mailto:domui-users@googlegroups.com) for using DomUI
+- [domui-devel@googlegroups.com](mailto:domui-devel@googlegroups.com) for developing DomUI itself
 
 Next page: [a developer list of facts about DomUI](../developer-view-of-domui/index.md)
