@@ -7,6 +7,8 @@ menu:
 Getting the model out of the database, in a way that is not tied to one
 persistence framework.
 
+- [The connection pool](connection-pool/index.md) - DomUI's own JDBC pool, and
+  what it tells you about the SQL your application runs.
 - [The Hibernate/JPA POJO generator](pojo-generator/index.md) - generating data
   classes from an existing database schema.
 

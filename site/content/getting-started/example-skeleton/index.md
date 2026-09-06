@@ -224,7 +224,8 @@ stop
 @enduml
 ```
 
-**The connection pool.** DomUI has its own pool (`to.etc.dbpool`). It is
+**The connection pool.** DomUI has its own
+[pool](../../data/connection-pool/index.md) (`to.etc.dbpool`). It is
 configured from the same `app.properties` that configures the rest of the
 application: a pool has an id, and every property of that pool is named
 `<poolid>.<property>`. The pool id is the application code, so:
