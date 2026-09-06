@@ -22,8 +22,12 @@ That is on purpose. The pages have two jobs, and they do both well:
 | `uitest` | the order entry page this documentation is written around | `ITOrderEntry`, `ITOrderEntryPageObject` |
 | `proxies` | one page with every component that has a page object proxy | `ITTestProxiesPage1` |
 | `binding` | pages where data binding has to do something exactly right | `ITTestBindingOrder`, `ITTestBuildOrder`, `ITBindValidationError`, `ITBindErrors1` |
-| `componenterrors` | components in their error and layout states | `ITTestText2Layout`, `ITTestText2Behavior`, `ITTestForm4Layout`, `ITTestLookupInput2`, `ITTestHtmlEditorComponent` |
+| `componenterrors` | components in their error and layout states | `ITTestText2Layout`, `ITTestText2Behavior`, `ITTestForm4Layout`, `ITTestLookupInput2`, `ITTestLookupInput2Layout`, `ITTestSearchPanel`, `ITTestHtmlEditorComponent` |
 | `msgbox` | the message box in each of its shapes | `ITTestMsgBox` |
+| `rxjava` | a page-bound rxjava subscription and its disposal | - |
+
+The last one has no test of its own: it is driven by hand, because what it
+checks is what happens when you walk away from the page.
 
 Two of them are worth reading before writing a test of your own.
 
