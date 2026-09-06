@@ -74,7 +74,7 @@ add them in the order you want them.
 | --- | --- |
 | `onAnswer(IAnswer)` | a standard button was pressed: the `MsgBoxButton` |
 | `onAnswer2(IAnswer2)` | the same, but for `button(label, value)`: the value |
-| `onClicked(IExecute)` | any button was pressed: the box |
+| `onClicked(IExecute)` | any button was pressed; it gets nothing |
 | `input(label, control, IInput<T>)` | the box has an input and it was accepted: the value of the control |
 | `onValidate(IValidate)` | *before* the answer handler, with the button; `false` keeps the box open |
 

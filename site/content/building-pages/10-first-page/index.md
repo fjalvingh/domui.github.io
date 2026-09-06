@@ -187,7 +187,7 @@ public class HelloClickPage extends UrlPage {
 
 		box.setClicked(() -> {
 			m_on = !m_on;
-			clickedNode.setBackgroundColor(m_on ? ON : OFF);
+			box.setBackgroundColor(m_on ? ON : OFF);
 		});
 	}
 }
@@ -197,10 +197,10 @@ Click the box a few times:
 
 !demo(to.etc.domuidemo.pages.tutorial.first.HelloClickPage.ui, 100%, 260)
 
-The handler receives the node it was attached to, so one handler instance can
-serve several tags. It changes a field on the page and a property of that node -
-and then it is done. There is no code that writes html, no code that updates the
-browser, and no id to look up on the other side.
+The handler takes no arguments: `box` is a local variable of `createContent()`,
+so the lambda already has the node it needs. It changes a field on the page and a
+property of that node - and then it is done. There is no code that writes html, no
+code that updates the browser, and no id to look up on the other side.
 
 That last part is what DomUI does for you:
 
@@ -214,7 +214,7 @@ participant "your click handler" as CH
 participant "the node tree" as T
 
 Browser -> RH: click on the div
-RH -> CH: clicked(node)
+RH -> CH: execute()
 CH -> T: change the background color
 RH -> T: what changed since the last response?
 RH -> Browser: delta: this div's style
@@ -235,6 +235,39 @@ For the click above, the entire response is one line:
 
 The page you see is never re-sent, and the browser never reloads - which is why
 "just change the node" is a complete answer.
+
+### When the click itself has more to say
+
+A click sometimes carries more than the fact that it happened: where the pointer
+was, and whether shift, control or alt was held down. `setClicked2()` hands the
+handler a `ClickInfo` holding exactly that:
+
+```java
+Div result = new Div();
+
+Div box = new Div("dm-tut");
+add(box);
+box.add("Click me");
+box.setClicked2(info -> result.add(new Div("", "Click: x=" + info.getPageX() + ", y=" + info.getPageY()
+	+ ", shift=" + info.isShift() + ", ctrl=" + info.isControl() + ", alt=" + info.isAlt())));
+
+add(result);
+```
+
+Click the box below, then click it again with shift down:
+
+!demo(to.etc.domuidemo.pages.test.Click2HandlerPage.ui, 100%, 420)
+
+`ClickInfo` has the position of the click within the page (`getPageX()`,
+`getPageY()`), the modifier keys that were down (`isShift()`, `isControl()`,
+`isAlt()`) and `isDoubleClick()`, which is true when the same node was clicked
+again within the double-click time. What it does not carry is the node - and it
+does not need to: `box` and `result` are local variables the lambda captures,
+exactly as with `setClicked()`.
+
+A node has one click handler, so `setClicked2()` replaces one set with
+`setClicked()`, and the other way round. Use it only when the details are really
+needed; almost every handler in a page is a plain `setClicked()`.
 
 ## Only tags so far
 

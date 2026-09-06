@@ -37,7 +37,7 @@ public class NavStatePage extends UrlPage {
 			m_clicks++;
 			forceRebuild();
 		});
-		bb.addButton("Detail (moveSub)", a -> UIGoto.moveSub(NavDetailPage.class));
+		bb.addButton("Detail (moveSub)", () -> UIGoto.moveSub(NavDetailPage.class));
 	}
 }
 ```
