@@ -17,20 +17,21 @@ you wrote alone.
 
 ## Running it
 
-The generator's main class is `to.etc.domui.hibgen.HibernateGenerator`. The
-module's jar has no `Main-Class` and does not carry its dependencies, so it is
-run from the build rather than with `java -jar`:
+Building the module makes `target/hibernate-generator.jar` next to its ordinary
+jar: the same code plus its dependencies and a `Main-Class`, so it starts with
+`java -jar`.
 
 ```bash
-$ mvn -q -pl utilities/hibernate-generator exec:java \
-    -Dexec.mainClass=to.etc.domui.hibgen.HibernateGenerator \
-    -Dexec.args="-dbtype postgres -db user:password@localhost/mydatabase \
-                 -pkgroot org.mydomain.myprogram.database \
-                 -source /home/me/myproject/src/main/java \
-                 -s public -s auth"
+$ mvn -q -pl utilities/hibernate-generator -am package
+$ java -jar utilities/hibernate-generator/target/hibernate-generator.jar \
+    -dbtype postgres -db user:password@localhost/mydatabase \
+    -pkgroot org.mydomain.myprogram.database \
+    -source /home/me/myproject/src/main/java \
+    -s public -s auth
 ```
 
-Running it with no arguments prints the full option list.
+A full `mvn install` of the framework makes the same jar. Running it with no
+arguments prints the full option list.
 
 This connects to a PostgreSQL database, reads the schemas `public` and `auth`,
 and generates or updates the classes under

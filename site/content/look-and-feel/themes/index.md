@@ -46,9 +46,9 @@ word up in the registry that `register(IThemeFactory)` fills.
 
 !! The **variant** is parsed and then ignored. `SassThemeFactory` reads the
 !! fifth part into a local variable and builds the `SassTheme` without it, so
-!! `UrlPage.setThemeVariant()` and a `-clean` theme name change nothing under
-!! the scss theme. It is a leftover from the stylesheet system that came before
-!! this one. Do not use it.
+!! `UrlPage.setThemeVariant()` and a fifth part in the theme name change
+!! nothing. It is a leftover from the stylesheet system that came before this
+!! one. Do not use it.
 
 ## Where a theme file comes from
 

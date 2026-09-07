@@ -75,13 +75,13 @@ your own URLs for a page, using the `@UIPage` annotation:
 
 ```java
 @UIPage("/welcome/hello")
-public class HelloPage extends UrlPage {
+public class WelcomePage extends UrlPage {
 	...
 }
 ```
 
-which puts the page at `https://demo.domui.org/welcome/hello` - no class name and no
-`.ui` extension. Nothing else changes: DomUI finds the annotation by scanning the
+which puts the page at `/welcome/hello` under the application's root URL - no class
+name and no `.ui` extension. Nothing else changes: DomUI finds the annotation by scanning the
 classpath at startup, and it uses that URL itself whenever it generates a link to
 the page.
 

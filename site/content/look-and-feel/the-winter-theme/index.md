@@ -90,10 +90,3 @@ came before it.
 !! Nothing finds a partial by itself. A new file has to be added to `style.scss`
 !! with an `@import` of its own, or it is simply never compiled - and no error
 !! is reported, because as far as the compiler is concerned it does not exist.
-
-## The stylesheets that are not this theme
-
-`resources/themes/` also holds `css-domui-clean`, 152 `.frag.css` files that
-predate the SCSS theme. Nothing is maintained in them, and the theme factories
-that read them - `simple` and `fragmented` - are registered but not used. A
-component styles itself in `winter` and nowhere else.
