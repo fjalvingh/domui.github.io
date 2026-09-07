@@ -1,6 +1,6 @@
 ---
 menu:
-  sort: "10"
+  sort: "50"
 ---
 # SASS/SCSS support
 

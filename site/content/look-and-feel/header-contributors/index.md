@@ -1,6 +1,6 @@
 ---
 menu:
-  sort: "20"
+  sort: "60"
 ---
 # Header contributors
 

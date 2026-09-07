@@ -1,6 +1,6 @@
 ---
 menu:
-  sort: "40"
+  sort: "70"
 ---
 # Animations
 

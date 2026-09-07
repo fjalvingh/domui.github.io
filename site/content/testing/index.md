@@ -31,5 +31,3 @@ that are in the repository and that you can run.
   one.
 - [Testing what the DOM cannot tell you](60-rendering-tests/index.md) - reading
   the rendered pixels when the markup does not hold the answer.
-- [Mockito pitfalls](70-mockito-pitfalls/index.md) - things that bite when
-  mocking, in any Java test.
