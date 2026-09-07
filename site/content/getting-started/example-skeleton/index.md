@@ -162,7 +162,7 @@ public class Application extends DomApplication {
 		SLF4JBridgeHandler.install();
 
 		setShowProblemTemplate(true);
-		setDefaultThemeFactory(SassThemeFactory.INSTANCE);
+		setThemeFactory(SassThemeFactory.INSTANCE);
 		addHeaderContributor(HeaderContributor.loadStylesheet("css/appstyle.scss"), 10);
 		addHeaderContributor(new FaviconContributor("img/favicon.ico"), 100);
 
