@@ -73,11 +73,10 @@ is found:
 
 Because the first directory that has a file wins, a variant overrides exactly
 what it wants to and inherits the rest. That is how the shipped dark variant is
-built - two files, no copies:
+built - **one file**, and no rule of the theme repeated anywhere:
 
 ```
-themes/scss/winter/dark/_color.scss          the colour variables, inverted
-themes/scss/winter/dark/_variantstyle.scss   the rules _color.scss cannot reach
+themes/scss/winter/dark/_color.scss
 ```
 
 `style.scss` keeps its plain `@import 'color'`; under the `dark` variant that
@@ -86,7 +85,7 @@ same works for an image - a `dark/btnCancel.png` is served only to sessions
 rendering in `dark`, and every image the variant does not replace still comes
 from `winter`.
 
-`_color.scss` gets most of the way on its own, because it is imported *before*
+That one file is enough because `_color.scss` is imported *before*
 `_variables.scss` and everything in that file carries `!default`: set a variable
 there and it wins, and `_derived-variables.scss` recomputes text, background,
 border, link and input colours from it. The dark one mostly turns the greyscale
@@ -94,18 +93,24 @@ ramp upside down - `$white` becomes the darkest surface, `$grey-darker` the
 lightest text - so every rule that reaches for "the light end of the ramp" gets a
 dark colour without knowing it.
 
-`_variantstyle.scss` is for what variables cannot reach. The theme still writes a
-couple of hundred colours literally (`background: white`), and no amount of
-variable overriding touches those. `style.scss` imports `variantstyle` as its very
-last line, so a variant's copy is the last word on any rule:
+For that to work a rule has to *have* a variable to take its colour from. The
+theme names the ones a variant is most likely to want:
 
-| File | Imported | For |
-| --- | --- | --- |
-| `winter/_variantstyle.scss` | last in `style.scss` | empty - the base theme corrects nothing about itself |
-| `winter/dark/_variantstyle.scss` | in its place, for `dark` | repaints the literal colours |
+| Variable | Used for |
+| --- | --- |
+| `$bg_color`, `$body-color` | the page itself |
+| `$line-color` | every line that is not part of a control: the edge of a panel, window, pane or menu, and rules between table cells |
+| `$surface-bg`, `$surface-color` | panels, popups, menus, layout panes |
+| `$surface-alt-bg` | a band or a second step up from a surface |
+| `$input-bg`, `$input-color`, `$input-ro-bg-top`/`-bottom` | input controls |
+| `$border`, `$border-hover` | the border of a control - these come from the greyscale ramp, so they follow a variant already |
+| `$row-hover-bg`, `$row-hover-outline` | the hover wash on a table row |
+| `$cal-*` | the jscalendar popup (`_calendarTheme.scss`) |
 
-An application's own variant works exactly the same way, and an application
-stylesheet can branch on `$themeVariant` instead - which is what the demo does in
+A partial that still writes a colour literally cannot be redressed by a variant -
+so when you find one, give it a variable here rather than overriding it in the
+variant. An application stylesheet, which the theme has no variables for, can
+branch on `$themeVariant` instead: that is what the demo does in
 `css/_darkstyle.scss` for its own colours.
 
 The `$` on the front of `$themes` makes DomUI's resource resolver handle the
