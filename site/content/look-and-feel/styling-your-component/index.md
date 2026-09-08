@@ -14,13 +14,13 @@ classes that all start with the component's own prefix:
 }
 
 .ui-mct-input {
-  border: 1px solid $bevel_up;
+  border: 1px solid $bevel-up;
   padding: 0 4px;
 }
 
 .ui-mct-clear {
   cursor: pointer;
-  color: $link_color;
+  color: $link-color;
 }
 ```
 
@@ -62,7 +62,7 @@ src/main/webapp/themes/scss/winter/_userstyle.scss
 The import is resolved relative to the file it appears in, so it finds your
 partial in your webapp. The theme's variables are all defined by the time
 `_userstyle.scss` is reached, which is why the example above can use
-`$bevel_up` and `$link_color`.
+`$bevel-up` and `$link-color`.
 
 For a component in the framework itself the partial goes in the theme directory
 and the `@import` goes in `style.scss`, among the others of its kind.

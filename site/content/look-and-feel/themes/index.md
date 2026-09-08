@@ -98,7 +98,8 @@ theme names the ones a variant is most likely to want:
 
 | Variable | Used for |
 | --- | --- |
-| `$bg_color`, `$body-color` | the page itself |
+| `$body-bg`, `$body-color` | the page itself |
+| `$grey-ramp`, `ladder()` | anything that nests - see below |
 | `$line-color` | every line that is not part of a control: the edge of a panel, window, pane or menu, and rules between table cells |
 | `$surface-bg`, `$surface-color` | panels, popups, menus, layout panes |
 | `$surface-alt-bg` | a band or a second step up from a surface |
@@ -106,6 +107,83 @@ theme names the ones a variant is most likely to want:
 | `$border`, `$border-hover` | the border of a control - these come from the greyscale ramp, so they follow a variant already |
 | `$row-hover-bg`, `$row-hover-outline` | the hover wash on a table row |
 | `$cal-*` | the jscalendar popup (`_calendarTheme.scss`) |
+
+### Where a colour is named
+
+Colours live in two tiers, and a component reads only the second.
+
+The **main set** is in `_variables.scss`. Its names say what a colour is in the theme's
+own vocabulary and never mention a component - `$primary`, `$line-color`, `$surface-bg`,
+`$input-bg`, the `$errors-*` / `$warnings-*` / `$info-*` states, the `$black`..`$white`
+greyscale ramp.
+
+**Component colours** are in `_derived-variables.scss`: one variable per colour a
+component paints, each defaulting to a main-set value.
+
+```scss
+//-- LogTailer (.ui-tlf-*)
+$tlf-hdr-bg: $primary !default;
+```
+
+The component's own stylesheet then reads only its own variables - never a literal, and
+never a main-set value directly:
+
+```scss
+.ui-tlf-hdr {
+	background-color: $tlf-hdr-bg;
+}
+```
+
+That indirection is the point. An application can restyle one component by setting one
+variable, a variant can move the whole theme by setting the main set, and neither has to
+edit a component.
+
+Both tiers name variables the same way, in kebab-case:
+
+```
+$<component>-<part>-<role>
+```
+
+| | |
+| --- | --- |
+| `<component>` | the component's CSS class prefix with `ui-` removed - `tlf` for `.ui-tlf-*`, `pmnu` for `.ui-pmnu-*`. The main set omits it. |
+| `<part>` | the element inside it, where a component paints more than one thing: `hdr`, `title`, `item`. Omitted where it paints one. |
+| `<role>` | what the colour does, and the part that must not vary: `-bg`, `-color` (text - the word CSS itself uses, never a background), `-border`, `-outline`, `-shadow`. |
+
+! Underscores and hyphens are the same character to SCSS: `$link-color` and `$link-color`
+! are one variable. An application that sets a theme variable by its old `snake_case`
+! spelling therefore still sets the current one, and the rename that brought the theme's
+! last 79 such names into line changed not one byte of the compiled stylesheet.
+
+### Things that nest
+
+A component whose levels nest - a submenu inside a submenu, a tree inside a tree -
+should not hand-pick a grey per level. `$grey-ramp` is the theme's greyscale as an
+ordered list, and `ladder()` walks it:
+
+```scss
+$pmnu-bg: $grey-darker !default;			// the component's own rung
+
+.ui-pmnu     { background-color: ladder($pmnu-bg);    }
+.ui-pmnu-sm1 { background-color: ladder($pmnu-bg, 1); }		// one level in
+.ui-pmnu-sm2 { background-color: ladder($pmnu-bg, 2); }		// two levels in
+```
+
+A negative level walks the other way, for something that sits *under* the component's
+own surface - a title band, a border. Walking off either end of the ramp clamps rather
+than failing.
+
+Two things this buys. The steps stay even and stay distinct: the popup menu used to
+pick `#666` and `#888` for its middle two levels, close enough that rounding each to
+its nearest ramp step would have collapsed them into one colour. And a variant only
+sets the base - `$ladder-direction` inverts with the ramp, so a ladder keeps stepping
+*away from the page ground* in either variant. The dark variant's whole entry for the
+popup menu is two lines:
+
+```scss
+$ladder-direction: -1;			// the ramp is inverted, so ladders walk it the other way
+$pmnu-bg: $white-ter;			// a raised dark surface instead of an inverted one
+```
 
 A partial that still writes a colour literally cannot be redressed by a variant -
 so when you find one, give it a variable here rather than overriding it in the

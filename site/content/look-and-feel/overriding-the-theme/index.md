@@ -14,7 +14,7 @@ src/main/webapp/themes/scss/winter/_custominit.scss
 and set the variables you want to change:
 
 ```scss
-$link_color: #c00040;
+$link-color: #c00040;
 $font-family: "Inter", sans-serif;
 $font-size: 15px;
 ```
@@ -32,7 +32,7 @@ Every variable in the theme is declared with SASS's `!default` flag:
 
 ```scss
 $font-size: 14px !default;
-$link_color: #2200cc !default;
+$link-color: #2200cc !default;
 ```
 
 `!default` means *assign this only if the variable has no value yet*. So
@@ -93,13 +93,13 @@ the rest:
 | --- | --- | --- |
 | `$font-family` | a system font stack | the font for everything |
 | `$font-size` | `14px` | base text size |
-| `$fixed_font_family` | `Courier New, Courier, monospace` | code and other fixed-width text |
-| `$bg_color` | `#ffffff` | page background |
-| `$body-image` | none | a background image for the body |
+| `$fixed-font-family` | `Courier New, Courier, monospace` | code and other fixed-width text |
+| `$body-bg` | `#ffffff` | page background |
+| `$body-bg-img` | none | a background image for the body |
 | `$horizontal-padding` | `10px` | the horizontal padding components inherit |
 | `$vertical-padding` | `10px` | the vertical one |
-| `$link_color` | `#2200cc` | links |
-| `$readonly_bg`, `$readonly_border` | transparent, `#EEEEEF` | how a readonly control shows |
+| `$link-color` | `#2200cc` | links |
+| `$readonly-bg`, `$readonly-border` | transparent, `#EEEEEF` | how a readonly control shows |
 
 `_derived-variables.scss` then names the semantic colours - `$primary`,
 `$info`, `$success`, `$warning`, `$danger`, `$light`, `$dark` - from the
