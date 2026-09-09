@@ -30,8 +30,8 @@ same way:
 static public final IThemeVariant HIGH_CONTRAST = IThemeVariant.of("high-contrast");
 ```
 
-Set it on the request context and it holds for the rest of the session, so a
-choice made on one page carries to every page after it:
+Set it on the request context and it holds for the rest of the session - and for
+the sessions after it, because the choice goes into a cookie as well:
 
 ```java
 UIContext.getRequestContext().setThemeVariant(DarkThemeVariant.INSTANCE);
@@ -45,11 +45,53 @@ keeps whatever the user had typed:
 !demo(to.etc.domuidemo.pages.HomePage.ui)
 
 The sun/moon button at the top right of every demo page is the whole of it - see
-`ThemeVariantSwitch` in the demo source.
+`ThemeVariantSwitch` in the demo source. Press it, close the browser, come back:
+the page is still the way you left it.
 
-To decide the variant per user instead - from a stored preference, say - override
-`calculateUserThemeVariant()` in your `DomApplication`. It is asked once per
-session, when the session has not set a variant of its own:
+## The first visit
+
+A user who has not chosen anything yet gets the scheme their desktop is set to.
+The preference lives in the browser and the theme is a server side stylesheet, so
+DomUI asks for it in the one place where the two meet - a script at the top of the
+page head, before the stylesheet the browser is about to fetch:
+
+```plantuml
+@startuml
+skinparam shadowing false
+actor Browser
+participant "page" as Page
+participant "$colorscheme" as Part
+
+Browser -> Page: GET the page
+Page --> Browser: light, plus "do you want dark?"
+Browser -> Part: yes, and here is where I was
+Part -> Part: store the variant\n(session + cookie)
+Part --> Browser: 302, back to where you were
+Browser -> Page: GET the page
+Page --> Browser: dark, and no question this time
+@enduml
+```
+
+Because the script leaves before the stylesheet is fetched, nothing has been
+painted yet: the user sees the page they wanted, not a flash of the other one.
+
+The question is only put to a browser that has nothing stored, so it is asked once
+and then never again - and pressing the switch answers it too. What each answer
+means is `getThemeVariantForColorScheme()` in your `DomApplication`; returning
+`null` from it stops the question being asked at all, which is what a theme with no
+dark variant of its own must do:
+
+```java
+@Override
+public IThemeVariant getThemeVariantForColorScheme(String colorScheme) {
+	return null;
+}
+```
+
+To decide the variant per user instead - from a preference stored with the account,
+say - override `calculateUserThemeVariant()` in your `DomApplication`. It is asked
+when neither the session nor the cookie holds a choice, so switch the browser
+question off as well or it will overrule what you return:
 
 ```java
 @Override
@@ -58,7 +100,7 @@ public IThemeVariant calculateUserThemeVariant(IRequestContext ctx) {
 }
 ```
 
-Sessions that never choose get `default`.
+Sessions that get through all of that without a variant render in `default`.
 
 ## Where a theme file comes from
 
