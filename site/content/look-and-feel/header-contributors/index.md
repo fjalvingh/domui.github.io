@@ -58,7 +58,10 @@ other resource is:
 - one starting with `$` is served by the internal resource part, which looks
   first in the webapp's own files and then on the classpath under `/resources/`
   - that is how a component reaches a script that ships inside a jar, as in
-  `$js/aceeditor-1.4.13/ace.js`;
+  `$js/aceeditor-1.4.13/ace.js`. For the `$js/` and `$ts/` prefixes there is one
+  extra step: **outside development mode a `-min` sibling of the file is used
+  when one exists**, so `$js/mylib/mylib.js` serves `mylib-min.js` in production
+  and the readable file while developing, from the same reference;
 - anything else is taken as webapp-relative;
 - a name starting with `http` is left exactly as it is, which is how a CDN is
   used.

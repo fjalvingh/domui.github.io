@@ -54,6 +54,11 @@ installed. `-DskipTests` switches off the unit tests, the integration tests and 
 run that serves them in one go. The chromedriver matching your Chrome is downloaded
 automatically when the tests do run, so there is nothing to install by hand for that.
 
+The build also compiles the browser side: the first build downloads its own node into
+`to.etc.domui/node` and compiles DomUI's TypeScript with it, so that first build needs
+network access. [The browser-side build](../../development-environment/typescript-build/index.md)
+describes what it produces.
+
 !i DomUI compiles with the **Eclipse batch compiler (ecj)** rather than javac, through the
 !i `plexus-compiler-eclipse` plugin. That is what makes the `@NonNull`/`@Nullable`
 !i annotations in the source into compile-time null checks. See

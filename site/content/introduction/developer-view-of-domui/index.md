@@ -19,8 +19,10 @@ gets to the browser, and what the code you write looks like.
   [ecj in Maven](../../development-environment/ecj-in-maven/index.md)).
 - **Hibernate 7.2** is supported out of the box, and plain JDBC is too.
 - Kotlin can be used alongside Java; the framework itself is almost entirely Java.
-- The browser side is small: TypeScript compiled to Javascript, scss (sass) for
-  the styling, and **jQuery 3.7.1** as the backing Javascript library.
+- The browser side is small: TypeScript compiled to Javascript (see
+  [the browser-side build](../../development-environment/typescript-build/index.md)),
+  scss (sass) for the styling, and **jQuery 3.7.1** as the backing Javascript
+  library.
 - It supports all standard modern browsers.
 - A set of base libraries with common Java functionality is part of DomUI, so the
   framework does not drag in a large dependency tree.
