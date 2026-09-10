@@ -40,6 +40,8 @@ methods, and a demo page showing it working.
 - [Rich content editors](110-editors/index.md) - `HtmlEditor`, `CKEditor` and
   the `AceEditor`.
 - [Charts](120-charts/index.md) - `PlotlyGraph`, its traces and its layout.
+- [Diagrams](125-diagrams/index.md) - `MaxGraphPanel`, the model it draws, and
+  what the user may do to it.
 - [Asynchronous and long-running work](130-async/index.md) - `AsyncContainer`,
   `AsyncDiv` and `PollingDiv`.
 - [Agenda and calendar](140-agenda/index.md) - `WeekAgendaComponent`,
