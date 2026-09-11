@@ -20,6 +20,8 @@ that use them, under
   else's way.
 - [SASS/SCSS support](sass-scss-support/index.md) - the stylesheet pipeline, and
   passing values into a stylesheet from the outside.
+- [Moving an application to the module system](moving-to-modules/index.md) -
+  what changes in an application's stylesheets, file by file.
 - [Header contributors](header-contributors/index.md) - putting a stylesheet or
   a script in the page header.
 - [Animations](animations/index.md) - the jQuery effects DomUI exposes.

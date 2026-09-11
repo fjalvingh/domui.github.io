@@ -9,6 +9,8 @@ classes that all start with the component's own prefix:
 
 ```scss
 /* _myclearabletext.scss */
+@use "theme" as *;
+
 .ui-mct {
   display: inline-block;
 }
@@ -56,18 +58,22 @@ src/main/webapp/themes/scss/winter/_userstyle.scss
 
 ```scss
 /* _userstyle.scss */
-@import "myclearabletext";
+@use "myclearabletext";
 ```
 
-The import is resolved relative to the file it appears in, so it finds your
-partial in your webapp. The theme's variables are all defined by the time
-`_userstyle.scss` is reached, which is why the example above can use
-`$bevel-up` and `$link-color`.
+The name is resolved relative to the file it appears in, so it finds your
+partial in your webapp. The `@use "theme" as *;` at the top of the partial is
+what gives it `$bevel-up` and `$link-color`: a module sees only what it loads
+itself, and `theme` is the theme's variables, functions and mixins for the
+variant being compiled - see [SASS/SCSS support](../sass-scss-support/index.md).
 
 For a component in the framework itself the partial goes in the theme directory
-and the `@import` goes in `style.scss`, among the others of its kind.
+and the `@use` goes in `_stylesheet.scss`, among the others of its kind. What it
+paints is named in `_derived-variables.scss` - `$mct-border: $bevel-up !default;`
+- rather than declared in the partial, so that an application or a variant can
+set it.
 
-!! Nothing finds a partial by itself. Without the `@import` the file is never
+!! Nothing finds a partial by itself. Without the `@use` the file is never
 !! compiled, and no error says so.
 
 ## The CSS base name
@@ -136,7 +142,7 @@ your component along with everything else:
 ```
 
 The variables available are listed with the override mechanism, and the full
-set is in `_color.scss` and `_variables.scss` in
+set is in `_variables.scss` and `_derived-variables.scss` in
 [the winter theme](../the-winter-theme/index.md).
 
 The rules about what a component may *do* - its node structure, its margins,

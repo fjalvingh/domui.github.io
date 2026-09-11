@@ -121,19 +121,37 @@ built - **one file**, and no rule of the theme repeated anywhere:
 themes/scss/winter/dark/_color.scss
 ```
 
-`style.scss` keeps its plain `@import 'color'`; under the `dark` variant that
-import finds `dark/_color.scss`, under `default` it finds the theme's own. The
+The theme loads its variables through `color`; under the `dark` variant that
+name finds `dark/_color.scss`, under `default` it finds the theme's own. The
 same works for an image - a `dark/btnCancel.png` is served only to sessions
 rendering in `dark`, and every image the variant does not replace still comes
 from `winter`.
 
-That one file is enough because `_color.scss` is imported *before*
-`_variables.scss` and everything in that file carries `!default`: set a variable
-there and it wins, and `_derived-variables.scss` recomputes text, background,
-border, link and input colours from it. The dark one mostly turns the greyscale
-ramp upside down - `$white` becomes the darkest surface, `$grey-darker` the
-lightest text - so every rule that reaches for "the light end of the ramp" gets a
-dark colour without knowing it.
+That one file is enough because `_color.scss` is where the theme's two variable
+modules are loaded, and a module's `!default` variables can be given their
+values by whoever loads them. The variant's file loads them *with* its own
+values:
+
+```scss
+@forward "variables" with (
+	$white:        hsl(220, 13%, 11%) !default,		// page background
+	$grey-darker:  hsl(220, 14%, 88%) !default,		// $text-strong, input text
+	...
+);
+@use "variables" as v;
+@forward "derived-variables" with (
+	$pmnu-bg: v.$white-ter !default,
+	...
+);
+```
+
+and `_derived-variables.scss` recomputes text, background, border, link and
+input colours from what `_variables.scss` was given. The `!default` on each
+value is what lets an application's `_custominit.scss` still win over the
+variant. The dark one mostly turns the greyscale ramp upside down - `$white`
+becomes the darkest surface, `$grey-darker` the lightest text - so every rule
+that reaches for "the light end of the ramp" gets a dark colour without knowing
+it.
 
 For that to work a rule has to *have* a variable to take its colour from. The
 theme names the ones a variant is most likely to want:
@@ -223,15 +241,16 @@ sets the base - `$ladder-direction` inverts with the ramp, so a ladder keeps ste
 popup menu is two lines:
 
 ```scss
-$ladder-direction: -1;			// the ramp is inverted, so ladders walk it the other way
-$pmnu-bg: $white-ter;			// a raised dark surface instead of an inverted one
+$ladder-direction: -1 !default,		// the ramp is inverted, so ladders walk it the other way
+$pmnu-bg: v.$white-ter !default,	// a raised dark surface instead of an inverted one
 ```
 
 A partial that still writes a colour literally cannot be redressed by a variant -
 so when you find one, give it a variable here rather than overriding it in the
 variant. An application stylesheet, which the theme has no variables for, can
-branch on `$themeVariant` instead: that is what the demo does in
-`css/_darkstyle.scss` for its own colours.
+branch on the variant's name instead: that is what the demo does in
+`css/_darkstyle.scss` for its own colours, reading `p.$themeVariant` from the
+[parameters module](../sass-scss-support/index.md).
 
 The `$` on the front of `$themes` makes DomUI's resource resolver handle the
 name, and it looks in four places, **in this order**:
@@ -256,7 +275,7 @@ participant Browser
 participant "DomUI page" as Page
 participant ThemeManager
 participant SassPartFactory
-participant "jsass" as Sass
+participant "dart-sass" as Sass
 
 Page -> ThemeManager: getTheme(variant "default")
 ThemeManager --> Page: SassTheme (cached)
