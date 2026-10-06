@@ -30,8 +30,7 @@ same way:
 static public final IThemeVariant HIGH_CONTRAST = IThemeVariant.of("high-contrast");
 ```
 
-Set it on the request context and it holds for the rest of the session - and for
-the sessions after it, because the choice goes into a cookie as well:
+Set it on the request context and it holds for the rest of the session:
 
 ```java
 UIContext.getRequestContext().setThemeVariant(DarkThemeVariant.INSTANCE);
@@ -45,8 +44,21 @@ keeps whatever the user had typed:
 !demo(to.etc.domuidemo.pages.HomePage.ui)
 
 The sun/moon button at the top right of every demo page is the whole of it - see
-`ThemeVariantSwitch` in the demo source. Press it, close the browser, come back:
-the page is still the way you left it.
+`ThemeVariantSwitch` in the demo source.
+
+To keep the choice for the sessions after this one too, name a cookie for it in
+your `DomApplication.initialize()`:
+
+```java
+setThemeVariantCookieName("myapp-theme-variant");
+```
+
+Now press the switch, close the browser, come back: the page is still the way you
+left it. The name is yours to choose, and there is no default, because every
+application on a host would otherwise read the same cookie and a choice made in
+one would carry into all the others. Without a name there is no cookie: the choice
+lasts as long as the session, and the browser is not asked for its preference
+either (see below), because the answer could not be kept.
 
 ## The first visit
 
@@ -76,8 +88,10 @@ Because the script leaves before the stylesheet is fetched, nothing has been
 painted yet: the user sees the page they wanted, not a flash of the other one.
 
 The question is only put to a browser that has nothing stored, so it is asked once
-and then never again - and pressing the switch answers it too. What each answer
-means is `getThemeVariantForColorScheme()` in your `DomApplication`; returning
+and then never again - and pressing the switch answers it too. It is not asked at
+all by an application without a theme cookie, since it could not keep the answer.
+What each answer means is `getThemeVariantForColorScheme()` in your
+`DomApplication`; returning
 `null` from it stops the question being asked at all, which is what a theme with no
 dark variant of its own must do:
 
