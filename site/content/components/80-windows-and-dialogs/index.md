@@ -28,7 +28,6 @@ The overlays - a window over the page, with or without buttons:
 | [`ErrorMessageDiv`](errormessagediv/index.md) | the same, as bare lines instead of a block |
 | [`MessageFlare`](messageflare/index.md) | a message that shows itself over the page and vanishes |
 | [`MessageLine`](messageline/index.md) | one line with an icon: a remark that is part of the screen |
-| [`InfoPanel`](infopanel/index.md) | a paragraph of explanation with a large icon |
 | [`Explanation`](explanation/index.md) | the same, with a severity |
 
 ## An overlay is added to the page

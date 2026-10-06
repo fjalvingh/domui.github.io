@@ -128,70 +128,79 @@ is found:
 | 3 | `$themes/scss/all` | always |
 
 Because the first directory that has a file wins, a variant overrides exactly
-what it wants to and inherits the rest. That is how the shipped dark variant is
-built - **one file**, and no rule of the theme repeated anywhere:
+what it wants to and inherits the rest. A variant replaces **the two files that hold the
+theme's colours**, and the images that do not work in it - and no rule of the theme is
+repeated anywhere:
 
 ```
-themes/scss/winter/dark/_color.scss
+themes/scss/winter/_palette.scss              the light theme's main set of colours
+themes/scss/winter/_component-colors.scss     ...and one colour per thing a component paints
+themes/scss/winter/dark/_palette.scss         the dark variant's own copy of each
+themes/scss/winter/dark/_component-colors.scss
+themes/scss/winter/dark/*.png, *.gif          the images that need a dark version
 ```
 
-The theme loads its variables through `color`; under the `dark` variant that
-name finds `dark/_color.scss`, under `default` it finds the theme's own. The
-same works for an image - a `dark/btnCancel.png` is served only to sessions
-rendering in `dark`, and every image the variant does not replace still comes
-from `winter`.
+Under the `dark` variant the theme's `@forward "palette"` finds `dark/_palette.scss`,
+under `default` it finds the theme's own. The same works for an image - a
+`dark/btn-datein.png` is served only to sessions rendering in `dark`, for a `url()` in a
+stylesheet and for a `THEME/btn-datein.png` in Java alike, and every image the variant
+does not replace still comes from `winter`.
 
-That one file is enough because `_color.scss` is where the theme's two variable
-modules are loaded, and a module's `!default` variables can be given their
-values by whoever loads them. The variant's file loads them *with* its own
-values:
+A variant's copy **replaces** the light file completely; it does not adjust it. So it
+declares every variable the light file declares - one it leaves out is a compile error the
+moment a stylesheet reads it - and nothing in it is computed from the light theme. Every
+colour of the dark variant is a value someone chose, written in one of its two files:
 
 ```scss
-@forward "variables" with (
-	$white:        hsl(220, 13%, 11%) !default,		// page background
-	$grey-darker:  hsl(220, 14%, 88%) !default,		// $text-strong, input text
-	...
-);
-@use "variables" as v;
-@forward "derived-variables" with (
-	$pmnu-bg: v.$white-ter !default,
-	...
-);
+// themes/scss/winter/dark/_palette.scss
+$body-bg: #2B2B2B !default;              // the page: Darcula's editor ground
+$surface-bg: #313335 !default;           // a panel on the page, one step up
+$ground-bg: #45494A !default;            // what a control or button is filled with
+$text-color: #BBBBBB !default;
+$primary: #CC7832 !default;              // the accent, muted for a dark page
+...
 ```
 
-and `_derived-variables.scss` recomputes text, background, border, link and
-input colours from what `_variables.scss` was given. The `!default` on each
-value is what lets an application's `_custominit.scss` still win over the
-variant. The dark one mostly turns the greyscale ramp upside down - `$white`
-becomes the darkest surface, `$grey-darker` the lightest text - so every rule
-that reaches for "the light end of the ramp" gets a dark colour without knowing
-it.
+The dark variant DomUI ships is modelled on IntelliJ's Darcula: dark grey rather than
+black, neutral greys for the grounds, a steel blue for what structures a page (caption
+bars, tab strips, table headers) and Darcula's orange for what acts. Every pair of text
+and ground it uses is tested for WCAG AA contrast.
 
-For that to work a rule has to *have* a variable to take its colour from. The
-theme names the ones a variant is most likely to want:
+The `!default` on each value is what lets an application still set it: an application's
+[`_custominit.scss`](../overriding-the-theme/index.md) wins over both variants, and its
+`_variant-custominit.scss` sets a value for one variant only.
+
+For a variant to recolour something, a rule has to *have* a variable to take its colour
+from. The theme names the ones a variant is most likely to want:
 
 | Variable | Used for |
 | --- | --- |
 | `$body-bg`, `$body-color` | the page itself |
-| `$grey-ramp`, `ladder()` | anything that nests - see below |
-| `$line-color` | every line that is not part of a control: the edge of a panel, window, pane or menu, and rules between table cells |
-| `$surface-bg`, `$surface-color` | panels, popups, menus, layout panes |
-| `$surface-alt-bg` | a band or a second step up from a surface |
+| `$surface-bg`, `$surface-color`, `$surface-alt-bg`, `$window-bg` | panels, a band inside one, floating windows and popups |
+| `$ground-bg`, `$ground-alt-bg` | what a control or button is filled with, and a recessed or static one |
+| `$text-color`, `$text-strong-color`, `$text-muted` | text at three strengths |
+| `$line-soft`, `$line-color`, `$line-strong`, `$line-hard` | every line that is not part of a control, from the quietest to a frame |
+| `$control-border`, `$control-hover-border`, `$control-active-border` | the edge of an input or a button |
 | `$input-bg`, `$input-color`, `$input-ro-bg-top`/`-bottom` | input controls |
-| `$border`, `$border-hover` | the border of a control - these come from the greyscale ramp, so they follow a variant already |
+| `$primary`, `$link-color`, `$selected-bg`, `$highlight-bg` | the accent, links, selection |
+| `$header-bg`, `$title-bg`, `$title-color` | caption bars and title bands |
+| `$errors-*`, `$warnings-*`, `$info-*` | the states, each a ground, a text colour and an edge |
 | `$row-hover-bg`, `$row-hover-outline` | the hover wash on a table row |
-| `$cal-*` | the jscalendar popup (`_calendarTheme.scss`) |
+| `$dt-*`, `$tab-*`, `$cal-*`, ... | the colours of one component - see below |
+
+The greys `$white` .. `$black` are there too, and in every variant they mean what they
+say: `$white` is white. A rule that wants "a surface" or "a line" takes the role for it,
+not a grey.
 
 ### Where a colour is named
 
 Colours live in two tiers, and a component reads only the second.
 
-The **main set** is in `_variables.scss`. Its names say what a colour is in the theme's
+The **main set** is in `_palette.scss`. Its names say what a colour is in the theme's
 own vocabulary and never mention a component - `$primary`, `$line-color`, `$surface-bg`,
-`$input-bg`, the `$errors-*` / `$warnings-*` / `$info-*` states, the `$black`..`$white`
-greyscale ramp.
+`$input-bg`, the `$errors-*` / `$warnings-*` / `$info-*` states, the roles above.
 
-**Component colours** are in `_derived-variables.scss`: one variable per colour a
+**Component colours** are in `_component-colors.scss`: one variable per colour a
 component paints, each defaulting to a main-set value.
 
 ```scss
@@ -200,7 +209,8 @@ $tlf-hdr-bg: $primary !default;
 ```
 
 The component's own stylesheet then reads only its own variables - never a literal, and
-never a main-set value directly:
+never a main-set value directly - and never computes a colour itself: a hover or a
+pressed shade is a variable of its own too.
 
 ```scss
 .ui-tlf-hdr {
@@ -209,8 +219,10 @@ never a main-set value directly:
 ```
 
 That indirection is the point. An application can restyle one component by setting one
-variable, a variant can move the whole theme by setting the main set, and neither has to
-edit a component.
+variable, a variant can map a component onto different roles than the light theme does,
+and neither has to edit a component. Both files exist once per variant. The light ones
+may still derive a value with `lighter()` or `findColorInvert()` where that is what the
+light theme always did; a variant states every value.
 
 Both tiers name variables the same way, in kebab-case:
 
@@ -224,47 +236,36 @@ $<component>-<part>-<role>
 | `<part>` | the element inside it, where a component paints more than one thing: `hdr`, `title`, `item`. Omitted where it paints one. |
 | `<role>` | what the colour does, and the part that must not vary: `-bg`, `-color` (text - the word CSS itself uses, never a background), `-border`, `-outline`, `-shadow`. |
 
-! Underscores and hyphens are the same character to SCSS: `$link-color` and `$link-color`
+! Underscores and hyphens are the same character to SCSS: `$link_color` and `$link-color`
 ! are one variable. An application that sets a theme variable by its old `snake_case`
-! spelling therefore still sets the current one, and the rename that brought the theme's
-! last 79 such names into line changed not one byte of the compiled stylesheet.
+! spelling therefore still sets the current one.
+
+Fonts, sizes and spacing are not colours, and are not per variant: they are in
+`_variables.scss` and `_derived-variables.scss`, shared by all.
 
 ### Things that nest
 
-A component whose levels nest - a submenu inside a submenu, a tree inside a tree -
-should not hand-pick a grey per level. `$grey-ramp` is the theme's greyscale as an
-ordered list, and `ladder()` walks it:
+A component whose levels nest - a submenu inside a submenu - states each level as a
+variable of its own, in each variant: `$pmnu-bg`, `$pmnu-sm1-bg`, `$pmnu-sm2-bg`,
+`$pmnu-sm3-bg`. In light each submenu is a step lighter grey, in dark a step lighter
+panel; the variant chooses the steps, rather than walking a scale that would have to
+mean something different in each.
 
-```scss
-$pmnu-bg: $grey-darker !default;			// the component's own rung
+### Images
 
-.ui-pmnu     { background-color: ladder($pmnu-bg);    }
-.ui-pmnu-sm1 { background-color: ladder($pmnu-bg, 1); }		// one level in
-.ui-pmnu-sm2 { background-color: ladder($pmnu-bg, 2); }		// two levels in
-```
-
-A negative level walks the other way, for something that sits *under* the component's
-own surface - a title band, a border. Walking off either end of the ramp clamps rather
-than failing.
-
-Two things this buys. The steps stay even and stay distinct: the popup menu used to
-pick `#666` and `#888` for its middle two levels, close enough that rounding each to
-its nearest ramp step would have collapsed them into one colour. And a variant only
-sets the base - `$ladder-direction` inverts with the ramp, so a ladder keeps stepping
-*away from the page ground* in either variant. The dark variant's whole entry for the
-popup menu is two lines:
-
-```scss
-$ladder-direction: -1 !default,		// the ramp is inverted, so ladders walk it the other way
-$pmnu-bg: v.$white-ter !default,	// a raised dark surface instead of an inverted one
-```
+An image that does not read on a dark page has a dark copy with the same name in
+`dark/`. The copies are not drawn by hand: `buildResources/dark-theme-images.sh` in the
+DomUI source makes them from the light images, turning their lightness around while
+keeping their colours, so a changed image is a re-run of the script. An image that must
+be there before anything can be loaded is no image at all: the sort arrows of a table
+header and the spinner of the "waiting for the server" message are drawn by css, in the
+variant's colours.
 
 A partial that still writes a colour literally cannot be redressed by a variant -
-so when you find one, give it a variable here rather than overriding it in the
-variant. An application stylesheet, which the theme has no variables for, can
-branch on the variant's name instead: that is what the demo does in
-`css/_darkstyle.scss` for its own colours, reading `p.$themeVariant` from the
-[parameters module](../sass-scss-support/index.md).
+so when you find one, give it a variable rather than overriding it in the variant. An
+application stylesheet can read the theme's roles with `@use "theme" as t;` - which is
+what the demo's `css/_darkstyle.scss` does for its own colours, inside a branch on
+`p.$themeVariant` from the [parameters module](../sass-scss-support/index.md).
 
 The `$` on the front of `$themes` makes DomUI's resource resolver handle the
 name, and it looks in four places, **in this order**:

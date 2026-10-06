@@ -32,8 +32,8 @@ methods, and a demo page showing it working.
 - [Windows, dialogs and messages](80-windows-and-dialogs/index.md) - `Window`,
   `Dialog`, `InputDialog`, `MsgBox2`, `ExceptionDialog` and the components that
   show a message on the page.
-- [Navigation and menus](90-navigation/index.md) - `BreadCrumb2`,
-  `AppPageTitleBar`, `ALink` and the two menus.
+- [Navigation and menus](90-navigation/index.md) - `BreadCrumb2`, `ALink` and
+  the two menus.
 - [Images, icons and file upload](100-images-and-icons/index.md) - `IIconRef`
   and the three kinds of icon, `Img`, the two image controls and the two upload
   controls.

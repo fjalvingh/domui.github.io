@@ -148,40 +148,74 @@ the theme.
 
 ## A variant of your own
 
-A variant directory used to hold a `_color.scss` of plain `!default`
-declarations that won by being loaded first. It now *configures* the two
-variable modules, which is `@forward ... with`:
+A variant directory holds its own copies of the theme's two colour files,
+`_palette.scss` and `_component-colors.scss`, and replaces them completely - it
+does not adjust the light ones:
 
-```scss
-// themes/scss/winter/high-contrast/_color.scss
-@forward "variables" with (
-	$black:      #000 !default,
-	$white:      #fff !default,
-	$line-color: #000 !default,
-	$link-color: #0000ee !default,
-);
-@use "variables" as v;
-@forward "derived-variables" with (
-	$dt-hdr-bg: v.$black !default,
-	$pmnu-bg:   v.$white !default,
-);
+```
+themes/scss/winter/high-contrast/_palette.scss
+themes/scss/winter/high-contrast/_component-colors.scss
+themes/scss/winter/high-contrast/_variant-custominit.scss     (may be empty; see below)
 ```
 
-Each variable goes in the clause of the file that declares it - `_variables.scss`
-or `_derived-variables.scss`; the compiler tells you when one is in the wrong
-clause - and keeps its `!default`, so that `_custominit.scss` still wins over
-the variant. A value in the second clause that needs one from the first reads
-it as `v.$name`. Trailing commas are fine. The shipped `dark/_color.scss` is a
-complete example.
+Start from a copy of DomUI's own: `winter/` for a light variant, `winter/dark/` for
+a dark one. Every value keeps its `!default`, so that the application's
+`_custominit.scss` still wins over the variant. Both files must declare every
+variable the theme's own declare - a variable left out is a compile error as soon as
+a stylesheet reads it, which is also how an upgrade tells you that the theme has a
+new colour for you to choose.
+
+The variant needs a `_variant-custominit.scss` of its own too, even an empty one:
+without it the variant takes the light variant's.
+
+!! Before October 2026 a variant was a single `_color.scss` that *configured* the
+!! light variables, `@forward "variables" with (...)` and
+!! `@forward "derived-variables" with (...)`. That file is no longer read: the theme's
+!! own `_color.scss` now forwards the colour files, and a variant that still has the
+!! old one fails with "This variable was not declared with !default in the @used
+!! module". Move its values into the two files above.
+
+Only want a few colours different in dark? Then you need no variant at all: put
+them in `themes/scss/winter/dark/_variant-custominit.scss` - see
+[overriding the theme](../overriding-the-theme/index.md).
 
 ## A copy of a framework partial
 
 A webapp file that shadows one of the theme's partials - a copy of
 `_datatable.scss` with an edit - has to be brought to the new form: the
 `@use "theme" as *;` header, and no `!default` declarations, which the theme
-keeps in `_derived-variables.scss`. Better, now as before, is to not have the
+keeps in `_component-colors.scss`. Better, now as before, is to not have the
 copy: set the component's variables in `_custominit.scss`, or add your rules
 in `_userstyle.scss`.
+
+## After the dark theme work
+
+The dark variant was reworked in October 2026: each variant got its own colour
+files, and the components, images and variables that did not survive it went. What
+an application may have to change:
+
+- **Variables that are gone.** Setting one in `_custominit.scss` is a compile error.
+  `$title-bg-img`, `$tab-img`, `$tab-close-img`, `$tab-close-hover-img`,
+  `$tab-arrows-img`, `$tab-inactive-color`, `$tab-hover-inactive-color`,
+  `$tab-active-color`, `$tab-btm-border-width`, `$stbp-border`,
+  `$stbp-pager-border` (all of the old ScrollableTabPanel and title bar),
+  `$ipa-border` (InfoPanel), `$expl-border` (the old Explanation),
+  `$grey-ramp`, `$ladder-direction` and `$shades`. The function `ladder()` is gone
+  too: a nested level is a variable of its own now (`$pmnu-sm1-bg`...).
+- **Components that are gone.** `AppPageTitleBar`, its base `BasePageTitleBar` and
+  `DomApplication.getDefaultPageTitleBar()`: applications write their own title bar.
+  `InfoPanel`: use an `Explanation`, which has the same room for text and a
+  severity. With them the css classes `.ui-atl*` and `.ui-ipa`, and `.ui-msgln2`,
+  which nothing created.
+- **Images that are gone.** An application that used one by its `THEME/` name gets
+  a missing image, and can copy it from an earlier DomUI into its own webapp:
+  `72x24_back`, `bg-expl`, `bg-horiz-separator`, `bg-new-ttl1`, `bg-new-ttl2`, `bg-ttl-domui`, `big-error`, `big-info`, `big-warning`, `blank`, `btnHeaderMenuActive`, `btn-hover-ClearMultipleLookup`, `btnMinus`, `bupl-cancel`, `defaultButton`, `exception-img-1`, `flare-important`, `hr-caption`, `iptLocation`, `iptSourceCode`, `lsel-delete`, `mbx-error`, `mbx-info`, `mbx-question`, `mbx-warning`, `pan-down`, `pan-left`, `pan-right`, `pan-up`, `paneh`, `panehc`, `panev`, `panevc`, `small-delete`, `sort-asc`, `sort-desc`, `sort-none`, `tab-all-domui`, `tab-blue-header-bg`, `tab-blue-header2-bg`, `tab-norm-left-sel`, `tab-norm-right-sel`, `tab-off-err-left`, `tab-off-err-right`, `tab-off-left`, `tab-off-right`, `tab-pnl-close`, `tab-pnl-close-hover`, `tab-scrl-icon`.
+  The big severity icons (`Theme.ICON_MBX_*`, `ICON_BIG_*`) are css markers now
+  rather than the `mbx-*` images.
+- **Light colours that changed**, in case a screenshot test notices: the
+  Explanation is a callout with a bar and a marker, MessageFlare has solid fills,
+  the HamburgerMenu is larger and opens against what opened it, TabPanel's tab strip
+  is a pale steel blue, and ScrollableTabPanel looks like TabPanel.
 
 ## Finding what is left
 

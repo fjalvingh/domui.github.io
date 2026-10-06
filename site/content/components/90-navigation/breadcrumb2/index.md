@@ -93,5 +93,6 @@ code replaces with `setValue()`, an observable one is a path the code *changes*.
 The crumb writes a `ul` of arrow-shaped steps under `.ui-brcr2`, with the last
 step marked `.ui-brcr2-a`. The colours are scss variables in `_breadcrumb2.scss`
 (`$brcr2-bg`, `$brcr2-color`, `$brcr2-hover-bg`, `$brcr2-sel-bg`,
-`$brcr2-sel-color`), so an application restyles the crumb by overriding those in
-its own `_variables.scss` rather than by writing css.
+`$brcr2-sel-color`), so an application restyles the crumb by setting those in its
+`_custominit.scss` - or in `_variant-custominit.scss`, for one
+[theme variant](../../../look-and-feel/themes/index.md) - rather than by writing css.

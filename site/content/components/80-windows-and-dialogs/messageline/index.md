@@ -50,6 +50,5 @@ excluding VAT"), not for the answer to something the user did. That is a
 [`ErrorMessageDiv`](../errormessagediv/index.md) or an
 [`ErrorPanel`](../errorpanel/index.md).
 
-For a whole paragraph rather than a line, use
-[`InfoPanel`](../infopanel/index.md) or
+For a whole paragraph rather than a line, use an
 [`Explanation`](../explanation/index.md).

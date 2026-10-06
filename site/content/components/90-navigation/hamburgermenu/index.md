@@ -54,11 +54,10 @@ Each entry takes its name, its icon and its reason to be disabled from its own
 action, exactly as a button made from that action does. A disabled entry is
 greyed out, shows its reason as a tooltip and does not answer a click.
 
-!! The menu does not appear *under the button*. It is positioned absolutely at
-!! `right: 0` of the block it is added to, so it lines up with the right edge of
-!! that block wherever the button happens to be. It therefore belongs to a
-!! button that is itself at the right - which is where `ExpandHeader` puts its
-!! three-bar button, and why it looks right there and lopsided anywhere else.
+The menu appears just below the node it was appended after - the button that
+opened it - lined up with that button's left edge, or with its right edge when
+there is no room to the right, as with the three-bar button of an `ExpandHeader`
+at the far right of its bar. `setAnchor(NodeBase)` shows it against another node.
 
 !! The menu does **not** run the action. It closes itself and hands the chosen
 !! action to the `onSelection` notify, and that is where `execute()` is called.

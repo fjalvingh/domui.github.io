@@ -14,7 +14,6 @@ Where you are, and how you get somewhere else:
 | Component | What it is for |
 | --- | --- |
 | [`BreadCrumb2`](breadcrumb2/index.md) | the path that led here, as steps you can click |
-| [`AppPageTitleBar`](apppagetitlebar/index.md) | the bar at the top of a page: icon, title, back button, buttons |
 | [`ALink`](alink/index.md) | a link to another page of the application |
 
 ...and the two menus:
@@ -45,11 +44,9 @@ skinparam rectangle {
 }
 rectangle "WindowSession\nthe shelved page stack" as WS #eef3fb
 rectangle "BreadCrumb2.createPageCrumb()\none step per shelved page" as BC
-rectangle "AppPageTitleBar.setShowBackButton()\nback to the page below" as TB
 rectangle "ALink / UIGoto\npush, replace or pop a page" as AL #ffffff
 
 WS --> BC : reads
-WS --> TB : reads
 AL --> WS : changes
 @enduml
 ```

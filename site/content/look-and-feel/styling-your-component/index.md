@@ -69,9 +69,9 @@ variant being compiled - see [SASS/SCSS support](../sass-scss-support/index.md).
 
 For a component in the framework itself the partial goes in the theme directory
 and the `@use` goes in `_stylesheet.scss`, among the others of its kind. What it
-paints is named in `_derived-variables.scss` - `$mct-border: $bevel-up !default;`
-- rather than declared in the partial, so that an application or a variant can
-set it.
+paints is named in `_component-colors.scss` - `$mct-border: $bevel-up !default;`,
+in the light theme's copy and in the dark variant's - rather than declared in the
+partial, so that an application or a variant can set it.
 
 !! Nothing finds a partial by itself. Without the `@use` the file is never
 !! compiled, and no error says so.
@@ -142,7 +142,8 @@ your component along with everything else:
 ```
 
 The variables available are listed with the override mechanism, and the full
-set is in `_variables.scss` and `_derived-variables.scss` in
+set is in `_palette.scss` and `_component-colors.scss` (the colours, one copy per
+variant) and `_variables.scss` and `_derived-variables.scss` (the rest), in
 [the winter theme](../the-winter-theme/index.md).
 
 The rules about what a component may *do* - its node structure, its margins,

@@ -34,9 +34,9 @@ The url is an ordinary web resource path, with `THEME/` in front of it meaning
 
 ## When to use it
 
-This is the button of the framework's own furniture: the back and close buttons
-of `AppPageTitleBar` and the expander of `ExpandHeader` are all `HoverButton`s,
-and their images live in the theme.
+This is the button of the framework's own furniture: the expander and the
+three-bar button of `ExpandHeader` are `HoverButton`s, and their images live in the
+theme.
 
 For anything else, prefer [`SmallImgButton`](../smallimgbutton/index.md): it
 takes an `IIconRef`, so it works with font icons, needs no image to be drawn in

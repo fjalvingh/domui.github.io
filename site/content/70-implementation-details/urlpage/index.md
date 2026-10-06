@@ -19,8 +19,8 @@ a `UrlPage` it is the `<title>` element of the document instead, because the
 page is the body and the head is rendered from it.
 
 `pageTitle` is a different property with a confusingly similar name: it is the
-page's name as [`AppPageTitleBar`](../../components/90-navigation/index.md) and
-the breadcrumb show it, and it never reaches the head.
+page's name as [the breadcrumb](../../components/90-navigation/breadcrumb2/index.md)
+shows it, and it never reaches the head.
 
 A page that sets no title gets one from
 `DomApplication.getDefaultPageTitle(body)`, which is

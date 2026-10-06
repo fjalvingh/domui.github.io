@@ -18,17 +18,20 @@ underscore - and reaches the stylesheet because something `@use`s it.
 
 ## What `style.scss` does
 
-Four lines:
+Six lines:
 
 ```scss
+@use "sass:map";
 @use "sass:meta";
 @use "custominit";
-@include meta.load-css("theme", $with: meta.module-variables("custominit"));
+@use "variant-custominit";
+@include meta.load-css("theme", $with: map.merge(meta.module-variables("custominit"), meta.module-variables("variant-custominit")));
 @include meta.load-css("stylesheet");
 ```
 
-It loads the application's `_custominit.scss`, configures the theme with the
-variables that file declares, and then loads the stylesheet proper. The order is
+It loads the application's `_custominit.scss` and `_variant-custominit.scss`,
+configures the theme with the variables those files declare, and then loads the
+stylesheet proper. The order is
 the theme's architecture: whatever the application says comes first, the
 theme's own defaults yield to it, and every component partial reads the result.
 The first two steps are described in
@@ -38,13 +41,15 @@ page is about.
 | File | What it is |
 | --- | --- |
 | `_index.scss` | the `theme` module: forwards `color`, `functions` and `bulmaish/core_defs`. Emits nothing |
-| `_color.scss` | the variant's configuration of the variables: forwards `variables` and `derived-variables`. A variant directory holds its own |
-| `_variables.scss` | the main set: palette, fonts, metrics |
-| `_derived-variables.scss` | one variable per thing a component paints, each defaulting to a main-set value |
-| `_functions.scss` | `ladder()`, `findColorInvert()`, `darker()`, `lighter()` and the rest |
+| `_color.scss` | forwards the four variable modules below. The same for every variant |
+| `_palette.scss` | the main set of colours. **One per variant**: `dark/_palette.scss` is the dark one |
+| `_component-colors.scss` | one colour per thing a component paints, each defaulting to a main-set value. **One per variant** |
+| `_variables.scss` | what is not a colour: fonts, sizes, spacing |
+| `_derived-variables.scss` | sizes derived from those |
+| `_functions.scss` | `findColorInvert()`, `contrastRatio()`, `darker()`, `lighter()` and the rest |
 | `bulmaish/_core_defs.scss` | the mixins every input control is built on |
 | `_userstyle.scss` | the application's own rules |
-| `_stylesheet.scss` | the list: 106 `@use` rules, one per file that emits css, in output order |
+| `_stylesheet.scss` | the list: 104 `@use` rules, one per file that emits css, in output order |
 
 ## The base layer
 
@@ -93,7 +98,7 @@ and it is almost always right. Each starts the same way:
 
 which is where its `$dt-border` and `@include ui-input-base` come from. A
 partial declares no `!default` variables of its own: what it paints is named in
-`_derived-variables.scss`, so that an application or a variant can set it.
+`_component-colors.scss`, so that an application or a variant can set it.
 
 The partials are grouped in `_stylesheet.scss` by what the component is - basic
 components, complex components, input components, multicomponents, panels and
