@@ -63,7 +63,9 @@ this control is deprecated for the same reason.
 
 The two texts are **css content**, drawn from the `data-checked` and
 `data-unchecked` attributes - which is why they can slide past each other
-without a round trip. The checkbox itself is a real checkbox, so the control
+without a round trip. The switch is two columns of the same width, each as wide as the
+longer of the two texts: a size class (`is-small` ... `is-xlarge`) sets the
+smallest it gets, and longer texts make it wider rather than wrap. The checkbox itself is a real checkbox, so the control
 keyboard-focuses and toggles the way a checkbox does.
 
 A mandatory control adds `ui-mandatory`, a read-only one `ui-ro` and a disabled
