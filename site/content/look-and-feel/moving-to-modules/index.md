@@ -146,38 +146,36 @@ $link-color: p.$link-color;
 which is one line per variable, and makes the file say which parameters drive
 the theme.
 
-## A variant of your own
+## A colour scheme of your own
 
-A variant directory holds its own copies of the theme's two colour files,
-`_palette.scss` and `_component-colors.scss`, and replaces them completely - it
-does not adjust the light ones:
+A colour scheme is one file of tokens, in a directory named for its nature and itself:
 
 ```
-themes/scss/winter/high-contrast/_palette.scss
-themes/scss/winter/high-contrast/_component-colors.scss
-themes/scss/winter/high-contrast/_variant-custominit.scss     (may be empty; see below)
+themes/scss/winter/dark/ocean/_scheme.scss
 ```
 
-Start from a copy of DomUI's own: `winter/` for a light variant, `winter/dark/` for
-a dark one. Every value keeps its `!default`, so that the application's
-`_custominit.scss` still wins over the variant. Both files must declare every
-variable the theme's own declare - a variable left out is a compile error as soon as
-a stylesheet reads it, which is also how an upgrade tells you that the theme has a
-new colour for you to choose.
+Start from a copy of one of DomUI's - `light/winter/_scheme.scss` for a light scheme,
+`dark/midnight/_scheme.scss` for a dark one - and change the colours; the nature's
+palette works every other colour out from them. The file must declare every token its
+nature reads, which is also how an upgrade tells you that a nature reads a new one.
+Then offer it:
 
-The variant needs a `_variant-custominit.scss` of its own too, even an empty one:
-without it the variant takes the light variant's.
+```java
+static private final IThemeVariant OCEAN = new SchemeVariant(ThemeNature.DARK, "ocean", "Ocean");
 
-!! Before October 2026 a variant was a single `_color.scss` that *configured* the
-!! light variables, `@forward "variables" with (...)` and
-!! `@forward "derived-variables" with (...)`. That file is no longer read: the theme's
-!! own `_color.scss` now forwards the colour files, and a variant that still has the
-!! old one fails with "This variable was not declared with !default in the @used
-!! module". Move its values into the two files above.
+@Override
+public List<IThemeVariant> getThemeVariants() {
+	return List.of(SchemeVariant.WINTER, OCEAN, SchemeVariant.MIDNIGHT);
+}
+```
 
-Only want a few colours different in dark? Then you need no variant at all: put
-them in `themes/scss/winter/dark/_variant-custominit.scss` - see
-[overriding the theme](../overriding-the-theme/index.md).
+A component colour the scheme wants different from what its tokens give goes in a
+`_scheme-exceptions.scss` next to it; a value you would rather set by name, in a
+`_variant-custominit.scss` there - see [overriding the theme](../overriding-the-theme/index.md).
+
+!! Before October 2026 a variant of your own was a directory with its own copies of
+!! `_palette.scss` and `_component-colors.scss`, such as `themes/scss/winter/high-contrast/`.
+!! Such a directory is no longer on any search path: make its colours a scheme.
 
 ## A copy of a framework partial
 
@@ -190,7 +188,8 @@ in `_userstyle.scss`.
 
 ## After the dark theme work
 
-The dark variant was reworked in October 2026: each variant got its own colour
+The dark variant was reworked in October 2026 - before it became the colour schemes of
+the section above: each variant got its own colour
 files, and the components, images and variables that did not survive it went. What
 an application may have to change:
 
@@ -216,6 +215,30 @@ an application may have to change:
   Explanation is a callout with a bar and a marker, MessageFlare has solid fills,
   the HamburgerMenu is larger and opens against what opened it, TabPanel's tab strip
   is a pale steel blue, and ScrollableTabPanel looks like TabPanel.
+
+## After the colour schemes
+
+In October 2026 every variant became a colour scheme of a nature, light or dark (see
+[themes](../themes/index.md)). What an application may have to change:
+
+- **Classes that are gone.** `DefaultThemeVariant.INSTANCE` is `SchemeVariant.WINTER`;
+  `DarkThemeVariant.INSTANCE` is one of the dark schemes, `SchemeVariant.MIDNIGHT` (the
+  new default for dark) or `SchemeVariant.DARCULA` (what the dark variant looked like,
+  more or less). `IThemeVariant.of(name)` is gone - a name is looked up with
+  `DomApplication.findThemeVariant(name)` - and so is `IThemeFactory.getDefaultVariant()`:
+  the default is the first light scheme of `getThemeVariants()`.
+  `new SassThemeFactory(style)` takes the list of the style's schemes as a second argument.
+- **Names that are gone.** A session or cookie that still holds `default` or `dark` gets
+  the default scheme, light; a URL `$THEME/dark/...` is served from it too. A sheet that
+  branched on `p.$themeVariant == "dark"` should test `p.$themeNature` instead.
+- **Files that moved.** `themes/scss/winter/_variant-custominit.scss` is now
+  `themes/scss/winter/light/_variant-custominit.scss`; the dark one stays where it was.
+- **Files that must go.** A `themes/scss/winter/_palette.scss`, or a
+  `themes/scss/winter/dark/_palette.scss` or `dark/_component-colors.scss`, left in the
+  webapp shadows DomUI's own and breaks the theme. The dark colours are now chosen per
+  scheme, the light ones in `light/winter/_scheme.scss`.
+- **Darcula changed** a little when it became a scheme: it has the light theme's orange
+  accent and buttons, like every dark scheme, and a lighter red.
 
 ## Finding what is left
 

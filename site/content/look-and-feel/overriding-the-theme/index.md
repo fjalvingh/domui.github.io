@@ -38,16 +38,17 @@ $link-color: #2200cc !default;
 another*. `style.scss`, the theme's entry point, does exactly that configuring:
 
 ```scss
-@use "custominit";
-@use "variant-custominit";
-@include meta.load-css("theme", $with: map.merge(meta.module-variables("custominit"), meta.module-variables("variant-custominit")));
+@use "theme-configuration" as c;
+@include meta.load-css("theme", $with: c.$configuration);
 @include meta.load-css("stylesheet");
 ```
 
-It loads your `_custominit.scss` as a module - and `_variant-custominit.scss`, see
-below - hands every variable they declare to the theme as its configuration, and
-only then loads the stylesheet proper - so by the time any component partial reads
-`$link-color`, the value is yours.
+`_theme-configuration.scss` loads your `_custominit.scss` as a module - and
+`_variant-custominit.scss`, see below - and `style.scss` hands every variable they
+declare to the theme as its configuration, and only then loads the stylesheet proper -
+so by the time any component partial reads `$link-color`, the value is yours. (The same
+configuration carries the theme's own [exceptions](../themes/index.md); yours outrank
+them.)
 
 Two consequences of that are worth knowing:
 
@@ -63,20 +64,21 @@ Two consequences of that are worth knowing:
 
   ```scss
   @use "parameters" as p;
-  $link-color: if(p.$themeVariant == "dark", #ff80a0, #c00040);
+  $link-color: if(p.$themeNature == "dark", #ff80a0, #c00040);
   ```
 
   For more than a value or two, the next section is the better way.
 
-## A value for one variant: `_variant-custominit.scss`
+## A value for light or dark: `_variant-custominit.scss`
 
-`_custominit.scss` applies to every [theme variant](../themes/index.md). A value
+`_custominit.scss` applies to every [colour scheme](../themes/index.md). A value
 that should differ between light and dark goes in `_variant-custominit.scss`
-instead, which exists once per variant:
+instead, which exists once per nature - or once per scheme:
 
 ```
-src/main/webapp/themes/scss/winter/_variant-custominit.scss        the light variant
-src/main/webapp/themes/scss/winter/dark/_variant-custominit.scss   the dark variant
+src/main/webapp/themes/scss/winter/light/_variant-custominit.scss       every light scheme
+src/main/webapp/themes/scss/winter/dark/_variant-custominit.scss        every dark scheme
+src/main/webapp/themes/scss/winter/dark/nord/_variant-custominit.scss   Nord only, instead of the one above
 ```
 
 ```scss
@@ -87,14 +89,18 @@ $header-bg: #3b4f63;
 ```
 
 It is written like `_custominit.scss` - plain declarations of variables the theme
-declares - and where both files set a variable, the variant's file wins. You only
-write what you change: every colour you leave alone still comes from DomUI's own
-palette for that variant, including the ones a later DomUI version adds.
+declares - and where both files set a variable, `_variant-custominit.scss` wins. You
+only write what you change: every colour you leave alone still comes from the scheme,
+including the ones a later DomUI version adds.
 
-The light file cannot leak into dark: DomUI ships an empty
-`_variant-custominit.scss` in its own `dark/` directory, which is found before your
-light one when the dark sheet is compiled. A variant directory of your own needs one
-too, even an empty one, or it takes the light file.
+The light file cannot leak into dark, because each lives in its nature's directory and
+the search path of a scheme only has its own nature in it. A copy in a scheme's own
+directory is found before the nature's, so it replaces it for that scheme - it does not
+add to it.
+
+!! Before the colour schemes (October 2026) the light file was
+!! `themes/scss/winter/_variant-custominit.scss`. That file is no longer read: move it to
+!! `themes/scss/winter/light/`.
 
 ## The second hook: `_userstyle.scss`
 
@@ -116,7 +122,7 @@ $my-panel-bg: lighter($primary, 40%);
 }
 ```
 
-`theme` is a name the framework resolves to the theme's module, for the variant
+`theme` is a name the framework resolves to the theme's module, for the colour scheme
 the sheet is being compiled for - see
 [SASS/SCSS support](../sass-scss-support/index.md). `as *` makes its members
 available without a prefix, so a theme variable is written the way the theme
@@ -127,11 +133,12 @@ Put the file in the same directory, next to `_custominit.scss`.
 | Use | Where |
 | --- | --- |
 | change a theme variable | `_custominit.scss` |
-| change it for one variant only | `_variant-custominit.scss`, in that variant's directory |
+| change it for light or dark only, or for one scheme | `_variant-custominit.scss`, in the nature's or the scheme's directory |
+| a colour scheme of your own | a `_scheme.scss` of your own - see [themes](../themes/index.md) |
 | use a theme variable, or add rules of your own | `_userstyle.scss` |
 | a value that differs per request or per user | `_custominit.scss`, reading `parameters` - see [SASS/SCSS support](../sass-scss-support/index.md) |
 
-!! Do not copy `_palette.scss`, `_component-colors.scss`, `_variables.scss` or
+!! Do not copy a `_palette.scss`, `_component-colors.scss`, `_variables.scss` or
 !! `_derived-variables.scss` into your webapp to edit them. A copy **shadows** the
 !! framework's file completely, so every variable added to the theme afterwards is
 !! missing from your build and the stylesheet fails to compile on an upgrade. The
@@ -139,13 +146,12 @@ Put the file in the same directory, next to `_custominit.scss`.
 
 ## What you can override
 
-Every `!default` variable in the theme. The colours are in two files under
-`$themes/scss/winter` that exist once per variant - `_palette.scss`, the main set,
-and `_component-colors.scss`, which names what each component paints, each
-defaulting to a main-set value; the [themes](../themes/index.md) page explains how
-they relate. What is not a colour - fonts, sizes, spacing - is in `_variables.scss`
-and `_derived-variables.scss`, the same for every variant. The ones most
-applications reach for, with their light defaults:
+Every `!default` variable in the theme. The colours are in the nature's
+`_palette.scss` (`light/`, `dark/`), the main set, and in `_component-colors.scss`,
+which names what each component paints, each a role of the main set; the
+[themes](../themes/index.md) page explains how they relate. What is not a colour -
+fonts, sizes, spacing - is in `_variables.scss` and `_derived-variables.scss`, the same
+for every scheme. The ones most applications reach for, with their light defaults:
 
 | Variable | Default | What it sets |
 | --- | --- | --- |

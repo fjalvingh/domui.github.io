@@ -20,13 +20,14 @@ arrive as a module called `parameters`, which does not exist as a file:
 @use "parameters" as p;
 
 .dm-banner {
-  display: if(p.$themeVariant == "dark", none, block);
+  display: if(p.$themeNature == "dark", none, block);
 }
 ```
 
 The module is generated per request and holds a `$name: value;` declaration for
-each variable the framework has for this stylesheet. `$themeVariant` is always
-there: the name of the theme variant the sheet is being compiled for, which is
+each variable the framework has for this stylesheet. Three are always there: the
+colour scheme the sheet is being compiled for, `$themeVariant` (`dark-nord`), and its
+two parts, `$themeNature` (`light` or `dark`) and `$themeScheme` (`nord`) - which is
 how an application sheet branches on dark and light. The rest comes from two
 sources.
 
@@ -86,7 +87,7 @@ $link-color: p.$brand-color;
 
 The other name the framework resolves for you is `theme`: the theme's own
 module - its variables, functions and mixins, nothing that emits css - for the
-variant the sheet is being compiled for.
+colour scheme the sheet is being compiled for.
 
 ```scss
 @use "theme" as *;

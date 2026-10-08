@@ -10,7 +10,7 @@ menu:
 to.etc.domui/src/main/resources/resources/themes/scss/winter/
 ```
 
-117 SCSS files, of which `style.scss` is the only one the compiler is ever
+About 130 SCSS files, of which `style.scss` is the only one the compiler is ever
 handed. Everything else is a **partial** - a file whose name starts with an
 underscore - and reaches the stylesheet because something `@use`s it.
 
@@ -18,20 +18,19 @@ underscore - and reaches the stylesheet because something `@use`s it.
 
 ## What `style.scss` does
 
-Six lines:
+Four lines:
 
 ```scss
-@use "sass:map";
 @use "sass:meta";
-@use "custominit";
-@use "variant-custominit";
-@include meta.load-css("theme", $with: map.merge(meta.module-variables("custominit"), meta.module-variables("variant-custominit")));
+@use "theme-configuration" as c;
+@include meta.load-css("theme", $with: c.$configuration);
 @include meta.load-css("stylesheet");
 ```
 
-It loads the application's `_custominit.scss` and `_variant-custominit.scss`,
-configures the theme with the variables those files declare, and then loads the
-stylesheet proper. The order is
+`_theme-configuration.scss` gathers what the theme is configured with: the theme's own
+exceptions for the nature and the scheme, and the application's `_custominit.scss` and
+`_variant-custominit.scss`, which outrank them. `style.scss` configures the theme with
+that, and then loads the stylesheet proper. The order is
 the theme's architecture: whatever the application says comes first, the
 theme's own defaults yield to it, and every component partial reads the result.
 The first two steps are described in
@@ -41,9 +40,12 @@ page is about.
 | File | What it is |
 | --- | --- |
 | `_index.scss` | the `theme` module: forwards `color`, `functions` and `bulmaish/core_defs`. Emits nothing |
-| `_color.scss` | forwards the four variable modules below. The same for every variant |
-| `_palette.scss` | the main set of colours. **One per variant**: `dark/_palette.scss` is the dark one |
-| `_component-colors.scss` | one colour per thing a component paints, each defaulting to a main-set value. **One per variant** |
+| `_theme-configuration.scss` | what the theme is configured with, see above |
+| `_color.scss` | forwards the four variable modules below. The same for every scheme |
+| `light/_palette.scss`, `dark/_palette.scss` | the main set of colours, **one per nature**, worked out from the scheme's tokens |
+| `light/winter/_scheme.scss`, `dark/nord/_scheme.scss`, ... | a colour scheme's tokens: **one per scheme** - see [themes](../themes/index.md) |
+| `_component-colors.scss` | one colour per thing a component paints, each a role of the main set. One for all schemes |
+| `_nature-exceptions.scss`, `_scheme-exceptions.scss` | component colours a nature or a scheme wants different; empty here, filled in `dark/` and `light/winter/` |
 | `_variables.scss` | what is not a colour: fonts, sizes, spacing |
 | `_derived-variables.scss` | sizes derived from those |
 | `_functions.scss` | `findColorInvert()`, `contrastRatio()`, `darker()`, `lighter()` and the rest |
@@ -98,7 +100,7 @@ and it is almost always right. Each starts the same way:
 
 which is where its `$dt-border` and `@include ui-input-base` come from. A
 partial declares no `!default` variables of its own: what it paints is named in
-`_component-colors.scss`, so that an application or a variant can set it.
+`_component-colors.scss`, so that an application or a scheme can set it.
 
 The partials are grouped in `_stylesheet.scss` by what the component is - basic
 components, complex components, input components, multicomponents, panels and

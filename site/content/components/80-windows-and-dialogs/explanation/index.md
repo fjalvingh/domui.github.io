@@ -25,7 +25,7 @@ cp.add(new Explanation(MsgType.WARNING, "Deleting an artist deletes its albums w
 
 The type picks the css class (`ui-expl ui-info`, `ui-warning`, `ui-error`), and
 the theme draws the rest - there is no image - so the colour of the block follows
-what is being said, and the [theme variant](../../../look-and-feel/themes/index.md)
+what is being said, and the [colour scheme](../../../look-and-feel/themes/index.md)
 it is said in. The text is xml text: html in it is rendered, as one paragraph.
 
 It is, like [`MessageLine`](../messageline/index.md), part of the page and not a

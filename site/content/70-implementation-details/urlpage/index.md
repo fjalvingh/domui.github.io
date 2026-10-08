@@ -72,4 +72,4 @@ point to the logic classes, when an application uses them.
 - `postbox()` is the page's `AsyncMessageLink`: how work on another thread hands
   results back to the page (see
   [asynchronous work](../../components/130-async/index.md)).
-- `setThemeVariant()` puts this page on a variant of the current theme.
+- `setThemeVariant()` puts the session on a colour scheme of the current theme, from this page on.

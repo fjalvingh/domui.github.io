@@ -15,36 +15,68 @@ setThemeFactory(SassThemeFactory.INSTANCE);
 That is all most applications ever do with themes. It cannot be changed
 afterwards, and there is no way to have two themes in play at the same time.
 
-What *can* differ from session to session is the theme's **variant** - which is
-how a dark and a light version of the same theme are done.
+What *can* differ from session to session is the theme's **colour scheme** - the
+theme's variant. A scheme is light or dark, and the winter theme comes with six of them.
 
 [TOC]
 
-## Variants
+## Colour schemes
 
-A variant is a name, and nothing more. DomUI ships one of its own - `dark`, a dark
-version of the winter theme - as `DarkThemeVariant.INSTANCE`; declare your own the
-same way:
+Every variant of the theme is a colour scheme of a **nature**, light or dark, and is
+named for both: `light-winter`, `dark-nord`. The winter theme ships these, as constants
+of `SchemeVariant`:
+
+| Variant | Constant | What it looks like |
+| --- | --- | --- |
+| `light-winter` | `WINTER` | DomUI's light theme |
+| `dark-midnight` | `MIDNIGHT` | deep indigo grounds, electric blue structure, neon accents (after Tokyo Night) |
+| `dark-darcula` | `DARCULA` | neutral greys with muted colours (after IntelliJ's Darcula) |
+| `dark-lagoon` | `LAGOON` | deep sea-green grounds with vivid teal structure |
+| `dark-violet` | `VIOLET` | aubergine grounds, violet structure, pink and cyan accents (after Dracula) |
+| `dark-nord` | `NORD` | arctic blue-grey grounds, frost blue structure: the calm one |
+
+The theme review page in the demo shows every component in one go, in whichever scheme
+you pick from the bar at its top:
+
+!demo(to.etc.domuidemo.pages.themereview.ThemeReviewPage.ui)
+
+Set a scheme on the request context and it holds for the rest of the session:
 
 ```java
-static public final IThemeVariant HIGH_CONTRAST = IThemeVariant.of("high-contrast");
-```
-
-Set it on the request context and it holds for the rest of the session:
-
-```java
-UIContext.getRequestContext().setThemeVariant(DarkThemeVariant.INSTANCE);
+UIContext.getRequestContext().setThemeVariant(SchemeVariant.NORD);
 ```
 
 The stylesheet link is written by the *full* page renderer, so after switching the
 page has to be reloaded for the new sheet to arrive. The demo does that with
 `appendJavascript("WebUI.refreshPage();")`, which keeps the conversation and so
-keeps whatever the user had typed:
+keeps whatever the user had typed. The sun/moon button at the top right of every demo
+page is the whole of a dark/light switch - see `ThemeVariantSwitch` in the demo source.
 
-!demo(to.etc.domuidemo.pages.HomePage.ui)
+### The schemes an application offers
 
-The sun/moon button at the top right of every demo page is the whole of it - see
-`ThemeVariantSwitch` in the demo source.
+`getThemeVariants()` in `DomApplication` returns the schemes a user can choose from, in
+the order they are offered - it is what a scheme picker shows, with each one's
+`getLabel()`. By default it is the theme's own list, the six above. Override it to leave
+some out, or to add schemes of your own:
+
+```java
+static private final IThemeVariant OCEAN = new SchemeVariant(ThemeNature.DARK, "ocean", "Ocean");
+
+@Override
+public List<IThemeVariant> getThemeVariants() {
+	return List.of(SchemeVariant.WINTER, OCEAN, SchemeVariant.NORD);
+}
+```
+
+The order means something: the **first light** scheme is the default, the one a session
+gets when nothing chose another (`getDefaultThemeVariant()`), and the first scheme of each
+nature is what a browser that prefers that nature gets (see below).
+
+A scheme that is not in the list is not recognised. A session, a cookie or a URL that
+names one - an old name, a scheme the application stopped offering, a name made up - gets
+the default instead of an error.
+
+### Keeping the choice
 
 To keep the choice for the sessions after this one too, name a cookie for it in
 your `DomApplication.initialize()`:
@@ -62,7 +94,7 @@ either (see below), because the answer could not be kept.
 
 ## The first visit
 
-A user who has not chosen anything yet gets the scheme their desktop is set to.
+A user who has not chosen anything yet gets the nature their desktop is set to.
 The preference lives in the browser and the theme is a server side stylesheet, so
 DomUI asks for it in the one place where the two meet - a script at the top of the
 page head, before the stylesheet the browser is about to fetch:
@@ -90,105 +122,113 @@ painted yet: the user sees the page they wanted, not a flash of the other one.
 The question is only put to a browser that has nothing stored, so it is asked once
 and then never again - and pressing the switch answers it too. It is not asked at
 all by an application without a theme cookie, since it could not keep the answer.
-What each answer means is `getThemeVariantForColorScheme()` in your
-`DomApplication`; returning
-`null` from it stops the question being asked at all, which is what a theme with no
-dark variant of its own must do:
+What each answer means is `getThemeVariantForColorScheme()` in your `DomApplication`:
+the first scheme of that nature in `getThemeVariants()` - so for the winter theme a dark
+desktop gets Midnight. An application that offers no dark scheme gets `null` there, and
+the question is not asked.
 
-```java
-@Override
-public IThemeVariant getThemeVariantForColorScheme(String colorScheme) {
-	return null;
-}
-```
-
-To decide the variant per user instead - from a preference stored with the account,
+To decide the scheme per user instead - from a preference stored with the account,
 say - override `calculateUserThemeVariant()` in your `DomApplication`. It is asked
 when neither the session nor the cookie holds a choice, so switch the browser
-question off as well or it will overrule what you return:
+question off as well (`setColorSchemeDetection(false)`) or it will overrule what you
+return:
 
 ```java
 @Override
 public IThemeVariant calculateUserThemeVariant(IRequestContext ctx) {
-	return userPrefersDark(ctx) ? DarkThemeVariant.INSTANCE : super.calculateUserThemeVariant(ctx);
+	return userPrefersDark(ctx) ? SchemeVariant.MIDNIGHT : super.calculateUserThemeVariant(ctx);
 }
 ```
 
-Sessions that get through all of that without a variant render in `default`.
+Sessions that get through all of that without a scheme render in the default, the first
+light one.
 
 ## Where a theme file comes from
 
-The style and the variant become a **search path**, tried in order until a file
-is found:
+The style, the nature and the scheme become a **search path**, the same for every
+scheme, tried in order until a file is found:
 
-| Order | Path | Present when |
+| Order | Path | Holds |
 | --- | --- | --- |
-| 1 | `$themes/scss/<style>/<variant>` | the variant is not `default` |
-| 2 | `$themes/scss/<style>` | always |
-| 3 | `$themes/scss/all` | always |
+| 1 | `$themes/scss/<style>/<nature>/<scheme>` | the scheme: `_scheme.scss` |
+| 2 | `$themes/scss/<style>/<nature>` | the nature: its `_palette.scss`, and its images |
+| 3 | `$themes/scss/<style>` | everything else: every rule of the theme, the component colours |
+| 4 | `$themes/scss/all` | what all themes share |
 
-Because the first directory that has a file wins, a variant overrides exactly
-what it wants to and inherits the rest. A variant replaces **the two files that hold the
-theme's colours**, and the images that do not work in it - and no rule of the theme is
-repeated anywhere:
+Because the first directory that has a file wins, a scheme or a nature overrides
+exactly what it wants to and inherits the rest. No rule of the theme is repeated
+anywhere; what differs is the colours, and a few images:
 
 ```
-themes/scss/winter/_palette.scss              the light theme's main set of colours
-themes/scss/winter/_component-colors.scss     ...and one colour per thing a component paints
-themes/scss/winter/dark/_palette.scss         the dark variant's own copy of each
-themes/scss/winter/dark/_component-colors.scss
-themes/scss/winter/dark/*.png, *.gif          the images that need a dark version
-```
-
-Under the `dark` variant the theme's `@forward "palette"` finds `dark/_palette.scss`,
-under `default` it finds the theme's own. The same works for an image - a
-`dark/btn-datein.png` is served only to sessions rendering in `dark`, for a `url()` in a
-stylesheet and for a `THEME/btn-datein.png` in Java alike, and every image the variant
-does not replace still comes from `winter`.
-
-A variant's copy **replaces** the light file completely; it does not adjust it. So it
-declares every variable the light file declares - one it leaves out is a compile error the
-moment a stylesheet reads it - and nothing in it is computed from the light theme. Every
-colour of the dark variant is a value someone chose, written in one of its two files:
-
-```scss
-// themes/scss/winter/dark/_palette.scss
-$body-bg: #2B2B2B !default;              // the page: Darcula's editor ground
-$surface-bg: #313335 !default;           // a panel on the page, one step up
-$ground-bg: #45494A !default;            // what a control or button is filled with
-$text-color: #BBBBBB !default;
-$primary: #CC7832 !default;              // the accent, muted for a dark page
+themes/scss/winter/                          style.scss, every component's partial, _component-colors.scss
+themes/scss/winter/light/_palette.scss       how the light schemes' colours are worked out
+themes/scss/winter/light/*.png, *.gif        the images that differ between light and dark
+themes/scss/winter/light/winter/_scheme.scss the light scheme "winter"
+themes/scss/winter/dark/_palette.scss        how the dark schemes' colours are worked out
+themes/scss/winter/dark/*.png, *.gif         the same images, made for a dark page
+themes/scss/winter/dark/midnight/_scheme.scss
+themes/scss/winter/dark/nord/_scheme.scss
 ...
 ```
 
-The dark variant DomUI ships is modelled on IntelliJ's Darcula: dark grey rather than
-black, neutral greys for the grounds, a steel blue for what structures a page (caption
-bars, tab strips, table headers) and Darcula's orange for what acts. Every pair of text
-and ground it uses is tested for WCAG AA contrast.
+### A scheme is one file
+
+A scheme states a few dozen colours, its **tokens**: the grounds, the text at its
+strengths, the lines, the colour that structures a page (caption bars, tab strips, table
+headers), links, the selection, seven hues and the states' text colours.
+
+```scss
+// themes/scss/winter/dark/nord/_scheme.scss
+$page: #2E3440;
+$panel: #343B49;
+$window: #3B4252;
+$text: #DEE3EC;
+$struct: #4C6E99;
+$link: #88C0D0;
+$selection: #48658C;
+...
+```
+
+Its nature's `_palette.scss` reads them (`@use "scheme" as s`) and works every colour of
+the theme out from them - which is how one file of colours redresses every component:
+
+```scss
+// themes/scss/winter/dark/_palette.scss
+$body-bg: s.$page !default;
+$header-bg: s.$struct !default;
+$errors-wash: color.mix(s.$red, s.$page, 16%) !default;
+```
+
+What a nature decides is the same for all its schemes. The dark nature keeps the light
+theme's orange accent, its default button and its coloured buttons in every dark scheme,
+and works the washes - an error message's ground, a hovered row - out by mixing a hue into
+the page. The light nature keeps its own choices the same way. A new scheme is therefore a
+copy of one of DomUI's with the colours changed; every dark scheme DomUI ships is tested
+for WCAG AA contrast on every pair of text and ground it uses, and yours deserves the same.
 
 The `!default` on each value is what lets an application still set it: an application's
-[`_custominit.scss`](../overriding-the-theme/index.md) wins over both variants, and its
-`_variant-custominit.scss` sets a value for one variant only.
+[`_custominit.scss`](../overriding-the-theme/index.md) wins over every scheme.
 
-For a variant to recolour something, a rule has to *have* a variable to take its colour
-from. The theme names the ones a variant is most likely to want:
+For a scheme to recolour something, a rule has to *have* a variable to take its colour
+from. These are the roles of the main set:
 
 | Variable | Used for |
 | --- | --- |
 | `$body-bg`, `$body-color` | the page itself |
 | `$surface-bg`, `$surface-color`, `$surface-alt-bg`, `$window-bg` | panels, a band inside one, floating windows and popups |
 | `$ground-bg`, `$ground-alt-bg` | what a control or button is filled with, and a recessed or static one |
-| `$text-color`, `$text-strong-color`, `$text-muted` | text at three strengths |
+| `$fill-muted-bg`, `$fill-strong-bg`, `$stripe-bg` | quiet and stronger fills, a striped table's other row |
+| `$text-color`, `$text-strong-color`, `$text-bright-color`, `$text-muted`, `$text-dim` | text at five strengths |
 | `$line-soft`, `$line-color`, `$line-strong`, `$line-hard` | every line that is not part of a control, from the quietest to a frame |
 | `$control-border`, `$control-hover-border`, `$control-active-border` | the edge of an input or a button |
 | `$input-bg`, `$input-color`, `$input-ro-bg-top`/`-bottom` | input controls |
-| `$primary`, `$link-color`, `$selected-bg`, `$highlight-bg` | the accent, links, selection |
-| `$header-bg`, `$title-bg`, `$title-color` | caption bars and title bands |
+| `$primary`, `$link-color`, `$selected-bg`, `$selection-bg`, `$highlight-bg` | the accent, links, a selected item and a selected row, a marked one |
+| `$header-bg`, `$header-strip-bg`, `$header-tab-bg`, `$header-band-bg`, `$title-color` | what structures a page: caption bars, tab strips, tabs, bands, their text |
+| `$heading-color`, `$heading2-color` | headings |
 | `$errors-*`, `$warnings-*`, `$info-*` | the states, each a ground, a text colour and an edge |
 | `$row-hover-bg`, `$row-hover-outline` | the hover wash on a table row |
-| `$dt-*`, `$tab-*`, `$cal-*`, ... | the colours of one component - see below |
 
-The greys `$white` .. `$black` are there too, and in every variant they mean what they
+The greys `$white` .. `$black` are there too, and in every scheme they mean what they
 say: `$white` is white. A rule that wants "a surface" or "a line" takes the role for it,
 not a grey.
 
@@ -196,16 +236,17 @@ not a grey.
 
 Colours live in two tiers, and a component reads only the second.
 
-The **main set** is in `_palette.scss`. Its names say what a colour is in the theme's
-own vocabulary and never mention a component - `$primary`, `$line-color`, `$surface-bg`,
-`$input-bg`, the `$errors-*` / `$warnings-*` / `$info-*` states, the roles above.
+The **main set** is the nature's `_palette.scss`. Its names say what a colour is in the
+theme's own vocabulary and never mention a component - the roles above.
 
 **Component colours** are in `_component-colors.scss`: one variable per colour a
-component paints, each defaulting to a main-set value.
+component paints, each a role of the main set. There is one copy of this file, for every
+scheme of both natures:
 
 ```scss
-//-- LogTailer (.ui-tlf-*)
-$tlf-hdr-bg: $primary !default;
+//-- TabPanel (.ui-tab-*)
+$tab-hdr-bg: $header-strip-bg !default;
+$tab-bg: $header-tab-bg !default;
 ```
 
 The component's own stylesheet then reads only its own variables - never a literal, and
@@ -213,59 +254,65 @@ never a main-set value directly - and never computes a colour itself: a hover or
 pressed shade is a variable of its own too.
 
 ```scss
-.ui-tlf-hdr {
-	background-color: $tlf-hdr-bg;
+.ui-tab-hdr ul {
+	background: $tab-hdr-bg;
 }
 ```
 
 That indirection is the point. An application can restyle one component by setting one
-variable, a variant can map a component onto different roles than the light theme does,
-and neither has to edit a component. Both files exist once per variant. The light ones
-may still derive a value with `lighter()` or `findColorInvert()` where that is what the
-light theme always did; a variant states every value.
+variable, a scheme redresses everything through its tokens, and neither has to edit a
+component.
 
-Both tiers name variables the same way, in kebab-case:
+### Exceptions
 
-```
-$<component>-<part>-<role>
-```
+A colour that one nature, or one scheme, wants different from what
+`_component-colors.scss` works out is an **exception**. Exceptions are plain declarations,
+like an application's `_custominit.scss`, in two files that the search path finds:
 
-| | |
+| File | For |
 | --- | --- |
-| `<component>` | the component's CSS class prefix with `ui-` removed - `tlf` for `.ui-tlf-*`, `pmnu` for `.ui-pmnu-*`. The main set omits it. |
-| `<part>` | the element inside it, where a component paints more than one thing: `hdr`, `title`, `item`. Omitted where it paints one. |
-| `<role>` | what the colour does, and the part that must not vary: `-bg`, `-color` (text - the word CSS itself uses, never a background), `-border`, `-outline`, `-shadow`. |
+| `<nature>/_nature-exceptions.scss` | every scheme of that nature - the dark nature keeps the light theme's button hues and flare colours this way |
+| `<nature>/<scheme>/_scheme-exceptions.scss` | that one scheme, outranking the nature's |
 
-! Underscores and hyphens are the same character to SCSS: `$link_color` and `$link-color`
-! are one variable. An application that sets a theme variable by its old `snake_case`
-! spelling therefore still sets the current one.
+An application's `_custominit.scss` and `_variant-custominit.scss` outrank both.
+`_theme-configuration.scss` gathers all four into what the theme is configured with.
 
-Fonts, sizes and spacing are not colours, and are not per variant: they are in
-`_variables.scss` and `_derived-variables.scss`, shared by all.
+The light scheme `winter` has about a hundred exceptions: the colours the light theme
+picked for one component at a time - the calendar's own beiges, the blue of a table
+header - before the component colours were expressed in roles. They keep the light theme
+looking as it did. Each one is a decision still to make: whether the component should
+take its role's colour after all.
+
+! Exceptions reach the theme's own stylesheet. An application stylesheet that reads
+! the theme with `@use "theme" as t;` gets the theme's values without them - for the light
+! scheme that is the role's colour for those hundred.
 
 ### Things that nest
 
 A component whose levels nest - a submenu inside a submenu - states each level as a
-variable of its own, in each variant: `$pmnu-bg`, `$pmnu-sm1-bg`, `$pmnu-sm2-bg`,
-`$pmnu-sm3-bg`. In light each submenu is a step lighter grey, in dark a step lighter
-panel; the variant chooses the steps, rather than walking a scale that would have to
-mean something different in each.
+variable of its own: `$pmnu-bg`, `$pmnu-sm1-bg`, `$pmnu-sm2-bg`, `$pmnu-sm3-bg`, each a
+step further up the scheme's grounds, rather than walking a scale that would have to mean
+something different in each nature.
 
 ### Images
 
-An image that does not read on a dark page has a dark copy with the same name in
-`dark/`. The copies are not drawn by hand: `buildResources/dark-theme-images.sh` in the
-DomUI source makes them from the light images, turning their lightness around while
-keeping their colours, so a changed image is a re-run of the script. An image that must
-be there before anything can be loaded is no image at all: the sort arrows of a table
-header and the spinner of the "waiting for the server" message are drawn by css, in the
-variant's colours.
+An image that does not read on both natures has a copy with the same name in `light/`
+and in `dark/`. The dark copies are not drawn by hand: `buildResources/dark-theme-images.sh`
+in the DomUI source makes them from the light images, turning their lightness around while
+keeping their colours, so a changed image is a re-run of the script. A
+`THEME/btn-datein.png` in Java, or a `url()` in a stylesheet, gets the copy of the
+session's nature; every other image comes from the theme directory, the same for all. An
+image that must be there before anything can be loaded is no image at all: the sort arrows
+of a table header and the spinner of the "waiting for the server" message are drawn by
+css, in the scheme's colours.
 
-A partial that still writes a colour literally cannot be redressed by a variant -
-so when you find one, give it a variable rather than overriding it in the variant. An
-application stylesheet can read the theme's roles with `@use "theme" as t;` - which is
-what the demo's `css/_darkstyle.scss` does for its own colours, inside a branch on
-`p.$themeVariant` from the [parameters module](../sass-scss-support/index.md).
+A partial that still writes a colour literally cannot be redressed by a scheme - so when
+you find one, give it a variable rather than overriding it. An application stylesheet can
+read the theme's roles with `@use "theme" as t;` - which is what the demo's
+`css/_darkstyle.scss` does for its own colours, inside a branch on `t.$color-scheme`.
+The [parameters module](../sass-scss-support/index.md) holds the variant's name as well,
+and its parts: `$themeVariant` (`dark-nord`), `$themeNature` (`dark`), `$themeScheme`
+(`nord`).
 
 The `$` on the front of `$themes` makes DomUI's resource resolver handle the
 name, and it looks in four places, **in this order**:
@@ -278,7 +325,7 @@ name, and it looks in four places, **in this order**:
 
 An application file therefore **wins over the framework's**, and that is the
 hook the whole of [overriding the theme](../overriding-the-theme/index.md)
-hangs on.
+hangs on - and how an application adds a scheme of its own.
 
 ## How the stylesheet reaches the browser
 
@@ -292,10 +339,10 @@ participant ThemeManager
 participant SassPartFactory
 participant "dart-sass" as Sass
 
-Page -> ThemeManager: getTheme(variant "default")
+Page -> ThemeManager: getTheme(variant "light-winter")
 ThemeManager --> Page: SassTheme (cached)
 Page -> Page: getStyleSheetName()
-Page --> Browser: <link href="$THEME/default/style.scss?$hash=..">
+Page --> Browser: <link href="$THEME/light-winter/style.scss?$hash=..">
 Browser -> SassPartFactory: GET that url
 SassPartFactory -> Sass: compile style.scss
 Sass --> SassPartFactory: css
@@ -303,9 +350,10 @@ SassPartFactory --> Browser: text/css (buffered)
 @enduml
 ```
 
-Every themed URL carries the variant as its first segment - `$THEME/default/...`,
-`$THEME/dark/...` - so the variant decides which file is served, and two variants
-never share a cache entry.
+Every themed URL carries the variant as its first segment - `$THEME/light-winter/...`,
+`$THEME/dark-nord/...` - so the scheme decides which file is served, and two schemes
+never share a cache entry. A URL with a variant the application does not offer is served
+from its default scheme.
 
 Nothing is compiled ahead of time and nothing is written to disk. The page emits
 a `$THEME/`-prefixed link whose query string carries a hash of the compiled
