@@ -87,7 +87,11 @@ $link-color: p.$brand-color;
 
 The other name the framework resolves for you is `theme`: the theme's own
 module - its variables, functions and mixins, nothing that emits css - for the
-colour scheme the sheet is being compiled for.
+colour scheme the sheet is being compiled for, and configured as the theme's own
+stylesheet is: with the application's `_custominit.scss` and `_variant-custominit.scss`
+and the theme's exceptions. So `$link-color` in your sheet is the link colour the page
+has. (DomUI does that by loading the theme configured before your sheet; a
+`@use "theme" with (...)` of your own is therefore an error.)
 
 ```scss
 @use "theme" as *;

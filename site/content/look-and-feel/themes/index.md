@@ -283,9 +283,9 @@ header - before the component colours were expressed in roles. They keep the lig
 looking as it did. Each one is a decision still to make: whether the component should
 take its role's colour after all.
 
-! Exceptions reach the theme's own stylesheet. An application stylesheet that reads
-! the theme with `@use "theme" as t;` gets the theme's values without them - for the light
-! scheme that is the role's colour for those hundred.
+An application stylesheet that reads the theme with `@use "theme" as t;` gets the same
+values the page shows, exceptions and custominit files included: DomUI configures the
+theme for it the way `style.scss` does, before the sheet itself is loaded.
 
 ### Things that nest
 
