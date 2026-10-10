@@ -24,11 +24,7 @@ released under the [LGPL 2.1](https://www.gnu.org/licenses/old-licenses/lgpl-2.1
 ## About the documentation
 
 These pages were written over many years in a Confluence wiki and have been
-converted to Markdown; they are maintained alongside the code now. They are being
-reworked chapter by chapter to describe the framework as it is today, so a page
-that has not been reached yet can still be older than the code it describes.
-
-!w This documentation is incomplete, and always will be while it is written by
-!w the people also writing the framework. If a page is wrong or missing, a pull
-!w request against [the site repository](https://github.com/fjalvingh/domui.github.io)
-!w is the fastest way to fix it.
+converted to Markdown; they are maintained alongside the code now. If a page is
+wrong or missing, a pull request against
+[the site repository](https://github.com/fjalvingh/domui.github.io) is the fastest
+way to fix it.
