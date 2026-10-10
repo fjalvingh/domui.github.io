@@ -151,7 +151,7 @@ scheme, tried in order until a file is found:
 | Order | Path | Holds |
 | --- | --- | --- |
 | 1 | `$themes/scss/<style>/<nature>/<scheme>` | the scheme: `_scheme.scss` |
-| 2 | `$themes/scss/<style>/<nature>` | the nature: its `_palette.scss`, and its images |
+| 2 | `$themes/scss/<style>/<nature>` | the nature: its `_palette.scss` (light or dark), and its images |
 | 3 | `$themes/scss/<style>` | everything else: every rule of the theme, the component colours |
 | 4 | `$themes/scss/all` | what all themes share |
 
@@ -161,10 +161,10 @@ anywhere; what differs is the colours, and a few images:
 
 ```
 themes/scss/winter/                          style.scss, every component's partial, _component-colors.scss
-themes/scss/winter/light/_palette.scss       how the light schemes' colours are worked out
+themes/scss/winter/light/_palette.scss       the light nature: $color-scheme, and the scheme's roles passed on
 themes/scss/winter/light/*.png, *.gif        the images that differ between light and dark
 themes/scss/winter/light/winter/_scheme.scss the light scheme "winter"
-themes/scss/winter/dark/_palette.scss        how the dark schemes' colours are worked out
+themes/scss/winter/dark/_palette.scss        the dark nature, the same way
 themes/scss/winter/dark/*.png, *.gif         the same images, made for a dark page
 themes/scss/winter/dark/midnight/_scheme.scss
 themes/scss/winter/dark/nord/_scheme.scss
@@ -173,85 +173,102 @@ themes/scss/winter/dark/nord/_scheme.scss
 
 ### A scheme is one file
 
-A scheme states a few dozen colours, its **tokens**: the grounds, the text at its
-strengths, the lines, the colour that structures a page (caption bars, tab strips, table
-headers), links, the selection, seven hues and the states' text colours.
+A scheme is the theme's colour **roles**, and nothing else: 97 colours, each named for what
+it is *for* - a surface, a kind of text, an intent - and never for the component that paints
+it. Every scheme states the same set, light or dark:
 
 ```scss
 // themes/scss/winter/dark/nord/_scheme.scss
-$page: #2E3440;
-$panel: #343B49;
-$window: #3B4252;
-$text: #DEE3EC;
-$struct: #4C6E99;
-$link: #88C0D0;
-$selection: #48658C;
+$surface-page: #2e3440;
+$surface-raised: #343b49;
+$text-default: #dee3ec;
+$text-subtle: #b0b9c8;
+$border-default: #434c5e;
+$control-solid: #88c0d0;
+$control-on-solid: #2e3440;
+$danger-wash: #483d48;
+$danger-text: #f0a0a7;
 ...
 ```
 
-Its nature's `_palette.scss` reads them (`@use "scheme" as s`) and works every colour of
-the theme out from them - which is how one file of colours redresses every component:
+A role is named `$<family>-<step>`. The families without a colour of their own:
+
+| Family | Roles | For |
+| --- | --- | --- |
+| `surface` | `-page`, `-raised`, `-overlay`, `-sunken`, `-band`, `-inverse` | what things stand on: the page, a panel on it, what floats (a popup, menu or window), something recessed (a gutter, a code block), a strip one step off its surface (a table header band, an alternate row), a dark spot in a light theme |
+| `text` | `-default`, `-strong`, `-subtle`, `-faint`, `-inverse` | body text, emphasis and labels, secondary text and hints, a placeholder or another month's day, text on the inverse surface |
+| `border` | `-subtle`, `-default`, `-strong`, `-bold` | from a divider, through the edge of a panel and a line with weight, to a hard frame |
+| `field` | `-surface`, `-surface-readonly`, `-border`, `-border-hover` | inputs |
+| `link` | `-text`, `-text-visited`, `-text-hover` | links |
+| states | `$hover-wash` and `-border`; `$selected-wash`, `-solid`, `-on-solid`, `-border`; `$highlight`; `$focus-ring`; `$disabled-surface`, `-text`, `-border`; `$scrim`; `$shadow` | what applies to anything: under the pointer, selected, marked or found, keyboard focus, disabled, the veil behind a modal, what shadows are made of |
+
+Selection has a hue no other role uses - a magenta in DomUI's schemes - so a selected row can
+never be taken for a hovered, marked, informative or erroneous one.
+
+Eight **colour families** have the same six steps:
+
+| Family | Means |
+| --- | --- |
+| `primary` | the theme's accent: the default action |
+| `control` | the normal colour of a control in use: a toggle that is on, the chosen item of a choice, a chip of a chosen value, a breadcrumb, a pager's buttons |
+| `neutral` | an ordinary action, a plain title bar, a quiet fill |
+| `info` | information, guidance |
+| `success` | it worked, it is allowed |
+| `warning` | caution, before a mistake |
+| `danger` | an error, a destructive action |
+| `chrome` | the application's frame: tab strips, tabs, table headers, headings |
+
+| Step | What it is | Its promise |
+| --- | --- | --- |
+| `-wash` | the lightest tint: the ground of a message, an input in error | the family's `-text` and `$text-default` reach 4.5:1 on it |
+| `-tint` | clearly coloured, still light: a tag, a label, a marked day | `$text-strong` reaches 4.5:1 on it |
+| `-solid` | the full colour: a button, a flare, a badge | - |
+| `-on-solid` | text and icons on `-solid` | 4.5:1 on it |
+| `-text` | text in this family on an ordinary surface | 4.5:1 on the page and on its wash |
+| `-border` | a border, an accent bar or a marker | decoration next to text that says the same |
+
+So `$danger-wash` is the ground of an error message, `$danger-text` its text, and
+`$danger-solid` with `$danger-on-solid` an error flare. The hover and pressed shades of a
+`-solid` are not roles: the theme works them out from it. Last come seven **categories**,
+`$category-1-solid`/`-wash` to `$category-7-...`: colours with no meaning, for things that only
+have to be told apart, like the levels of a nested ConditionPanel. They are numbered, not named
+after a hue, so that a scheme picks its own; neighbours differ most.
+
+Every scheme DomUI ships keeps those promises, and a test (`TestThemeContrast`) holds it to
+them: a new scheme is a copy of one of DomUI's with the colours changed, and it deserves the
+same test.
+
+The nature's `_palette.scss` decides very little. It says what the browser paints its own
+canvas and scrollbars in (`$color-scheme: dark`), and passes the scheme's roles on, each
+`!default`:
 
 ```scss
 // themes/scss/winter/dark/_palette.scss
-$body-bg: s.$page !default;
-$header-bg: s.$struct !default;
-$errors-wash: color.mix(s.$red, s.$page, 16%) !default;
+$color-scheme: dark !default;
+$surface-page: s.$surface-page !default;
+$text-default: s.$text-default !default;
+...
 ```
 
-What a nature decides is the same for all its schemes. The dark nature keeps the light
-theme's orange accent, its default button and its coloured buttons in every dark scheme,
-and works the washes - an error message's ground, a hovered row - out by mixing a hue into
-the page. The light nature keeps its own choices the same way. A new scheme is therefore a
-copy of one of DomUI's with the colours changed; every dark scheme DomUI ships is tested
-for WCAG AA contrast on every pair of text and ground it uses, and yours deserves the same.
-
-The `!default` on each value is what lets an application still set it: an application's
+That `!default` is what lets an application still set any role: an application's
 [`_custominit.scss`](../overriding-the-theme/index.md) wins over every scheme.
-
-For a scheme to recolour something, a rule has to *have* a variable to take its colour
-from. These are the roles of the main set:
-
-| Variable | Used for |
-| --- | --- |
-| `$body-bg`, `$body-color` | the page itself |
-| `$surface-bg`, `$surface-color`, `$surface-alt-bg`, `$window-bg` | panels, a band inside one, floating windows and popups |
-| `$ground-bg`, `$ground-alt-bg` | what a control or button is filled with, and a recessed or static one |
-| `$fill-muted-bg`, `$fill-strong-bg`, `$stripe-bg` | quiet and stronger fills, a striped table's other row |
-| `$text-color`, `$text-strong-color`, `$text-bright-color`, `$text-muted`, `$text-dim` | text at five strengths |
-| `$line-soft`, `$line-color`, `$line-strong`, `$line-hard` | every line that is not part of a control, from the quietest to a frame |
-| `$control-border`, `$control-hover-border`, `$control-active-border` | the edge of an input or a button |
-| `$input-bg`, `$input-color`, `$input-ro-bg-top`/`-bottom` | input controls |
-| `$primary`, `$link-color`, `$selected-bg`, `$selection-bg`, `$highlight-bg` | the accent, links, a selected item and a selected row, a marked one |
-| `$header-bg`, `$header-strip-bg`, `$header-tab-bg`, `$header-band-bg`, `$title-color` | what structures a page: caption bars, tab strips, tabs, bands, their text |
-| `$heading-color`, `$heading2-color` | headings |
-| `$errors-*`, `$warnings-*`, `$info-*` | the states, each a ground, a text colour and an edge |
-| `$row-hover-bg`, `$row-hover-outline` | the hover wash on a table row |
-
-The greys `$white` .. `$black` are there too, and in every scheme they mean what they
-say: `$white` is white. A rule that wants "a surface" or "a line" takes the role for it,
-not a grey.
 
 ### Where a colour is named
 
-Colours live in two tiers, and a component reads only the second.
+Colours live in two tiers.
 
-The **main set** is the nature's `_palette.scss`. Its names say what a colour is in the
-theme's own vocabulary and never mention a component - the roles above.
-
-**Component colours** are in `_component-colors.scss`: one variable per colour a
-component paints, each a role of the main set. There is one copy of this file, for every
-scheme of both natures:
+The **roles** are the scheme's, above. **Component colours** are in
+`_component-colors.scss`: one variable per colour a component paints, each defaulting to a
+role. There is one copy of this file, for every scheme of both natures:
 
 ```scss
 //-- TabPanel (.ui-tab-*)
-$tab-hdr-bg: $header-strip-bg !default;
-$tab-bg: $header-tab-bg !default;
+$tab-hdr-bg: $chrome-wash !default;
+$tab-bg: $chrome-tint !default;
+$tab-color: $text-strong !default;
 ```
 
-The component's own stylesheet then reads only its own variables - never a literal, and
-never a main-set value directly - and never computes a colour itself: a hover or a
-pressed shade is a variable of its own too.
+A component's own stylesheet reads its own variables, or a role directly - never a literal:
 
 ```scss
 .ui-tab-hdr ul {
@@ -259,40 +276,36 @@ pressed shade is a variable of its own too.
 }
 ```
 
-That indirection is the point. An application can restyle one component by setting one
-variable, a scheme redresses everything through its tokens, and neither has to edit a
-component.
+That indirection is the point. An application restyles one component by setting one
+component colour, or the whole theme by setting a role, and a scheme redresses everything
+through its roles; none of them has to edit a component.
 
 ### Exceptions
 
-A colour that one nature, or one scheme, wants different from what
-`_component-colors.scss` works out is an **exception**. Exceptions are plain declarations,
-like an application's `_custominit.scss`, in two files that the search path finds:
+A component colour that one nature, or one scheme, wants different from what
+`_component-colors.scss` gives it is an **exception**: a plain declaration, like an
+application's `_custominit.scss`, in a file the search path finds:
 
 | File | For |
 | --- | --- |
-| `<nature>/_nature-exceptions.scss` | every scheme of that nature - the dark nature keeps the light theme's button hues and flare colours this way |
+| `<nature>/_nature-exceptions.scss` | every scheme of that nature |
 | `<nature>/<scheme>/_scheme-exceptions.scss` | that one scheme, outranking the nature's |
 
-An application's `_custominit.scss` and `_variant-custominit.scss` outrank both.
+Neither nature, and none of DomUI's schemes, has any: every component colour is its role in
+every scheme. The files are there, empty, for a scheme of your own that needs one. An
+application's `_custominit.scss` and `_variant-custominit.scss` outrank both;
 `_theme-configuration.scss` gathers all four into what the theme is configured with.
 
-The light scheme `winter` has about a hundred exceptions: the colours the light theme
-picked for one component at a time - the calendar's own beiges, the blue of a table
-header - before the component colours were expressed in roles. They keep the light theme
-looking as it did. Each one is a decision still to make: whether the component should
-take its role's colour after all.
-
 An application stylesheet that reads the theme with `@use "theme" as t;` gets the same
-values the page shows, exceptions and custominit files included: DomUI configures the
-theme for it the way `style.scss` does, before the sheet itself is loaded.
+values the page shows, custominit files included: DomUI configures the theme for it the way
+`style.scss` does, before the sheet itself is loaded.
 
 ### Things that nest
 
 A component whose levels nest - a submenu inside a submenu - states each level as a
-variable of its own: `$pmnu-bg`, `$pmnu-sm1-bg`, `$pmnu-sm2-bg`, `$pmnu-sm3-bg`, each a
-step further up the scheme's grounds, rather than walking a scale that would have to mean
-something different in each nature.
+variable of its own: `$pmnu-bg`, `$pmnu-sm1-bg`, `$pmnu-sm2-bg`, `$pmnu-sm3-bg`, each a role
+further off the menu than the one before, rather than walking a scale that would have to mean something
+different in each nature.
 
 ### Images
 

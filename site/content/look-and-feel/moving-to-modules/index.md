@@ -30,7 +30,7 @@ them, file by file. Each is small; what changes is where a variable comes from.
 Plain `$name: value;` declarations, one per theme variable, as before:
 
 ```scss
-$link-color: #c00040;
+$link-text: #c00040;
 $font-size: 15px;
 ```
 
@@ -38,7 +38,7 @@ Two things to check:
 
 - **Every name must be one the theme declares.** The file's variables are handed
   to the theme as its configuration, and a name the theme has no `!default` for
-  is an error: *"$lnk-color was not declared with !default in the @used
+  is an error: *"$lnk-text was not declared with !default in the @used
   module"*. A line that was silently doing nothing - a typo, or a variable of an
   earlier theme version - now stops the compile. Remove it, or fix the name.
 - **Nothing but declarations.** An `@import` here has no place to go, and a
@@ -47,7 +47,7 @@ Two things to check:
 
   ```scss
   @use "parameters" as p;
-  $link-color: p.$brand-color;
+  $link-text: p.$brand-color;
   ```
 
 ## `_userstyle.scss`
@@ -61,7 +61,7 @@ Add one line at the top, and change `@import` to `@use`:
 @use "reports";
 
 .myapp-toolbar {
-  background: $surface-bg;
+  background: $surface-raised;
   padding: $vertical-padding $horizontal-padding;
 }
 ```
@@ -77,7 +77,7 @@ their replacements in `sass:color` do not clamp, so the theme provides
 `darker()`, `lighter()` and `moreSaturated()`, which do and come with `theme`:
 
 ```scss
-$my-panel-bg: lighter($primary, 40%);
+$my-panel-bg: lighter($primary-solid, 40%);
 ```
 
 ## Partials of your own
@@ -90,7 +90,7 @@ first line:
 
 .ui-mct-input {
   @include ui-input-base;
-  border: 1px solid $bevel-up;
+  border: 1px solid $field-border;
 }
 ```
 
@@ -140,7 +140,7 @@ connection in `_custominit.scss` instead:
 
 ```scss
 @use "parameters" as p;
-$link-color: p.$link-color;
+$link-text: p.$link-color;
 ```
 
 which is one line per variable, and makes the file say which parameters drive
@@ -148,17 +148,19 @@ the theme.
 
 ## A colour scheme of your own
 
-A colour scheme is one file of tokens, in a directory named for its nature and itself:
+A colour scheme is one file, its [colour roles](../themes/index.md), in a directory named for
+its nature and itself:
 
 ```
 themes/scss/winter/dark/ocean/_scheme.scss
 ```
 
 Start from a copy of one of DomUI's - `light/winter/_scheme.scss` for a light scheme,
-`dark/midnight/_scheme.scss` for a dark one - and change the colours; the nature's
-palette works every other colour out from them. The file must declare every token its
-nature reads, which is also how an upgrade tells you that a nature reads a new one.
-Then offer it:
+`dark/midnight/_scheme.scss` for a dark one - and change the colours. The file must declare
+every role, which is also how an upgrade tells you that the theme has a new one: the compile
+fails on the role your scheme lacks. Keep each family's promises - its `-text` readable on
+its `-wash`, its `-on-solid` on its `-solid` - which DomUI's own schemes are tested for. Then
+offer it:
 
 ```java
 static private final IThemeVariant OCEAN = new SchemeVariant(ThemeNature.DARK, "ocean", "Ocean");
@@ -169,7 +171,7 @@ public List<IThemeVariant> getThemeVariants() {
 }
 ```
 
-A component colour the scheme wants different from what its tokens give goes in a
+A component colour the scheme wants different from its role goes in a
 `_scheme-exceptions.scss` next to it; a value you would rather set by name, in a
 `_variant-custominit.scss` there - see [overriding the theme](../overriding-the-theme/index.md).
 
@@ -239,6 +241,109 @@ In October 2026 every variant became a colour scheme of a nature, light or dark 
   scheme, the light ones in `light/winter/_scheme.scss`.
 - **Darcula changed** a little when it became a scheme: it has the light theme's orange
   accent and buttons, like every dark scheme, and a lighter red.
+
+## After the colour roles
+
+Also in October 2026 the theme's colours became **colour roles**: a set of names that say what
+a colour is for, which every scheme states (see [themes](../themes/index.md)). The old names
+are gone, without aliases. An application that sets one in `_custominit.scss` or
+`_variant-custominit.scss`, or reads one in a sheet of its own, gets a compile error naming
+it; rename it with the tables below.
+
+**A scheme of your own** that has the old tokens (`$page`, `$panel`, `$struct`,
+`$struct-strip`, `$hint-wash` ...) has to state the roles instead: start again from a copy of
+one of DomUI's schemes and carry your colours over.
+
+**The main set**, which the nature's `_palette.scss` declared:
+
+| Old name | Role |
+| --- | --- |
+| `$body-bg`, `$background-color` | `$surface-page` |
+| `$body-color`, `$text-color`, `$surface-color` | `$text-default` |
+| `$text-strong-color`, `$form-label-color` | `$text-strong` |
+| `$text-muted` | `$text-subtle` |
+| `$text-dim` | `$text-faint` (or `$disabled-text` for a disabled control) |
+| `$text-bright-color` | `$text-inverse`, or the `-on-solid` of the fill the text is on |
+| `$surface-bg` | `$surface-raised` |
+| `$window-bg` | `$surface-overlay` |
+| `$surface-alt-bg`, `$stripe-bg`, `$ground-alt-bg` | `$surface-band` |
+| `$ground-bg`, `$input-bg` | `$field-surface` (a control's ground) or `$surface-raised` |
+| `$fill-muted-bg` | `$neutral-tint`, or `$disabled-surface` for a disabled control |
+| `$fill-strong-bg` | `$neutral-solid` |
+| `$line-soft` | `$border-subtle` |
+| `$line-color` | `$border-default` |
+| `$line-strong` | `$border-strong` |
+| `$line-hard` | `$border-bold` |
+| `$control-border`, `$input-border-color`, `$bevel-up`, `$bevel-down` | `$field-border` |
+| `$control-hover-border` | `$field-border-hover` |
+| `$control-active-border` | `$border-strong` |
+| `$bevel-hover-up`, `$bevel-hover-down` | `$focus-ring` |
+| `$input-color` | `$text-strong` |
+| `$input-ro-bg-top`, `$input-ro-bg-bottom`, `$readonly-bg` | `$field-surface-readonly` |
+| `$readonly-border` | `$field-border` |
+| `$link-color` | `$link-text` |
+| `$link-visited-color` | `$link-text-visited` |
+| `$primary`, `$button-top-color`, `$button-bottom-color`, `$button-focus-top-color`, `$button-focus-bot-color` | `$primary-solid` (and `$primary-wash` ... for the other steps) |
+| `$button-focus-glow-color` | `$focus-ring` |
+| `$button-disabled-color` | `$disabled-surface` |
+| `$alt-button-color` | `$control-solid` |
+| `$alt-button-bg` | `$control-wash` |
+| `$selected-bg` | `$selected-solid` |
+| `$selection-bg` | `$selected-wash` |
+| `$highlight-bg` | `$highlight` |
+| `$row-hover-bg`, `$menu-hover-bg` | `$hover-wash` |
+| `$row-hover-outline`, `$menu-hover-border` | `$hover-border` |
+| `$row-select-hover-bg`, `$row-select-hover-outline` | `$selected-wash`, `$selected-border` |
+| `$title-bg`, `$header-bg` | `$neutral-solid` (a plain title bar) or `$chrome-solid` |
+| `$title-color` | `$neutral-on-solid` or `$chrome-on-solid` |
+| `$header-strip-bg` | `$chrome-wash` |
+| `$header-tab-bg`, `$header-band-bg` | `$chrome-tint` |
+| `$header-edge-color`, `$header-bar-color`, `$tab-sep-bg` | `$chrome-border` |
+| `$heading-color` | `$chrome-text` |
+| `$heading2-color` | `$text-strong` |
+| `$errors-color` | `$danger-text` |
+| `$errors-border` | `$danger-border`, or `$danger-solid` for a fill |
+| `$errors-wash`, `$errors-input-bg` | `$danger-wash` |
+| `$warnings-color` | `$warning-text` |
+| `$warnings-bg` | `$warning-wash` |
+| `$warnings-border` | `$warning-border` |
+| `$info-color` | `$info-text` |
+| `$info-bg` | `$info-wash` |
+| `$info-border` | `$info-border` (kept) |
+| `$errors-transparent`, `$warnings-transparent`, `$info-transparent`, `$white-transparent` | `rgba()` of the role, at the point of use |
+| `$green-accent` | `$success-border` |
+| `$shadow-color` | `$shadow` (or `$scrim` behind a modal) |
+| `$red`, `$orange`, `$yellow`, `$green`, `$cyan`, `$blue`, `$purple` | the intent that means what you use the hue for (`$danger-*`, `$warning-*`, `$success-*`, `$info-*`), or a `$category-<n>-solid` / `-wash` when it means nothing |
+| `$black` .. `$white` (the greyscale ramp) | the surface, text or border role the grey was standing in for |
+
+**Bulma's names**, which the component colours declared: `$info`, `$success`, `$warning`,
+`$danger` are the families' `-solid`; `$light` is `$neutral-wash`, `$dark` `$neutral-solid`;
+every `*-invert` is the family's `-on-solid`; `$link` is `$link-text`; `$text` is
+`$text-default`, `$text-light` `$text-subtle`, `$text-invert` `$text-inverse`; `$border` is
+`$field-border`, `$border-hover` `$field-border-hover`; `$background` is `$surface-band`,
+`$code-bg` and `$pre-bg` are `$surface-sunken`; `$link-hover`, `$link-focus` and `$link-active` are
+`$text-strong`. `$text-strong` keeps its name: it is a role now. The colour maps `$colors`
+and `$button-color-shades` remain, built from the roles.
+
+**Component colours that were renamed:**
+
+| Old name | New name |
+| --- | --- |
+| `$highlight2-bg` | `$list-selected-bg` (the selected item of a list) |
+| `$esic-label-bg`, `$mli-label-bg` | `$tag-bg` |
+| `$esic-label-border`, `$mli-label-border` | `$tag-border` |
+| `$esic-label-color` | `$tag-color` |
+| `$rbb-common-bg`, `$rbb-common-color` | `$rbb-bg` and `$rbb-color` for an item, `$rbb-chosen-bg` and `$rbb-chosen-color` for the chosen one |
+| `$rbb-disabled-color` | `$rbb-disabled-bg` |
+| `$rbb-disabled-checked-color` | `$rbb-disabled-chosen-color` (with `$rbb-disabled-chosen-bg`) |
+| `$button-link-color`, `$button-link-invert` | gone: the "link" button is `$link-text` |
+
+**What looks different in light**, in case a screenshot test notices. Things that are on or
+chosen - a CheckboxButton or SwitchButton that is on, the chosen RadioGroup button, a chip,
+a breadcrumb - are the control blue. A selected row, cell or day is magenta. Menus float on
+the overlay grey with a yellow hover. Tab strips and table headers are a pale steel blue.
+Read-only inputs are flat. Body text is a dark grey rather than black. Info messages are a
+cyan-teal.
 
 ## Finding what is left
 

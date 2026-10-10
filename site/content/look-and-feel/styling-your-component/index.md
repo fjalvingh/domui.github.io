@@ -16,13 +16,13 @@ classes that all start with the component's own prefix:
 }
 
 .ui-mct-input {
-  border: 1px solid $bevel-up;
+  border: 1px solid $field-border;
   padding: 0 4px;
 }
 
 .ui-mct-clear {
   cursor: pointer;
-  color: $link-color;
+  color: $link-text;
 }
 ```
 
@@ -63,15 +63,16 @@ src/main/webapp/themes/scss/winter/_userstyle.scss
 
 The name is resolved relative to the file it appears in, so it finds your
 partial in your webapp. The `@use "theme" as *;` at the top of the partial is
-what gives it `$bevel-up` and `$link-color`: a module sees only what it loads
+what gives it the roles `$field-border` and `$link-text`: a module sees only what it loads
 itself, and `theme` is the theme's variables, functions and mixins for the
 variant being compiled - see [SASS/SCSS support](../sass-scss-support/index.md).
 
 For a component in the framework itself the partial goes in the theme directory
 and the `@use` goes in `_stylesheet.scss`, among the others of its kind. What it
-paints is named in `_component-colors.scss` - `$mct-border: $bevel-up !default;`,
-one file for every colour scheme - rather than declared in the
-partial, so that an application or a scheme can set it.
+paints is named in `_component-colors.scss` - `$mct-border: $field-border !default;`,
+one file for every colour scheme, each a [colour role](../themes/index.md) - rather than declared
+in the partial, so that an application or a scheme can set it. A colour is never written as a
+literal: pick the role that says what the colour is for.
 
 !! Nothing finds a partial by itself. Without the `@use` the file is never
 !! compiled, and no error says so.

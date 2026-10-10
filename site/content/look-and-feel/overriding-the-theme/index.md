@@ -14,7 +14,7 @@ src/main/webapp/themes/scss/winter/_custominit.scss
 and declare the variables you want to change:
 
 ```scss
-$link-color: #c00040;
+$link-text: #c00040;
 $font-family: "Inter", sans-serif;
 $font-size: 15px;
 ```
@@ -31,7 +31,7 @@ Every variable in the theme is declared with SASS's `!default` flag:
 
 ```scss
 $font-size: 14px !default;
-$link-color: #2200cc !default;
+$link-text: s.$link-text !default;			// a colour role, passed on from the scheme
 ```
 
 `!default` means *this is the value unless the module was configured with
@@ -46,7 +46,7 @@ another*. `style.scss`, the theme's entry point, does exactly that configuring:
 `_theme-configuration.scss` loads your `_custominit.scss` as a module - and
 `_variant-custominit.scss`, see below - and `style.scss` hands every variable they
 declare to the theme as its configuration, and only then loads the stylesheet proper -
-so by the time any component partial reads `$link-color`, the value is yours. (The same
+so by the time any component partial reads `$link-text`, the value is yours. (The same
 configuration carries the theme's own [exceptions](../themes/index.md); yours outrank
 them.)
 
@@ -54,7 +54,7 @@ Two consequences of that are worth knowing:
 
 - **A name the theme does not declare is an error.** The configuration may only
   set variables that exist with `!default` somewhere in the theme, so a
-  misspelt `$lnk-color` fails the compile with *"$lnk-color was not declared
+  misspelt `$lnk-text` fails the compile with *"$lnk-text was not declared
   with !default in the @used module"* rather than being silently ignored.
 - `_custominit.scss` holds plain declarations. It cannot read a theme variable -
   the theme is not loaded yet when it runs - so a value *derived* from the theme
@@ -64,7 +64,7 @@ Two consequences of that are worth knowing:
 
   ```scss
   @use "parameters" as p;
-  $link-color: if(p.$themeNature == "dark", #ff80a0, #c00040);
+  $link-text: if(p.$themeNature == "dark", #ff80a0, #c00040);
   ```
 
   For more than a value or two, the next section is the better way.
@@ -83,9 +83,9 @@ src/main/webapp/themes/scss/winter/dark/nord/_variant-custominit.scss   Nord onl
 
 ```scss
 // themes/scss/winter/dark/_variant-custominit.scss
-$primary: #d9822b;
-$link-color: #8ab4ff;
-$header-bg: #3b4f63;
+$primary-solid: #d9822b;
+$link-text: #8ab4ff;
+$chrome-solid: #3b4f63;
 ```
 
 It is written like `_custominit.scss` - plain declarations of variables the theme
@@ -113,7 +113,7 @@ functions with one line at the top:
 @use "theme" as *;
 
 // derived from a value the theme computed, not a raw override
-$my-panel-bg: lighter($primary, 40%);
+$my-panel-bg: lighter($primary-solid, 40%);
 
 // or plain css of your own
 .myapp-toolbar {
@@ -146,30 +146,45 @@ Put the file in the same directory, next to `_custominit.scss`.
 
 ## What you can override
 
-Every `!default` variable in the theme. The colours are in the nature's
-`_palette.scss` (`light/`, `dark/`), the main set, and in `_component-colors.scss`,
-which names what each component paints, each a role of the main set; the
-[themes](../themes/index.md) page explains how they relate. What is not a colour -
-fonts, sizes, spacing - is in `_variables.scss` and `_derived-variables.scss`, the same
-for every scheme. The ones most applications reach for, with their light defaults:
+Every `!default` variable in the theme. The colours come in two tiers, which the
+[themes](../themes/index.md) page explains:
+
+- the **colour roles**, which every scheme states in its `_scheme.scss` and the nature's
+  `_palette.scss` passes on - `$surface-page`, `$text-subtle`, `$border-default`,
+  `$primary-solid`, `$danger-wash`, `$chrome-tint` ... Set one, and everything that takes that
+  role follows.
+- the **component colours** in `_component-colors.scss`, one for each colour a component
+  paints, each a role by default. `$tlf-hdr-bg: #336;` restyles the LogTailer's header and
+  nothing else.
+
+What is not a colour - fonts, sizes, spacing - is in `_variables.scss` and
+`_derived-variables.scss`, the same for every scheme. The ones most applications reach for,
+with their light defaults:
 
 | Variable | Default | What it sets |
 | --- | --- | --- |
 | `$font-family` | a system font stack | the font for everything |
 | `$font-size` | `14px` | base text size |
 | `$fixed-font-family` | `Courier New, Courier, monospace` | code and other fixed-width text |
-| `$body-bg` | `#ffffff` | page background |
+| `$surface-page` | `#ffffff` | page background |
 | `$body-bg-img` | none | a background image for the body |
 | `$horizontal-padding` | `10px` | the horizontal padding components inherit |
 | `$vertical-padding` | `10px` | the vertical one |
-| `$link-color` | `#2200cc` | links |
-| `$primary` | `#f69231` | the accent: a default button, a selected row, a hovered menu entry |
-| `$readonly-bg`, `$readonly-border` | transparent, `#EEEEEF` | how a readonly control shows |
+| `$link-text` | `#2200cc` | links |
+| `$primary-solid` | `#f69231` | the accent: a default button |
+| `$control-solid` | `#2b6de8` | the colour of a control in use: a toggle that is on, the chosen item, a chip |
+| `$field-surface-readonly` | `#f2f9fe` | how a read-only input shows |
 
-The semantic colours - `$info`, `$success`, `$warning`, `$danger`, `$light`,
-`$dark` - are in the derived tier and can be set directly when you want the
-framework's warning colour to be yours. So can any single component's colour:
-`$tlf-hdr-bg: #336;` restyles the LogTailer's header and nothing else.
+A role you set in `_custominit.scss` holds for every scheme, dark ones included; set it in
+the nature's or a scheme's `_variant-custominit.scss` to change it in those only. A role's
+promise - the family's `-text` readable on its `-wash`, `-on-solid` on its `-solid` - is yours to
+keep for the colours you choose.
+
+!! The colours were renamed when the theme moved to colour roles (October 2026): `$link-color`
+!! is `$link-text`, `$primary` is `$primary-solid`, `$body-bg` is `$surface-page`, and so on, and
+!! the old names are gone. A `_custominit.scss` that still sets one fails to compile, naming it.
+!! [Moving to modules](../moving-to-modules/index.md#after-the-colour-roles) has the table from
+!! every old name to its new one.
 
 ## Checking what you changed
 

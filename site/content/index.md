@@ -1,7 +1,5 @@
 # Welcome to DomUI
 
-!i Work in progress (2026)
-
 DomUI is a component-based Java framework for building AJAX web applications
 without writing Javascript. If this is your first visit, read
 [What is DomUI](introduction/what-is-domui/index.md) and then
@@ -9,9 +7,7 @@ without writing Javascript. If this is your first visit, read
 
 ## Current status
 
-This is a newer version of the site, converted from Confluence to a static site generator. The
-data is still very old, plan is to update the documentation step by step. The most recent version
-is in branch skarp-master; this branch uses Java 21 and has upgraded to survive the javax -> jakarta 
+The most recent version is in branch skarp-master; this branch uses Java 21 and has upgraded to survive the javax -> jakarta 
 absolute idiocy (I hope the idiots requiring that move lose as much money as this has cost 
 the industry for absolutely nothing gained).
 
